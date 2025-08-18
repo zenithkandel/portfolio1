@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zenith Kandel — Portfolio</title>
+  <meta name="description" content="Zenith Kandel — Self-taught & passionate web developer from Kathmandu, Nepal. Modern portfolio with parallax, animations, and contact form." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <style>
+    :root{
+      --bg:#0f1115; --card:#0f1720; --muted:#9aa4b2; --accent:#6ee7b7; --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.02); --glass-border: rgba(255,255,255,0.06);
+      --max-width:1200px; --radius:14px; --ff: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box;transition:all 0.28s cubic-bezier(.2,.9,.25,1)}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#07101a 0%, #0b1220 100%);color:#e6eef6;font-family:var(--ff);-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{color:#60a5fa}
+    .wrap{max-width:var(--max-width);margin:0 auto;padding:48px 24px}
+
+    /* header */
+    header{position:fixed;left:0;right:0;top:18px;z-index:80;display:flex;align-items:center;justify-content:center;pointer-events:none}
+    .nav{width:100%;max-width:var(--max-width);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(1,3,8,0.6);border:1px solid var(--glass-border);pointer-events:all}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo .mark{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-weight:700;background:linear-gradient(135deg,var(--accent),#60a5fa);color:#07202a;transform:rotate(-6deg)}
+    .logo:hover .mark{transform:rotate(6deg) scale(1.06)}
+    nav a{color:var(--muted);margin-left:16px;font-weight:600;font-size:14px;position:relative}
+    nav a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:2px;background:var(--accent);transition:width 0.28s}
+    nav a:hover::after{width:100%}
+
+    /* hero */
+    .hero{min-height:100vh;display:grid;grid-template-columns:1fr 420px;gap:36px;align-items:center;padding-top:120px;padding-bottom:80px}
+    .hero-left{padding:28px}
+    .eyebrow{display:inline-block;background:linear-gradient(90deg, rgba(110,231,183,0.08), rgba(96,165,250,0.06));padding:6px 10px;border-radius:999px;font-weight:700;color:var(--accent);font-size:13px;margin-bottom:18px;animation:fadeIn 1.6s ease}
+    h1{font-size:46px;line-height:1.02;margin:0 0 12px}
+    h1 .thin{font-weight:400;color:#dff7ee}
+    p.lead{color:var(--muted);max-width:650px;font-size:16px;margin-bottom:20px}
+    .cta{display:flex;gap:12px;align-items:center}
+    .btn{padding:12px 16px;border-radius:12px;background:linear-gradient(90deg,var(--accent),#60a5fa);color:#04211a;font-weight:700;border:none;cursor:pointer;box-shadow:0 8px 30px rgba(96,165,250,0.08)}
+    .btn:hover{transform:translateY(-3px) scale(1.05)}
+    .btn.ghost{background:transparent;border:1px solid var(--glass-border);color:var(--muted);font-weight:600}
+    .btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--glass-border);border-radius:18px;padding:20px;backdrop-filter:blur(8px);box-shadow:0 12px 40px rgba(2,6,12,0.6);transition:transform .3s, box-shadow .3s}
+    .card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 20px 60px rgba(96,165,250,0.12)}
+
+    .profile{display:flex;gap:14px;align-items:center}
+    .avatar{width:96px;height:96px;border-radius:16px;background:linear-gradient(135deg,#0ea5a7,#60a5fa);display:grid;place-items:center;font-weight:800;font-size:28px;color:#021416}
+    .meta{color:var(--muted)}
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+    .info-item{background:var(--glass-2);padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);font-size:14px}
+
+    section{padding:96px 0;border-top:1px solid rgba(255,255,255,0.02)}
+    h2.section-title{font-size:24px;margin:0 0 18px;display:flex;align-items:center;gap:10px}
+    h2.section-title i{color:var(--accent)}
+
+    .skills{display:flex;flex-wrap:wrap;gap:10px}
+    .skill-chip{padding:8px 12px;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--glass-border);font-weight:600}
+    .skill-chip:hover{background:var(--accent);color:#04211a;transform:translateY(-4px)}
+
+    .projects{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .project{border-radius:14px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02);min-height:160px;display:flex;flex-direction:column;justify-content:space-between}
+    .project:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 8px 30px rgba(96,165,250,0.15)}
+    .project h3{margin:0 0 8px}
+    .project p{color:var(--muted);font-size:14px;margin:0}
+    .project .tech{font-size:13px;color:var(--muted);margin-top:12px}
+
+    .exp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+    .exp{background:var(--glass-2);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);position:relative;overflow:hidden}
+    .exp i{font-size:28px;color:var(--accent);margin-bottom:8px}
+    .exp h3{margin:6px 0}
+    .exp p{color:var(--muted);margin:0}
+
+    /* Education timeline */
+    .timeline{position:relative;padding-left:26px}
+    .timeline::before{content:'';position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--accent),transparent);opacity:0.2}
+    .tl-item{position:relative;padding:18px 18px 18px 36px;margin-bottom:12px;background:rgba(255,255,255,0.01);border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .tl-item .dot{position:absolute;left:-2px;top:20px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--accent);box-shadow:0 6px 18px rgba(14,199,142,0.06)}
+
+    /* contact */
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .socials{display:flex;gap:10px;align-items:center}
+    .socials a{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
+    .socials a:hover{transform:translateY(-6px);background:linear-gradient(90deg,var(--accent),#60a5fa);color:#04211a}
+
+    .msg{padding:10px;border-radius:8px;margin-top:8px;font-size:14px}
+    .msg.ok{background:rgba(110,231,183,0.06);border:1px solid rgba(110,231,183,0.14);color:var(--accent)}
+    .msg.err{background:rgba(255,99,132,0.04);border:1px solid rgba(255,99,132,0.12);color:#ff6b81}
+
+    footer{padding:40px 0;color:var(--muted);text-align:center}
+
+    /* parallax layers */
+    .parallax-wrap{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .layer{position:absolute;will-change:transform;opacity:0.12}
+    .layer.s1{top:10vh;left:-8vw;width:40vw;height:40vw;background:radial-gradient(circle at 20% 20%, rgba(110,231,183,0.12), transparent 30%), radial-gradient(circle at 80% 80%, rgba(96,165,250,0.08), transparent 30%);border-radius:50%}
+    .layer.s2{bottom:-6vh;right:-6vw;width:50vw;height:50vw;background:conic-gradient(from 120deg at 50% 50%, rgba(96,165,250,0.06), rgba(110,231,183,0.06));border-radius:20%}
+    .layer.s3{top:30vh;right:12vw;width:18vw;height:18vw;background:linear-gradient(135deg, rgba(96,165,250,0.06), rgba(110,231,183,0.06));border-radius:28%}
+
+    .reveal{opacity:0;transform:translateY(14px) rotateX(6deg);transform-origin:top;transition:all 700ms cubic-bezier(.2,.9,.25,1)}
+    .reveal.show{opacity:1;transform:none}
+
+    form{display:grid;gap:12px}
+    input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.02);color:#fff}
+    input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 10px 30px rgba(110,231,183,0.03)}
+    .send-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#60a5fa);border:none;color:#04211a;font-weight:700;cursor:pointer}
+    .send-btn:active{transform:translateY(2px)}
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+    @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+
+    .avatar{animation:floaty 6s ease-in-out infinite}
+    .project:hover .tech{transform:translateY(4px)}
+
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr;gap:28px;padding-top:80px}
+      .projects{grid-template-columns:repeat(2,1fr)}
+      .nav a{display:none}
+      .hero-right{order:2}
+      .contact-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:640px){
+      h1{font-size:36px}
+      .projects{grid-template-columns:1fr}
+      .logo .mark{width:40px;height:40px}
+      .wrap{padding:28px 16px}
+    }
+
+  </style>
+</head>
+<body>
+  <div class="parallax-wrap" aria-hidden>
+    <div class="layer s1" data-depth="0.08"></div>
+    <div class="layer s2" data-depth="0.04"></div>
+    <div class="layer s3" data-depth="0.12"></div>
+  </div>
+
+  <header>
+    <div class="nav wrap">
+      <div class="logo">
+        <div class="mark">ZK</div>
+        <div>
+          <div style="font-weight:700">Zenith Kandel</div>
+          <div style="font-size:12px;color:var(--muted)">Self-Taught & Passionate Developer</div>
+        </div>
+      </div>
+      <nav aria-label="Main navigation">
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" style="position:relative;z-index:20">
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="hero-left">
+        <span class="eyebrow">Kathmandu • Age: 16</span>
+        <h1><span class="thin">Zenith Kandel</span><br/><span style="color:var(--accent)">Self‑Taught & Passionate Developer</span></h1>
+        <p class="lead">I'm a highly dedicated and resourceful 16-year-old self-taught programmer with over four years of real-world freelance experience. I build professional, dynamic, and responsive web applications with a minimal, cool design focus.</p>
+
+        <div class="cta">
+          <a class="btn" href="#projects">View Projects</a>
+          <a class="btn ghost" href="mailto:zenithkandel0@gmail.com">Say Hello</a>
+        </div>
+      </div>
+      <aside class="hero-right">
+        <div class="card reveal">
+          <div class="profile">
+            <div class="avatar">ZK</div>
+            <div>
+              <div style="font-weight:800;font-size:16px">Zenith Kandel</div>
+              <div class="meta">Full-Stack • UI/UX • PHP / Node / Laravel</div>
+            </div>
+          </div>
+          <div class="info-grid" style="margin-top:14px">
+            <div class="info-item"><i class="fa-solid fa-location-dot"></i> Kathmandu, Nepal</div>
+            <div class="info-item"><i class="fa-solid fa-envelope"></i> zenithkandel0@gmail.com</div>
+            <div class="info-item"><i class="fa-solid fa-phone"></i> 9806176120</div>
+            <div class="info-item"><i class="fa-solid fa-briefcase"></i> Freelance / Part-time</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+      <h2 class="section-title"><i class="fa-solid fa-code"></i> Technical Skills</h2>
+      <div class="skills reveal">
+        <div class="skill-chip">HTML</div><div class="skill-chip">CSS</div><div class="skill-chip">JavaScript</div><div class="skill-chip">TypeScript</div>
+        <div class="skill-chip">PHP</div><div class="skill-chip">Node.js</div><div class="skill-chip">jQuery</div><div class="skill-chip">Laravel</div>
+        <div class="skill-chip">MySQL</div><div class="skill-chip">UI/UX Design</div><div class="skill-chip">Photoshop</div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects">
+      <h2 class="section-title"><i class="fa-solid fa-diagram-project"></i> Selected Projects</h2>
+      <div class="projects">
+        <article class="project reveal"><h3>Kushma Art Project</h3><p>Multi-page dynamic website with admin, donations, gallery, and blog.</p><div class="tech">PHP • MySQL • HTML/CSS/JS</div><a href="http://kushmaartproject.com.np" target="_blank">Visit Website</a></article>
+        <article class="project reveal"><h3>Rageni Agro Resort</h3><p>Professional site promoting eco-tourism with booking system.</p><div class="tech">HTML • CSS • JS</div><a href="https://rageniresort.com.np" target="_blank">Visit Website</a></article>
+        <article class="project reveal"><h3>Karuna Swasthya Clinic</h3><p>Responsive clinic website with services, doctors, and testimonials.</p><div class="tech">HTML • CSS • PHP</div><a href="https://karunaclinic.com.np" target="_blank">Visit Website</a></article>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience">
+      <h2 class="section-title"><i class="fa-solid fa-briefcase"></i> Experience</h2>
+      <div class="exp-grid">
+        <div class="exp reveal"><i class="fa-solid fa-laptop-code"></i><h3>Freelance Web Developer</h3><p>Designed and developed professional, dynamic websites and apps for diverse clients.</p></div>
+        <div class="exp reveal"><i class="fa-solid fa-users"></i><h3>Technical Support & Mentorship</h3><p>Provided support and taught peers at Budhanilkantha School (2021–2024).</p></div>
+        <div class="exp reveal"><i class="fa-solid fa-book-open"></i><h3>Magazine Design</h3><p>Designed layouts for Budhanilkantha Times (Vol-12,13) & Intellescope (Vol-18).</p></div>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section id="education">
+      <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> Education</h2>
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <div class="dot"></div>
+          <strong>Secondary Education Examination (SEE)</strong>
+          <div style="color:var(--muted);margin-top:6px">Budhanilkantha School — GPA: 3.86</div>
+          <p style="margin-top:8px;color:var(--muted)">Completed Grade 10 with a strong academic record and active involvement in technical projects.</p>
+        </div>
+
+        <div class="tl-item">
+          <div class="dot"></div>
+          <strong>Basic Level Examinations (BLE)</strong>
+          <div style="color:var(--muted);margin-top:6px">GPA: 3.75</div>
+          <p style="margin-top:8px;color:var(--muted)">Solid foundation in core subjects and early coding interests.</p>
+        </div>
+
+        <div class="tl-item">
+          <div class="dot"></div>
+          <strong>Self-Taught Programmer</strong>
+          <div style="color:var(--muted);margin-top:6px">March 2020 — Present</div>
+          <p style="margin-top:8px;color:var(--muted)">Independent learning of web stack, built multiple real-world projects and freelanced since 2020.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <h2 class="section-title"><i class="fa-solid fa-paper-plane"></i> Get in touch</h2>
+      <div class="contact-grid">
+        <div class="card reveal">
+          <strong>Contact</strong>
+          <p style="color:var(--muted);margin-top:8px">Email: <a href="mailto:zenithkandel0@gmail.com">zenithkandel0@gmail.com</a><br/>Phone: 9806176120</p>
+
+          <div style="margin-top:12px">
+            <div class="socials">
+              <a href="https://github.com/zenithkandel" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+              <a href="https://www.linkedin.com/in/kandel.zenith" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+              <a href="https://instagram.com/zenithkandel" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;color:var(--muted);font-size:14px">Prefer direct? <a href="mailto:zenithkandel0@gmail.com">Send an email</a> or use the form.</div>
+        </div>
+
+        <div class="card reveal">
+          <strong style="display:flex;align-items:center;gap:8px"><i class="fa-solid fa-envelope"></i> Message Me</strong>
+          <form id="contactForm" style="margin-top:12px">
+            <input type="text" id="name" name="name" placeholder="Your name" required />
+            <input type="email" id="email" name="email" placeholder="Your email" required />
+            <input type="text" id="subject" name="subject" placeholder="Subject (optional)" />
+            <textarea id="message" name="message" rows="5" placeholder="Write your message..." required></textarea>
+            <div style="display:flex;gap:10px;align-items:center">
+              <button class="send-btn" type="submit"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+              <div id="formStatus" aria-live="polite"></div>
+            </div>
+          </form>
+          <div style="margin-top:10px;color:var(--muted);font-size:13px">Note: Replace <code>FORM_ENDPOINT</code> in the script with your Formspree/EmailJS or server endpoint to enable real sending.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div style="max-width:var(--max-width);margin:0 auto;padding:24px 12px">© <strong>Zenith Kandel</strong> — Built with ❤️ • Designed for speed and clarity.</div>
+    </footer>
+
+  </main>
+
+  <script>
+    // small utility: reveal on scroll with stagger
+    const revealEls = document.querySelectorAll('.reveal');
+    const onScrollReveal = ()=>{
+      const y = window.innerHeight;
+      revealEls.forEach((el,i)=>{
+        const r = el.getBoundingClientRect();
+        if(r.top < y - 80){ setTimeout(()=>el.classList.add('show'), i*60) }
+      })
+    }
+    onScrollReveal();
+    window.addEventListener('scroll', onScrollReveal);
+
+    // parallax simple
+    const layers = document.querySelectorAll('.parallax-wrap .layer');
+    window.addEventListener('scroll', ()=>{
+      const top = window.scrollY;
+      layers.forEach(layer=>{
+        const depth = parseFloat(layer.dataset.depth) || 0.06;
+        const movement = top * depth;
+        layer.style.transform = `translateY(${movement}px)`;
+      });
+    });
+
+    // Smooth anchor scroll (already provided by CSS but ensure offset)
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const href = a.getAttribute('href');
+        if(href.length>1){
+          e.preventDefault();
+          const el = document.querySelector(href);
+          const offset = 80; // header
+          const top = el.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({top,behavior:'smooth'});
+        }
+      })
+    });
+
+    // Contact form handler (demo)
+    const FORM_ENDPOINT = 'https://formspree.io/f/{your-id}'; // <- replace this with your Formspree endpoint or server URL
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('formStatus');
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      status.innerHTML = '';
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        subject: form.subject.value,
+        message: form.message.value
+      };
+
+      if(FORM_ENDPOINT.includes('{your-id}')){
+        // fallback: open mail client if no endpoint set
+        status.innerHTML = '<div class="msg err">No form endpoint configured — opening mail client as fallback.</div>';
+        setTimeout(()=>{
+          const mailto = `mailto:zenithkandel0@gmail.com?subject=${encodeURIComponent(data.subject||'Message from portfolio')}&body=${encodeURIComponent(`Name: ${data.name}
+Email: ${data.email}
+
+${data.message}`)}`;
+          window.location.href = mailto;
+        },800);
+        return;
+      }
+
+      try{
+        const res = await fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: {'Content-Type':'application/json','Accept':'application/json'},
+          body: JSON.stringify(data)
+        });
+        if(res.ok){
+          status.innerHTML = '<div class="msg ok">Message sent — I will reply soon. Thank you!</div>';
+          form.reset();
+        } else {
+          const txt = await res.text();
+          status.innerHTML = `<div class="msg err">Send failed — ${res.status} ${res.statusText}</div>`;
+          console.error('Form response', res.status, txt);
+        }
+      }catch(err){
+        status.innerHTML = '<div class="msg err">Network error — check console for details.</div>';
+        console.error(err);
+      }
+    });
+
+    // small interactive touches
+    document.querySelectorAll('.exp').forEach(el=>{
+      el.addEventListener('mouseenter', ()=>{
+        el.style.boxShadow = '0 30px 80px rgba(96,165,250,0.12)';
+      });
+      el.addEventListener('mouseleave', ()=>{
+        el.style.boxShadow = '';
+      });
+    });
+
+  </script>
+</body>
+</html>
