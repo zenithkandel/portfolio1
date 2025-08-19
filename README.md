@@ -1,3 +1,6 @@
+# 🕸️ Live at
+[https://zenithkandel.com.np/](https://zenithkandel.com.np/)
+
 # 🌐 Personal Portfolio Website
 
 A modern, responsive, and animated **portfolio website** built with **HTML, CSS, JavaScript, and Express.js**.  
