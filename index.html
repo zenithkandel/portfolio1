@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5" />
   <title>Zenith Kandel — Portfolio</title>
   <meta name="description" content="Zenith Kandel — self‑taught frontend developer & designer. Ultra‑minimal, retro‑styled, black & white portfolio.">
   <meta name="color-scheme" content="dark">
@@ -44,22 +45,50 @@
     header { position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.85); backdrop-filter: blur(2px); border-bottom: 1px solid var(--line); }
     .bar { display: flex; align-items: center; justify-content: space-between; height: 56px; }
     .logo { font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+    
+    /* Desktop Navigation */
+    nav { display: flex; gap: 16px; }
     nav a { color: #fff; text-decoration: none; padding: 0 10px; opacity: 0.8; border-bottom: 2px solid transparent; }
     nav a:hover { opacity: 1; border-bottom: 2px solid #fff; }
+
+    /* Mobile Navigation */
+    .mobile-menu-btn { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+    .mobile-menu { display: none; position: fixed; top: 56px; left: 0; width: 100%; background: rgba(0,0,0,0.95); z-index: 100; padding: 20px; border-bottom: 1px solid var(--line); }
+    .mobile-menu.active { display: block; }
+    .mobile-menu a { display: block; padding: 12px 0; color: white; text-decoration: none; opacity: 0.8; }
+    .mobile-menu a:hover { opacity: 1; }
+
+    @media (max-width: 768px) {
+        nav { display: none; }
+        .mobile-menu-btn { display: block; }
+        .hero { min-height: 90vh; }
+        .hero-cta { flex-direction: column; gap: 12px; }
+        .about-content { grid-template-columns: 1fr !important; }
+        .contact .grid { grid-template-columns: 1fr !important; }
+    }
 
     /* ====== HERO ====== */
     .hero { min-height: calc(100vh - 56px); display: grid; place-items: center; position: relative; }
     .hero-inner { width: 100%; }
     .tag { color: var(--dim); text-transform: uppercase; letter-spacing: 2px; font-size: 12px; }
-    .title { font-size: clamp(36px, 6vw, 80px); line-height: 1.05; margin: 12px 0 12px; font-weight: 900; }
+    .title { font-size: clamp(32px, 6vw, 80px); line-height: 1.05; margin: 12px 0 12px; font-weight: 900; }
     .subtitle { color: var(--muted); font-size: clamp(14px, 2.2vw, 18px); max-width: 68ch; }
+    @media (max-width: 480px) {
+      .section { padding: 60px 0; }
+      .title { font-size: 32px; }
+      .subtitle { font-size: 14px; }
+    }
     .hero-cta { display: inline-flex; gap: 18px; align-items: center; margin-top: 28px; }
     .btn {
       appearance: none; border: 1px solid #fff; background: transparent; color: #fff;
       padding: 10px 16px; text-decoration: none; text-transform: uppercase; letter-spacing: 1.5px;
       transition: transform .2s ease, background .2s ease, color .2s ease; border-radius: 0; /* no rounded */
     }
-    .btn:hover { background: #fff; color: #000; transform: translateY(-2px); }
+    .btn:hover, .btn:active { background: #fff; color: #000; transform: translateY(-2px); }
+    @media (hover: none) {
+      .btn:hover { background: transparent; color: #fff; transform: none; }
+      .btn:active { background: #fff; color: #000; transform: translateY(-2px); }
+    }
 
     /* ====== ABOUT ====== */
     .about-content { 
@@ -106,6 +135,16 @@
     .card p { margin: 0; color: var(--muted); }
 
     /* ====== CONTACT ====== */
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+    @media (max-width: 768px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
     .contact .links { display: flex; flex-wrap: wrap; gap: 16px; }
     .link { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); padding: 12px 14px; text-decoration: none; color: #fff; opacity: 0.9; }
     .link:hover { opacity: 1; background: #0a0a0a; transform: translateY(-2px); }
@@ -134,7 +173,7 @@
     .cursor { position: fixed; left: 0; top: 0; width: 18px; height: 18px; border: 1.5px solid #fff; pointer-events: none; z-index: 100; transform: translate(-50%, -50%); transition: width .15s ease, height .15s ease, background .08s ease; }
     .cursor.dot { width: 6px; height: 6px; background: #fff; border: none; }
     a:hover ~ .cursor, .btn:hover ~ .cursor, .card:hover ~ .cursor, .link:hover ~ .cursor { width: 28px; height: 28px; }
-    @media (prefers-reduced-motion: reduce) {
+    @media (pointer: coarse), (prefers-reduced-motion: reduce) {
       .cursor { display: none; }
       body { scroll-behavior: auto; }
       .reveal { transition: none; }
@@ -179,6 +218,13 @@
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
       </nav>
+      <button class="mobile-menu-btn" aria-label="Menu">☰</button>
+      <div class="mobile-menu">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
     </div>
   </header>
 
@@ -308,7 +354,7 @@
         <div class="hr"></div>
         <p class="muted reveal">Open to internships, collaborations, and freelance work. Let's build something clean and useful.</p>
         
-        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 48px;">
+        <div class="grid contact-grid">
           <!-- Contact Form -->
           <div class="reveal">
             <form id="contact-form" class="grid" style="gap: 16px;">
@@ -395,6 +441,22 @@
     window.addEventListener('mousemove', (e)=> move(e.clientX, e.clientY));
     window.addEventListener('mousedown', ()=> cursor.classList.add('dot'));
     window.addEventListener('mouseup', ()=> cursor.classList.remove('dot'));
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+      mobileMenuBtn.textContent = mobileMenu.classList.contains('active') ? '✕' : '☰';
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        mobileMenuBtn.textContent = '☰';
+      });
+    });
 
     // Contact form handling
     document.getElementById('contact-form').addEventListener('submit', function(e) {
