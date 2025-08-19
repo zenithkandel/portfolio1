@@ -62,7 +62,27 @@
     .btn:hover { background: #fff; color: #000; transform: translateY(-2px); }
 
     /* ====== ABOUT ====== */
-    .about p { color: var(--muted); max-width: 75ch; }
+    .about-content { 
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 40px;
+      align-items: start;
+    }
+    .about-text { color: var(--muted); }
+    .about-text p { max-width: 75ch; }
+    .about-photo {
+      border: 1px solid var(--line);
+      aspect-ratio: 1;
+      background: #0a0a0a;
+      display: grid;
+      place-items: center;
+      color: var(--dim);
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .about-photo:hover {
+      transform: translateY(-2px);
+      border-color: #222;
+    }
 
     /* ====== SKILLS (icon grid) ====== */
     .skills { --col: 5; }
@@ -162,8 +182,15 @@
       <div class="wrap">
         <h2 class="reveal">About</h2>
         <div class="hr"></div>
-        <p class="reveal" style="transition-delay:.06s">I’m a Grade 11 student and a self‑taught web developer/designer from Nepal. I enjoy frontend craft, quick prototyping, and turning ideas into simple UIs. Currently exploring Node.js, PHP, MongoDB, and building portfolio projects while staying open to internships and collaborations.</p>
-        <p class="reveal" style="transition-delay:.12s">When not coding, I sketch interfaces, tweak micro‑interactions, and learn by doing. I prefer minimal code, no frameworks when possible, and strong fundamentals.</p>
+        <div class="about-content">
+          <div class="about-text">
+            <p class="reveal" style="transition-delay:.06s">I’m a Grade 11 student and a self‑taught web developer/designer from Nepal. I enjoy frontend craft, quick prototyping, and turning ideas into simple UIs. Currently exploring Node.js, PHP, MongoDB, and building portfolio projects while staying open to internships and collaborations.</p>
+            <p class="reveal" style="transition-delay:.12s">When not coding, I sketch interfaces, tweak micro‑interactions, and learn by doing. I prefer minimal code, no frameworks when possible, and strong fundamentals.</p>
+          </div>
+          <div class="about-photo reveal" style="transition-delay:.18s">
+            <img src="your-photo.jpg" alt="Zenith Kandel" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+        </div>
       </div>
     </section>
 
