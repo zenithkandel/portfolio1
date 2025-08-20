@@ -473,7 +473,7 @@
     });
 
     // Particle background animation
-    const particleCount = 30; // Reduced from 100
+    const particleCount = Math.floor(Math.random(30*50-1)*30+50); // Reduced from 100
     const particles = [];
     const container = document.getElementById('particles');
     
