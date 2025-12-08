@@ -124,24 +124,24 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 // ====== TERMINAL SIMULATION ======
 const terminalOutput = document.getElementById('terminal-output');
 const commands = [
-  { text: '$ whoami', delay: 0 },
-  { text: '> Zenith Kandel - Full-Stack Developer', delay: 800 },
-  { text: '$ cat skills.txt', delay: 2000 },
-  { text: '> HTML, CSS, JavaScript, PHP, Node.js', delay: 2800 },
-  { text: '> MySQL, MongoDB, UI/UX Design', delay: 3400 },
-  { text: '$ echo $PASSION', delay: 4500 },
-  { text: '> Building minimal, functional web experiences', delay: 5300 },
-  { text: '$ █', delay: 6500, class: 'cursor-blink' }
+  { text: '> zenith@dev', type: 'prompt', delay: 0 },
+  { text: 'Self-taught Full-Stack Developer', type: 'output', delay: 400 },
+  { text: 'Kathmandu, Nepal', type: 'output', delay: 800 },
+  { text: '', type: 'output', delay: 1200 },
+  { text: '$ cat skills.txt', type: 'prompt', delay: 1600 },
+  { text: 'HTML • CSS • JavaScript • PHP', type: 'output', delay: 2000 },
+  { text: 'Node.js • MySQL • MongoDB', type: 'output', delay: 2400 },
+  { text: '', type: 'output', delay: 2800 },
+  { text: '$ echo $PASSION', type: 'prompt', delay: 3200 },
+  { text: 'Building minimal, functional experiences', type: 'output', delay: 3600 }
 ];
 
 function typeTerminal() {
   commands.forEach((cmd, index) => {
     setTimeout(() => {
       const line = document.createElement('div');
-      line.className = 'terminal-line';
-      if (cmd.class) line.classList.add(cmd.class);
+      line.className = `terminal-line ${cmd.type}`;
       line.textContent = cmd.text;
-      line.style.animationDelay = '0s';
       terminalOutput.appendChild(line);
     }, cmd.delay);
   });
