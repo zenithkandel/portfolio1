@@ -66,10 +66,7 @@
             <!-- Live Code Terminal Simulation -->
             <div class="terminal reveal" style="transition-delay:.18s">
               <div class="terminal-header">
-                <span class="terminal-dot" style="background: #ff5f56;"></span>
-                <span class="terminal-dot" style="background: #ffbd2e;"></span>
-                <span class="terminal-dot" style="background: #27c93f;"></span>
-                <span class="terminal-title">terminal — zenith@dev</span>
+                <span class="terminal-title">$ whoami</span>
               </div>
               <div class="terminal-body">
                 <div id="terminal-output"></div>
@@ -92,24 +89,24 @@
         <!-- Stats Dashboard -->
         <div class="stats-grid reveal">
           <div class="stat-card">
-            <div class="stat-icon"><i class="fa-sharp fa-solid fa-code"></i></div>
-            <div class="stat-number" data-target="500">0</div>
-            <div class="stat-label">Hours Coded</div>
+            <div class="stat-icon"><i class="fa-brands fa-github"></i></div>
+            <div class="stat-number" id="journey-repos">--</div>
+            <div class="stat-label">Repositories</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon"><i class="fa-sharp fa-solid fa-folder-open"></i></div>
-            <div class="stat-number" data-target="25">0</div>
-            <div class="stat-label">Projects Built</div>
+            <div class="stat-icon"><i class="fa-sharp fa-solid fa-star"></i></div>
+            <div class="stat-number" id="journey-stars">--</div>
+            <div class="stat-label">Total Stars</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon"><i class="fa-sharp fa-solid fa-mug-hot"></i></div>
-            <div class="stat-number" data-target="1000">0</div>
-            <div class="stat-label">Cups of Coffee</div>
+            <div class="stat-icon"><i class="fa-sharp fa-solid fa-code-commit"></i></div>
+            <div class="stat-number" id="journey-commits">--</div>
+            <div class="stat-label">Contributions</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon"><i class="fa-sharp fa-solid fa-lightbulb"></i></div>
-            <div class="stat-number" data-target="15">0</div>
-            <div class="stat-label">Technologies</div>
+            <div class="stat-icon"><i class="fa-sharp fa-solid fa-code-fork"></i></div>
+            <div class="stat-number" id="journey-forks">--</div>
+            <div class="stat-label">Total Forks</div>
           </div>
         </div>
 
@@ -238,10 +235,11 @@
           </div>
         </div>
 
-        <!-- Top Languages -->
-        <div class="github-languages reveal" style="transition-delay:.3s">
-          <h3 style="margin-bottom: 20px;">Most Used Languages</h3>
-          <div id="language-bars"></div>
+        <!-- GitHub Stats Card -->
+        <div class="github-stats-card-container reveal" style="transition-delay:.3s">
+          <div class="github-stats-visual">
+            <canvas id="github-stats-canvas" width="800" height="400"></canvas>
+          </div>
         </div>
       </div>
     </section>

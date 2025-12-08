@@ -53,7 +53,7 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
 });
 
 // Particle background animation
-const particleCount = Math.floor(Math.random(30*50-1)*30+50); // Reduced from 100
+const particleCount = Math.floor(Math.random() * 30 + 50);
 const particles = [];
 const container = document.getElementById('particles');
 
@@ -78,7 +78,7 @@ for (let i = 0; i < particleCount; i++) {
   particle.style.height = `${size}px`;
   particle.style.left = `${x}%`;
   particle.style.top = `${y}%`;
-  particle.style.opacity = 0.2 + Math.random() * 0.2; // Reduced opacity
+  particle.style.opacity = 0.2 + Math.random() * 0.2;
   
   container.appendChild(particle);
   
@@ -91,9 +91,6 @@ for (let i = 0; i < particleCount; i++) {
 }
 
 function updateParticles() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  
   particles.forEach(p => {
     // Update position based on angle and speed
     p.x += Math.cos(p.angle * Math.PI / 180) * p.speed;
@@ -123,3 +120,170 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     if(el){ el.setAttribute('tabindex','-1'); el.focus({preventScroll:true}); setTimeout(()=>el.removeAttribute('tabindex'), 600); }
   });
 });
+
+// ====== TERMINAL SIMULATION ======
+const terminalOutput = document.getElementById('terminal-output');
+const commands = [
+  { text: '$ whoami', delay: 0 },
+  { text: '> Zenith Kandel - Full-Stack Developer', delay: 800 },
+  { text: '$ cat skills.txt', delay: 2000 },
+  { text: '> HTML, CSS, JavaScript, PHP, Node.js', delay: 2800 },
+  { text: '> MySQL, MongoDB, UI/UX Design', delay: 3400 },
+  { text: '$ echo $PASSION', delay: 4500 },
+  { text: '> Building minimal, functional web experiences', delay: 5300 },
+  { text: '$ █', delay: 6500, class: 'cursor-blink' }
+];
+
+function typeTerminal() {
+  commands.forEach((cmd, index) => {
+    setTimeout(() => {
+      const line = document.createElement('div');
+      line.className = 'terminal-line';
+      if (cmd.class) line.classList.add(cmd.class);
+      line.textContent = cmd.text;
+      line.style.animationDelay = '0s';
+      terminalOutput.appendChild(line);
+    }, cmd.delay);
+  });
+}
+
+// Start terminal animation when in view
+const terminalObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      typeTerminal();
+      terminalObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+const terminal = document.querySelector('.terminal');
+if (terminal) {
+  terminalObserver.observe(terminal);
+}
+
+// ====== STATS COUNTER ANIMATION ======
+function animateCounter(element) {
+  const target = parseInt(element.getAttribute('data-target'));
+  const duration = 2000;
+  const step = target / (duration / 16);
+  let current = 0;
+
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) {
+      element.textContent = target.toLocaleString();
+      clearInterval(timer);
+    } else {
+      element.textContent = Math.floor(current).toLocaleString();
+    }
+  }, 16);
+}
+
+// Observe stat numbers
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounter(entry.target);
+      statObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.stat-number').forEach(stat => {
+  statObserver.observe(stat);
+});
+
+// ====== GITHUB API INTEGRATION ======
+const GITHUB_USERNAME = 'zenithkandel';
+
+async function fetchGitHubStats() {
+  try {
+    // Fetch user data
+    const userResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+    const userData = await userResponse.json();
+    
+    // Fetch repositories
+    const reposResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100`);
+    const repos = await reposResponse.json();
+    
+    // Calculate total stars and forks
+    const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+    const totalForks = repos.reduce((sum, repo) => sum + repo.forks_count, 0);
+    
+    // Update GitHub stats
+    document.getElementById('gh-repos').textContent = userData.public_repos;
+    document.getElementById('gh-stars').textContent = totalStars;
+    document.getElementById('gh-forks').textContent = totalForks;
+    document.getElementById('gh-followers').textContent = userData.followers;
+    
+    // Calculate language statistics
+    const languages = {};
+    repos.forEach(repo => {
+      if (repo.language) {
+        languages[repo.language] = (languages[repo.language] || 0) + 1;
+      }
+    });
+    
+    // Sort and get top 5 languages
+    const sortedLangs = Object.entries(languages)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+    
+    const total = sortedLangs.reduce((sum, [, count]) => sum + count, 0);
+    
+    // Display language bars
+    const languageBars = document.getElementById('language-bars');
+    sortedLangs.forEach(([lang, count]) => {
+      const percent = ((count / total) * 100).toFixed(1);
+      const bar = document.createElement('div');
+      bar.className = 'language-bar';
+      bar.innerHTML = `
+        <div class="language-info">
+          <span class="language-name">${lang}</span>
+          <span class="language-percent">${percent}%</span>
+        </div>
+        <div class="language-progress">
+          <div class="language-progress-fill" style="width: ${percent}%"></div>
+        </div>
+      `;
+      languageBars.appendChild(bar);
+    });
+    
+    // Fetch individual repo stats for project cards
+    const repoNames = ['STREAMFLIX', 'Javascript-Calculator', 'Random-Color-Generator', 'Css-Login'];
+    for (const repoName of repoNames) {
+      const repo = repos.find(r => r.name === repoName);
+      if (repo) {
+        const starsEl = document.querySelector(`.repo-stars[data-repo="${repoName}"]`);
+        const forksEl = document.querySelector(`.repo-forks[data-repo="${repoName}"]`);
+        if (starsEl) starsEl.textContent = repo.stargazers_count;
+        if (forksEl) forksEl.textContent = repo.forks_count;
+      }
+    }
+    
+  } catch (error) {
+    console.error('Error fetching GitHub stats:', error);
+    // Display fallback data
+    document.getElementById('gh-repos').textContent = '20+';
+    document.getElementById('gh-stars').textContent = '50+';
+    document.getElementById('gh-forks').textContent = '15+';
+    document.getElementById('gh-followers').textContent = '25+';
+  }
+}
+
+// Fetch GitHub stats on page load
+fetchGitHubStats();
+
+// Add CSS for cursor blink in terminal
+const style = document.createElement('style');
+style.textContent = `
+  .cursor-blink {
+    animation: blink 1s step-end infinite !important;
+  }
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+`;
+document.head.appendChild(style);
