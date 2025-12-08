@@ -3,7 +3,7 @@
 
 # 🌐 Personal Portfolio Website
 
-A modern, responsive, and animated **portfolio website** built with **HTML, CSS, JavaScript, and Express.js**.  
+A modern, responsive, and animated **portfolio website** built with **HTML, CSS, and JavaScript**.  
 This project showcases personal details, skills, education, experience, and a contact form with smooth animations, hover effects, and FontAwesome icons.  
 
 ---
@@ -16,7 +16,6 @@ This project showcases personal details, skills, education, experience, and a co
 - 🧑‍🎓 **Experience & Education Sections** with engaging layouts and icons  
 - 📩 **Contact Form** with styled inputs and validation-ready design  
 - ⚡ **FontAwesome Icons** for professional and creative design  
-- 🚀 **Express.js server** to serve static files  
 
 ---
 
@@ -24,7 +23,6 @@ This project showcases personal details, skills, education, experience, and a co
 
 - **Frontend:** HTML, CSS, JavaScript  
 - **Icons & Styling:** [FontAwesome](https://fontawesome.com/)  
-- **Backend/Server:** Node.js + Express.js  
 
 ---
 
@@ -33,7 +31,4 @@ This project showcases personal details, skills, education, experience, and a co
 ```bash
 portfolio/
 ├── index.html          # Main HTML file
-├── style.css           # Custom CSS styles
-├── script.js           # Animations & interactivity
-├── server.js           # Express.js server
 └── assets/             # Images, fonts, etc.
