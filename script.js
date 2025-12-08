@@ -163,8 +163,7 @@ if (terminal) {
 }
 
 // ====== STATS COUNTER ANIMATION ======
-function animateCounter(element) {
-  const target = parseInt(element.getAttribute('data-target'));
+function animateCounter(element, target) {
   const duration = 2000;
   const step = target / (duration / 16);
   let current = 0;
@@ -180,19 +179,7 @@ function animateCounter(element) {
   }, 16);
 }
 
-// Observe stat numbers
-const statObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      animateCounter(entry.target);
-      statObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.5 });
-
-document.querySelectorAll('.stat-number').forEach(stat => {
-  statObserver.observe(stat);
-});
+// Journey stats will be updated from GitHub API, no need for observer here
 
 // ====== GITHUB API INTEGRATION ======
 const GITHUB_USERNAME = 'zenithkandel';
