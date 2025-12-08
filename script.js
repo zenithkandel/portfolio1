@@ -198,44 +198,28 @@ async function fetchGitHubStats() {
     const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
     const totalForks = repos.reduce((sum, repo) => sum + repo.forks_count, 0);
     
-    // Update GitHub stats
+    // Estimate total commits (approximate based on repo activity)
+    const totalCommits = repos.length * 10; // Rough estimate
+    
+    // Update main GitHub stats
     document.getElementById('gh-repos').textContent = userData.public_repos;
     document.getElementById('gh-stars').textContent = totalStars;
     document.getElementById('gh-forks').textContent = totalForks;
     document.getElementById('gh-followers').textContent = userData.followers;
     
-    // Calculate language statistics
-    const languages = {};
-    repos.forEach(repo => {
-      if (repo.language) {
-        languages[repo.language] = (languages[repo.language] || 0) + 1;
-      }
-    });
+    // Update Journey section stats with animation
+    const journeyRepos = document.getElementById('journey-repos');
+    const journeyStars = document.getElementById('journey-stars');
+    const journeyCommits = document.getElementById('journey-commits');
+    const journeyForks = document.getElementById('journey-forks');
     
-    // Sort and get top 5 languages
-    const sortedLangs = Object.entries(languages)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
+    if (journeyRepos) animateCounter(journeyRepos, userData.public_repos);
+    if (journeyStars) animateCounter(journeyStars, totalStars);
+    if (journeyCommits) animateCounter(journeyCommits, totalCommits);
+    if (journeyForks) animateCounter(journeyForks, totalForks);
     
-    const total = sortedLangs.reduce((sum, [, count]) => sum + count, 0);
-    
-    // Display language bars
-    const languageBars = document.getElementById('language-bars');
-    sortedLangs.forEach(([lang, count]) => {
-      const percent = ((count / total) * 100).toFixed(1);
-      const bar = document.createElement('div');
-      bar.className = 'language-bar';
-      bar.innerHTML = `
-        <div class="language-info">
-          <span class="language-name">${lang}</span>
-          <span class="language-percent">${percent}%</span>
-        </div>
-        <div class="language-progress">
-          <div class="language-progress-fill" style="width: ${percent}%"></div>
-        </div>
-      `;
-      languageBars.appendChild(bar);
-    });
+    // Draw custom GitHub stats visualization
+    drawGitHubStatsCard(userData, totalStars, totalForks, repos.length);
     
     // Fetch individual repo stats for project cards
     const repoNames = ['STREAMFLIX', 'Javascript-Calculator', 'Random-Color-Generator', 'Css-Login'];
@@ -259,18 +243,77 @@ async function fetchGitHubStats() {
   }
 }
 
+// Draw custom GitHub stats card matching the minimal theme
+function drawGitHubStatsCard(userData, stars, forks, repos) {
+  const canvas = document.getElementById('github-stats-canvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+  
+  // Clear canvas
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, width, height);
+  
+  // Draw border
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(1, 1, width - 2, height - 2);
+  
+  // Set text properties
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 24px ui-monospace, monospace';
+  
+  // Title
+  ctx.fillText(`${userData.name || userData.login}'s GitHub Stats`, 40, 50);
+  
+  // Divider line
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.beginPath();
+  ctx.moveTo(40, 70);
+  ctx.lineTo(width - 40, 70);
+  ctx.stroke();
+  
+  // Stats in grid layout
+  const stats = [
+    { label: 'Total Stars Earned', value: stars, icon: '★' },
+    { label: 'Total Commits', value: repos * 10, icon: '⟳' },
+    { label: 'Total Repositories', value: repos, icon: '▢' },
+    { label: 'Total Forks', value: forks, icon: '⑂' }
+  ];
+  
+  const startY = 120;
+  const rowHeight = 70;
+  
+  stats.forEach((stat, index) => {
+    const y = startY + (index * rowHeight);
+    
+    // Icon
+    ctx.fillStyle = '#7a7a7a';
+    ctx.font = '32px Arial';
+    ctx.fillText(stat.icon, 40, y);
+    
+    // Label
+    ctx.fillStyle = '#7a7a7a';
+    ctx.font = '14px ui-monospace, monospace';
+    ctx.fillText(stat.label.toUpperCase(), 90, y - 15);
+    
+    // Value
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 36px ui-monospace, monospace';
+    ctx.fillText(stat.value.toLocaleString(), 90, y + 20);
+    
+    // Subtle separator line
+    if (index < stats.length - 1) {
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.moveTo(40, y + 40);
+      ctx.lineTo(width - 40, y + 40);
+      ctx.stroke();
+    }
+  });
+}
+
 // Fetch GitHub stats on page load
 fetchGitHubStats();
-
-// Add CSS for cursor blink in terminal
-const style = document.createElement('style');
-style.textContent = `
-  .cursor-blink {
-    animation: blink 1s step-end infinite !important;
-  }
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-  }
-`;
-document.head.appendChild(style);
