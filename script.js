@@ -198,8 +198,38 @@ async function fetchGitHubStats() {
     const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
     const totalForks = repos.reduce((sum, repo) => sum + repo.forks_count, 0);
     
-    // Estimate total commits (approximate based on repo activity)
-    const totalCommits = repos.length * 10; // Rough estimate
+    // Fetch actual commit counts from all repositories
+    let totalCommits = 0;
+    const commitPromises = repos.map(async (repo) => {
+      try {
+        // Get commits for each repo (GitHub API returns max 100 per page)
+        const commitsResponse = await fetch(
+          `https://api.github.com/repos/${GITHUB_USERNAME}/${repo.name}/commits?per_page=1`,
+          { headers: { 'Accept': 'application/vnd.github.v3+json' } }
+        );
+        
+        // Get the Link header to find total count
+        const linkHeader = commitsResponse.headers.get('Link');
+        if (linkHeader) {
+          // Extract last page number which equals total commits
+          const match = linkHeader.match(/page=(\d+)>; rel="last"/);
+          if (match) {
+            return parseInt(match[1]);
+          }
+        }
+        
+        // If no pagination, check if there are commits
+        const commits = await commitsResponse.json();
+        return Array.isArray(commits) ? commits.length : 0;
+      } catch (error) {
+        console.warn(`Error fetching commits for ${repo.name}:`, error);
+        return 0;
+      }
+    });
+    
+    // Wait for all commit counts and sum them up
+    const commitCounts = await Promise.all(commitPromises);
+    totalCommits = commitCounts.reduce((sum, count) => sum + count, 0);
     
     // Update main GitHub stats
     document.getElementById('gh-repos').textContent = userData.public_repos;
@@ -219,7 +249,7 @@ async function fetchGitHubStats() {
     if (journeyForks) animateCounter(journeyForks, totalForks);
     
     // Draw custom GitHub stats visualization
-    drawGitHubStatsCard(userData, totalStars, totalForks, repos.length);
+    drawGitHubStatsCard(userData, totalStars, totalForks, repos.length, totalCommits);
     
     // Fetch individual repo stats for project cards
     const repoNames = ['STREAMFLIX', 'Javascript-Calculator', 'Random-Color-Generator', 'Css-Login'];
@@ -244,7 +274,7 @@ async function fetchGitHubStats() {
 }
 
 // Draw custom GitHub stats card matching the minimal theme
-function drawGitHubStatsCard(userData, stars, forks, repos) {
+function drawGitHubStatsCard(userData, stars, forks, repos, commits) {
   const canvas = document.getElementById('github-stats-canvas');
   if (!canvas) return;
   
@@ -278,7 +308,7 @@ function drawGitHubStatsCard(userData, stars, forks, repos) {
   // Stats in grid layout
   const stats = [
     { label: 'Total Stars Earned', value: stars, icon: '★' },
-    { label: 'Total Commits', value: repos * 10, icon: '⟳' },
+    { label: 'Total Commits', value: commits, icon: '⟳' },
     { label: 'Total Repositories', value: repos, icon: '▢' },
     { label: 'Total Forks', value: forks, icon: '⑂' }
   ];
