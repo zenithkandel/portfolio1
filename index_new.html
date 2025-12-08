@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5" />
+  <title>Zenith Kandel — Portfolio</title>
+  <meta name="description" content="Zenith Kandel — self‑taught frontend developer & designer. Ultra‑minimal, retro‑styled, black & white portfolio.">
+  <meta name="color-scheme" content="dark">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/fontawesome.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/sharp-solid.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/sharp-regular.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/brands.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/duotone.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="scanlines">
+  <div id="particles"></div>
+  <header>
+    <div class="wrap bar">
+      <div class="logo">ZENITH</div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#journey">Journey</a>
+        <a href="#skills">Skills</a>
+        <a href="#github-stats">GitHub</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="mobile-menu-btn" aria-label="Menu">☰</button>
+      <div class="mobile-menu">
+        <a href="#about">About</a>
+        <a href="#journey">Journey</a>
+        <a href="#skills">Skills</a>
+        <a href="#github-stats">GitHub</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero section">
+      <div class="wrap hero-inner">
+        <div class="tag reveal">Self‑taught Frontend Developer • Kathmandu, Nepal</div>
+        <h1 class="title reveal" style="transition-delay:.06s">Hi, I'm Zenith Kandel.</h1>
+        <p class="subtitle reveal" style="transition-delay:.12s">I build clean, fast, and functional web experiences with <span class="kbd">HTML</span> <span class="kbd">CSS</span> <span class="kbd">JavaScript</span>. I love minimal UI, retro aesthetics, and shipping pragmatic solutions.
+        </p>
+        <div class="hero-cta reveal" style="transition-delay:.18s">
+          <a class="btn" href="#projects" aria-label="View projects">View Projects</a>
+          <a class="btn" href="#contact" aria-label="Contact Zenith">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section about">
+      <div class="wrap">
+        <h2 class="reveal">About</h2>
+        <div class="hr"></div>
+        <div class="about-content">
+          <div class="about-text">
+            <p class="reveal" style="transition-delay:.06s">I'm a Grade 11 student and a self‑taught web developer/designer from Nepal. I enjoy frontend craft, quick prototyping, and turning ideas into simple UIs. Currently exploring Node.js, PHP, MongoDB, and building portfolio projects while staying open to internships and collaborations.</p>
+            <p class="reveal" style="transition-delay:.12s">When not coding, I sketch interfaces, tweak micro‑interactions, and learn by doing. I prefer minimal code, no frameworks when possible, and strong fundamentals.</p>
+            
+            <!-- Live Code Terminal Simulation -->
+            <div class="terminal reveal" style="transition-delay:.18s">
+              <div class="terminal-header">
+                <span class="terminal-dot" style="background: #ff5f56;"></span>
+                <span class="terminal-dot" style="background: #ffbd2e;"></span>
+                <span class="terminal-dot" style="background: #27c93f;"></span>
+                <span class="terminal-title">terminal — zenith@dev</span>
+              </div>
+              <div class="terminal-body">
+                <div id="terminal-output"></div>
+              </div>
+            </div>
+          </div>
+          <div class="about-photo reveal" style="transition-delay:.18s">
+            <img src="me.jpg" alt="Zenith Kandel" style="width:100%; height:100%; max-width: 100%; max-height: 350px; object-fit:cover;">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOURNEY & EXPERIENCE -->
+    <section id="journey" class="section journey">
+      <div class="wrap">
+        <h2 class="reveal">Journey</h2>
+        <div class="hr"></div>
+        
+        <!-- Stats Dashboard -->
+        <div class="stats-grid reveal">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-sharp fa-solid fa-code"></i></div>
+            <div class="stat-number" data-target="500">0</div>
+            <div class="stat-label">Hours Coded</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-sharp fa-solid fa-folder-open"></i></div>
+            <div class="stat-number" data-target="25">0</div>
+            <div class="stat-label">Projects Built</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-sharp fa-solid fa-mug-hot"></i></div>
+            <div class="stat-number" data-target="1000">0</div>
+            <div class="stat-label">Cups of Coffee</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-sharp fa-solid fa-lightbulb"></i></div>
+            <div class="stat-number" data-target="15">0</div>
+            <div class="stat-label">Technologies</div>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+          <div class="timeline-item reveal" style="transition-delay:.06s">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2024 — Present</div>
+            <div class="timeline-content">
+              <h3>Self-Taught Web Developer</h3>
+              <p>Building full-stack applications, learning new technologies, and contributing to open-source projects. Focus on clean code and user experience.</p>
+              <div class="timeline-tags">
+                <span class="tag-pill">Full-Stack</span>
+                <span class="tag-pill">PHP</span>
+                <span class="tag-pill">Node.js</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item reveal" style="transition-delay:.12s">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2023</div>
+            <div class="timeline-content">
+              <h3>Frontend Development</h3>
+              <p>Mastered HTML, CSS, JavaScript fundamentals. Built responsive websites and interactive UI components. Explored design systems and micro-interactions.</p>
+              <div class="timeline-tags">
+                <span class="tag-pill">HTML/CSS</span>
+                <span class="tag-pill">JavaScript</span>
+                <span class="tag-pill">UI/UX</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item reveal" style="transition-delay:.18s">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2022</div>
+            <div class="timeline-content">
+              <h3>The Beginning</h3>
+              <p>Started learning web development through online resources. First "Hello World" in HTML. Discovered passion for creating digital experiences.</p>
+              <div class="timeline-tags">
+                <span class="tag-pill">HTML</span>
+                <span class="tag-pill">Basics</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="section skills">
+      <div class="wrap">
+        <h2 class="reveal">Skills</h2>
+        <div class="hr"></div>
+        <div class="grid skill-grid">
+          <div class="skill reveal">
+            <i class="fa-sharp fa-solid fa-code"></i>
+            <span>HTML</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.02s">
+            <i class="fa-sharp fa-solid fa-paintbrush"></i>
+            <span>CSS</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.04s">
+            <i class="fa-brands fa-js"></i>
+            <span>JavaScript</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.06s">
+            <i class="fa-brands fa-node-js"></i>
+            <span>Node.js</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.08s">
+            <i class="fa-sharp fa-solid fa-server"></i>
+            <span>PHP</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.10s">
+            <i class="fa-sharp fa-solid fa-database"></i>
+            <span>MySQL</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.12s">
+            <i class="fa-sharp fa-solid fa-leaf"></i>
+            <span>MongoDB</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.14s">
+            <i class="fa-sharp fa-solid fa-pen-ruler"></i>
+            <span>UI/UX</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.16s">
+            <i class="fa-sharp fa-solid fa-mobile-screen"></i>
+            <span>Responsive Design</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GITHUB STATS -->
+    <section id="github-stats" class="section github-section">
+      <div class="wrap">
+        <h2 class="reveal">GitHub Stats</h2>
+        <div class="hr"></div>
+        <p class="muted reveal">Real-time statistics from my GitHub profile</p>
+        
+        <div class="github-stats-grid">
+          <div class="github-stat-card reveal" style="transition-delay:.06s">
+            <div class="github-stat-icon"><i class="fa-brands fa-github"></i></div>
+            <div class="github-stat-value" id="gh-repos">--</div>
+            <div class="github-stat-label">Public Repos</div>
+          </div>
+          
+          <div class="github-stat-card reveal" style="transition-delay:.12s">
+            <div class="github-stat-icon"><i class="fa-sharp fa-solid fa-star"></i></div>
+            <div class="github-stat-value" id="gh-stars">--</div>
+            <div class="github-stat-label">Total Stars</div>
+          </div>
+          
+          <div class="github-stat-card reveal" style="transition-delay:.18s">
+            <div class="github-stat-icon"><i class="fa-sharp fa-solid fa-code-fork"></i></div>
+            <div class="github-stat-value" id="gh-forks">--</div>
+            <div class="github-stat-label">Total Forks</div>
+          </div>
+          
+          <div class="github-stat-card reveal" style="transition-delay:.24s">
+            <div class="github-stat-icon"><i class="fa-sharp fa-solid fa-users"></i></div>
+            <div class="github-stat-value" id="gh-followers">--</div>
+            <div class="github-stat-label">Followers</div>
+          </div>
+        </div>
+
+        <!-- Top Languages -->
+        <div class="github-languages reveal" style="transition-delay:.3s">
+          <h3 style="margin-bottom: 20px;">Most Used Languages</h3>
+          <div id="language-bars"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section projects">
+      <div class="wrap">
+        <h2 class="reveal">Projects</h2>
+        <div class="hr"></div>
+        <div class="grid cards">
+          <a class="card reveal" href="https://github.com/zenithkandel/STREAMFLIX" target="_blank" rel="noopener">
+            <div class="meta"><span>PHP</span><span>Full‑stack</span></div>
+            <h3>STREAMFLIX</h3>
+            <p>Movie streaming platform with chunked uploads, subtitles, and HLS processing.</p>
+            <div class="card-stats">
+              <span><i class="fa-sharp fa-solid fa-star"></i> <span class="repo-stars" data-repo="STREAMFLIX">--</span></span>
+              <span><i class="fa-sharp fa-solid fa-code-fork"></i> <span class="repo-forks" data-repo="STREAMFLIX">--</span></span>
+            </div>
+          </a>
+          <a class="card reveal" style="transition-delay:.04s" href="https://github.com/zenithkandel" target="_blank" rel="noopener">
+            <div class="meta"><span>Showcase</span><span>Frontend</span></div>
+            <h3>Kushma Art Project</h3>
+            <p>Modern bilingual art site with gallery, events, and donation flows.</p>
+            <div class="card-stats">
+              <span><i class="fa-sharp fa-solid fa-palette"></i> Design</span>
+            </div>
+          </a>
+          <a class="card reveal" style="transition-delay:.08s" href="https://github.com/zenithkandel" target="_blank" rel="noopener">
+            <div class="meta"><span>Landing</span><span>SPA</span></div>
+            <h3>Rageni Agro Resort</h3>
+            <p>Single‑page resort website with parallax and theme switch experiments.</p>
+            <div class="card-stats">
+              <span><i class="fa-sharp fa-solid fa-image"></i> Parallax</span>
+            </div>
+          </a>
+          <a class="card reveal" style="transition-delay:.12s" href="https://github.com/zenithkandel/Javascript-Calculator" target="_blank" rel="noopener">
+            <div class="meta"><span>HTML</span><span>JS</span></div>
+            <h3>JavaScript Calculator</h3>
+            <p>Compact, dependency‑free calculator built with just HTML/CSS/JS.</p>
+            <div class="card-stats">
+              <span><i class="fa-sharp fa-solid fa-star"></i> <span class="repo-stars" data-repo="Javascript-Calculator">--</span></span>
+              <span><i class="fa-sharp fa-solid fa-code-fork"></i> <span class="repo-forks" data-repo="Javascript-Calculator">--</span></span>
+            </div>
+          </a>
+          <a class="card reveal" style="transition-delay:.16s" href="https://github.com/zenithkandel/Random-Color-Generator" target="_blank" rel="noopener">
+            <div class="meta"><span>Utility</span><span>JS</span></div>
+            <h3>Random Color Generator</h3>
+            <p>Generates random colors for design/dev workflows—simple and handy.</p>
+            <div class="card-stats">
+              <span><i class="fa-sharp fa-solid fa-star"></i> <span class="repo-stars" data-repo="Random-Color-Generator">--</span></span>
+              <span><i class="fa-sharp fa-solid fa-code-fork"></i> <span class="repo-forks" data-repo="Random-Color-Generator">--</span></span>
+            </div>
+          </a>
+          <a class="card reveal" style="transition-delay:.20s" href="https://github.com/zenithkandel/Css-Login" target="_blank" rel="noopener">
+            <div class="meta"><span>CSS</span><span>UI</span></div>
+            <h3>CSS Login</h3>
+            <p>Minimal login interface with basic client‑side validation.</p>
+            <div class="card-stats">
+              <span><i class="fa-sharp fa-solid fa-star"></i> <span class="repo-stars" data-repo="Css-Login">--</span></span>
+              <span><i class="fa-sharp fa-solid fa-code-fork"></i> <span class="repo-forks" data-repo="Css-Login">--</span></span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section contact">
+      <div class="wrap">
+        <h2 class="reveal">Contact</h2>
+        <div class="hr"></div>
+        <p class="muted reveal">Open to internships, collaborations, and freelance work. Let's build something clean and useful.</p>
+        
+        <div class="grid contact-grid">
+          <!-- Contact Form -->
+          <div class="reveal">
+            <form id="contact-form" class="grid" style="gap: 16px;">
+              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                  <label for="name" class="muted" style="display: block; margin-bottom: 8px; font-size: 14px;">Name</label>
+                  <input type="text" id="name" name="name" required style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;">
+                </div>
+                <div>
+                  <label for="email" class="muted" style="display: block; margin-bottom: 8px; font-size: 14px;">Email</label>
+                  <input type="email" id="email" name="email" required style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;">
+                </div>
+              </div>
+              <div>
+                <label for="subject" class="muted" style="display: block; margin-bottom: 8px; font-size: 14px;">Subject</label>
+                <input type="text" id="subject" name="subject" required style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;">
+              </div>
+              <div>
+                <label for="message" class="muted" style="display: block; margin-bottom: 8px; font-size: 14px;">Message</label>
+                <textarea id="message" name="message" rows="5" required style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;"></textarea>
+              </div>
+              <button type="submit" class="btn" style="margin-top: 12px; width: fit-content;">Send Message</button>
+            </form>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="reveal" style="transition-delay:.1s">
+            <div class="links" style="display: grid; gap: 16px;">
+              <a class="link" href="mailto:zenithkandel0@gmail.com" aria-label="Email">
+                <i class="fa-sharp fa-solid fa-envelope"></i>
+                zenithkandel0@gmail.com
+              </a>
+              <a class="link" href="tel:9806176120" aria-label="Phone">
+                <i class="fa-sharp fa-solid fa-phone"></i>
+                +977 9806176120
+              </a>
+              <a class="link" href="https://github.com/zenithkandel" target="_blank" rel="noopener" aria-label="GitHub">
+                <i class="fa-brands fa-github"></i>
+                github.com/zenithkandel
+              </a>
+              <a class="link" href="https://www.linkedin.com/in/zenithkandel" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <i class="fa-brands fa-linkedin"></i>
+                linkedin.com/in/zenithkandel
+              </a>
+              <a class="link" href="https://instagram.com/kandel.zenith" target="_blank" rel="noopener" aria-label="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+                instagram.com/kandel.zenith
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="y"></span> Zenith Kandel</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  
+</body>
+</html>
