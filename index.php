@@ -44,7 +44,13 @@ $location = $settings['contact_location'] ?? '';
       <li><a href="#contact">Contact</a></li>
     </ul>
 
-    <span class="header-time"></span>
+    <div class="header-actions">
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <i class="fas fa-sun"></i>
+        <i class="fas fa-moon"></i>
+      </button>
+      <span class="header-time"></span>
+    </div>
 
     <button class="menu-toggle">Menu</button>
   </header>
@@ -229,7 +235,8 @@ $location = $settings['contact_location'] ?? '';
       <?php endif; ?>
 
       <?php if (!empty($settings['whatsapp'])): ?>
-        <a href="https://wa.me/977<?= e($settings['whatsapp']) ?>" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+        <a href="https://wa.me/977<?= e($settings['whatsapp']) ?>" target="_blank"><i class="fab fa-whatsapp"></i>
+          WhatsApp</a>
       <?php endif; ?>
     </div>
   </section>
@@ -237,6 +244,24 @@ $location = $settings['contact_location'] ?? '';
   <!-- Footer -->
   <footer class="footer reveal">
     <span>© <?= date('Y') ?> <?= e($name) ?></span>
+
+    <div class="footer-social">
+      <?php if (!empty($settings['github_url'])): ?>
+        <a href="<?= e($settings['github_url']) ?>" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <?php endif; ?>
+      <?php if (!empty($settings['linkedin_url'])): ?>
+        <a href="<?= e($settings['linkedin_url']) ?>" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <?php endif; ?>
+      <?php if (!empty($settings['instagram_url'])): ?>
+        <a href="<?= e($settings['instagram_url']) ?>" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <?php endif; ?>
+      <?php if (!empty($settings['facebook_url'])): ?>
+        <a href="<?= e($settings['facebook_url']) ?>" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <?php endif; ?>
+      <?php if (!empty($settings['whatsapp'])): ?>
+        <a href="https://wa.me/977<?= e($settings['whatsapp']) ?>" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      <?php endif; ?>
+    </div>
 
     <div class="footer-links">
       <a href="#work">Work</a>

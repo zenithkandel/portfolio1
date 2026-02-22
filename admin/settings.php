@@ -210,7 +210,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="form-group">
                         <label>WhatsApp Number</label>
-                        <input type="text" name="whatsapp" value="<?= e($settings['whatsapp'] ?? '') ?>" placeholder="e.g., 9806176120">
+                        <input type="text" name="whatsapp" value="<?= e($settings['whatsapp'] ?? '') ?>"
+                            placeholder="e.g., 9806176120">
                         <div class="form-hint">Just the number, without country code prefix</div>
                     </div>
                 </div>
