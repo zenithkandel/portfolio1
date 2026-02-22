@@ -58,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -67,300 +66,286 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
+    <style>
+        .settings-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; }
+        
+        .settings-nav { position: sticky; top: 32px; }
+        .settings-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; color: var(--text-muted); cursor: pointer; transition: all 0.2s; margin-bottom: 4px; border: none; background: none; width: 100%; text-align: left; font-size: 14px; }
+        .settings-nav-item:hover { background: var(--card); color: var(--text); }
+        .settings-nav-item.active { background: var(--accent-dim); color: var(--accent); }
+        .settings-nav-item i { width: 18px; }
+        
+        .settings-section { display: none; }
+        .settings-section.active { display: block; }
+        
+        .section-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .section-header h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+        .section-header p { color: var(--text-muted); font-size: 14px; }
+        
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .form-grid .form-group.full { grid-column: 1 / -1; }
+        
+        .photo-upload { display: flex; align-items: flex-start; gap: 20px; }
+        .photo-current { width: 120px; height: 120px; border-radius: 12px; overflow: hidden; background: var(--bg); flex-shrink: 0; }
+        .photo-current img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-actions { flex: 1; }
+        .photo-actions p { color: var(--text-muted); font-size: 13px; margin-bottom: 12px; }
+        
+        .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .social-item { display: flex; align-items: center; gap: 12px; background: var(--bg); padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); }
+        .social-item i { font-size: 18px; color: var(--accent); width: 24px; text-align: center; }
+        .social-item input { flex: 1; background: none; border: none; color: var(--text); font-size: 14px; outline: none; }
+        .social-item input::placeholder { color: var(--text-dim); }
+        
+        .save-bar { position: sticky; bottom: 0; background: linear-gradient(transparent, var(--bg) 20%); padding: 24px 0 0; margin-top: 32px; }
+        .save-bar .btn { width: 100%; padding: 14px; font-size: 15px; }
+        
+        @media (max-width: 900px) {
+            .settings-layout { grid-template-columns: 1fr; }
+            .settings-nav { position: static; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+            .settings-nav-item { flex: 1; min-width: 100px; justify-content: center; margin-bottom: 0; }
+            .form-grid, .social-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-
 <body>
     <div class="layout">
-        <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="sidebar-logo">
-                <i class="fas fa-terminal"></i>
-                Portfolio
-            </div>
-
+            <div class="sidebar-logo"><i class="fas fa-terminal"></i> Portfolio</div>
             <ul class="sidebar-nav">
                 <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="settings.php" class="active"><i class="fas fa-sliders"></i> Settings</a></li>
                 <li><a href="skills.php"><i class="fas fa-code"></i> Skills</a></li>
                 <li><a href="projects.php"><i class="fas fa-folder"></i> Projects</a></li>
-                <li>
-                    <a href="messages.php">
-                        <i class="fas fa-envelope"></i> Messages
-                        <?php if ($unreadCount > 0): ?>
-                            <span class="nav-badge"><?= $unreadCount ?></span>
-                        <?php endif; ?>
-                    </a>
-                </li>
+                <li><a href="messages.php"><i class="fas fa-envelope"></i> Messages <?php if ($unreadCount > 0): ?><span class="nav-badge"><?= $unreadCount ?></span><?php endif; ?></a></li>
             </ul>
-
             <div class="sidebar-divider"></div>
-
             <ul class="sidebar-nav">
                 <li><a href="../index.php" target="_blank"><i class="fas fa-external-link-alt"></i> View Site</a></li>
                 <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <div class="page-header">
                 <div>
-                    <h1>Site Settings</h1>
+                    <h1>Settings</h1>
                     <p>Manage your portfolio content and preferences</p>
                 </div>
             </div>
 
             <?php if ($flash = getFlash()): ?>
-                <div class="alert alert-<?= $flash['type'] ?>">
-                    <i class="fas fa-check-circle"></i>
-                    <?= e($flash['message']) ?>
-                </div>
+                <div class="alert alert-<?= $flash['type'] ?>"><i class="fas fa-check-circle"></i> <?= e($flash['message']) ?></div>
             <?php endif; ?>
 
             <form method="POST">
-                <!-- General Settings -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>General Settings</h3>
-                    </div>
-                    <div class="form-group">
-                        <label>Site Title</label>
-                        <input type="text" name="site_title" value="<?= e($settings['site_title'] ?? '') ?>"
-                            placeholder="Portfolio | Your Name">
-                    </div>
-                    <div class="form-group">
-                        <label>Site Description</label>
-                        <textarea name="site_description"
-                            rows="2"><?= e($settings['site_description'] ?? '') ?></textarea>
-                        <div class="form-hint">Shown in search engine results</div>
-                    </div>
-                </div>
+                <div class="settings-layout">
+                    <nav class="settings-nav">
+                        <button type="button" class="settings-nav-item active" data-tab="profile"><i class="fas fa-user"></i> Profile</button>
+                        <button type="button" class="settings-nav-item" data-tab="about"><i class="fas fa-file-alt"></i> About</button>
+                        <button type="button" class="settings-nav-item" data-tab="social"><i class="fas fa-share-alt"></i> Social</button>
+                        <button type="button" class="settings-nav-item" data-tab="security"><i class="fas fa-lock"></i> Security</button>
+                    </nav>
 
-                <!-- Hero Section -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Hero Section</h3>
-                    </div>
-                    <div class="form-group">
-                        <label>Tagline</label>
-                        <input type="text" name="hero_tagline" value="<?= e($settings['hero_tagline'] ?? '') ?>"
-                            placeholder="e.g., Frontend Developer • Location">
-                    </div>
-                    <div class="form-group">
-                        <label>Main Heading (Your Name)</label>
-                        <input type="text" name="hero_title" value="<?= e($settings['hero_title'] ?? '') ?>"
-                            placeholder="e.g., John Doe">
-                    </div>
-                    <div class="form-group">
-                        <label>Subtitle / Role</label>
-                        <textarea name="hero_subtitle" rows="2"><?= e($settings['hero_subtitle'] ?? '') ?></textarea>
-                    </div>
-                </div>
-
-                <!-- About Section -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>About Section</h3>
-                    </div>
-                    <div class="form-group">
-                        <label>About Text (Paragraph 1)</label>
-                        <textarea name="about_text" rows="4"><?= e($settings['about_text'] ?? '') ?></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>About Text (Paragraph 2) - Optional</label>
-                        <textarea name="about_text_2" rows="4"><?= e($settings['about_text_2'] ?? '') ?></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Profile Photo</label>
-                        <input type="hidden" name="photo_url" id="photo_url"
-                            value="<?= e($settings['photo_url'] ?? 'me.jpg') ?>">
-                        <div class="upload-area" id="photoUploadArea">
-                            <input type="file" id="photo_file" accept="image/*" style="display:none">
-                            <?php $currentPhoto = $settings['photo_url'] ?? 'me.jpg'; ?>
-                            <div class="upload-placeholder" id="photoPlaceholder"
-                                style="<?= $currentPhoto ? 'display:none' : '' ?>">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <span>Click, drag, or paste image here</span>
-                                <small>JPG, PNG, GIF, WebP (Max 5MB)</small>
+                    <div class="settings-content">
+                        <!-- Profile Tab -->
+                        <div class="settings-section active" data-section="profile">
+                            <div class="section-header">
+                                <h2>Profile & Hero</h2>
+                                <p>Your name, title, and hero section content</p>
                             </div>
-                            <div class="upload-preview" id="photoPreview"
-                                style="<?= $currentPhoto ? 'display:block' : 'display:none' ?>">
-                                <img id="photoPreviewImg" src="../<?= e($currentPhoto) ?>" alt="Preview">
-                                <button type="button" class="remove-image" onclick="removePhoto()">&times;</button>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Site Title</label>
+                                    <input type="text" name="site_title" value="<?= e($settings['site_title'] ?? '') ?>" placeholder="My Portfolio">
+                                </div>
+                                <div class="form-group">
+                                    <label>Your Name</label>
+                                    <input type="text" name="hero_title" value="<?= e($settings['hero_title'] ?? '') ?>" placeholder="John Doe">
+                                </div>
+                                <div class="form-group full">
+                                    <label>Tagline / Role</label>
+                                    <input type="text" name="hero_tagline" value="<?= e($settings['hero_tagline'] ?? '') ?>" placeholder="Frontend Developer • Kathmandu, Nepal">
+                                </div>
+                                <div class="form-group full">
+                                    <label>Hero Subtitle</label>
+                                    <textarea name="hero_subtitle" rows="2" placeholder="A short introduction..."><?= e($settings['hero_subtitle'] ?? '') ?></textarea>
+                                </div>
+                                <div class="form-group full">
+                                    <label>SEO Description</label>
+                                    <textarea name="site_description" rows="2" placeholder="Shown in search engine results"><?= e($settings['site_description'] ?? '') ?></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Contact Info -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Contact Information</h3>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" name="email" value="<?= e($settings['email'] ?? '') ?>">
+                        <!-- About Tab -->
+                        <div class="settings-section" data-section="about">
+                            <div class="section-header">
+                                <h2>About Section</h2>
+                                <p>Your bio and profile photo</p>
+                            </div>
+
+                            <div class="photo-upload">
+                                <div class="photo-current">
+                                    <img id="photoPreviewImg" src="../<?= e($settings['photo_url'] ?? 'me.jpg') ?>" alt="Profile" onerror="this.src='https://via.placeholder.com/120/141414/333?text=Photo'">
+                                </div>
+                                <div class="photo-actions">
+                                    <input type="hidden" name="photo_url" id="photo_url" value="<?= e($settings['photo_url'] ?? 'me.jpg') ?>">
+                                    <p>Click to upload a new profile photo. Max 5MB.</p>
+                                    <input type="file" id="photo_file" accept="image/*" style="display:none">
+                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('photo_file').click()">
+                                        <i class="fas fa-upload"></i> Upload Photo
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-grid" style="margin-top: 24px;">
+                                <div class="form-group full">
+                                    <label>About Text (Paragraph 1)</label>
+                                    <textarea name="about_text" rows="4" placeholder="Tell visitors about yourself..."><?= e($settings['about_text'] ?? '') ?></textarea>
+                                </div>
+                                <div class="form-group full">
+                                    <label>About Text (Paragraph 2) - Optional</label>
+                                    <textarea name="about_text_2" rows="4" placeholder="Additional info..."><?= e($settings['about_text_2'] ?? '') ?></textarea>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Phone</label>
-                            <input type="text" name="phone" value="<?= e($settings['phone'] ?? '') ?>">
+
+                        <!-- Social Tab -->
+                        <div class="settings-section" data-section="social">
+                            <div class="section-header">
+                                <h2>Contact & Social Links</h2>
+                                <p>How visitors can reach you</p>
+                            </div>
+
+                            <div class="form-grid" style="margin-bottom: 24px;">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="email" value="<?= e($settings['email'] ?? '') ?>" placeholder="you@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="text" name="phone" value="<?= e($settings['phone'] ?? '') ?>" placeholder="+1 234 567 890">
+                                </div>
+                            </div>
+
+                            <label style="display: block; margin-bottom: 12px; font-weight: 500;">Social Profiles</label>
+                            <div class="social-grid">
+                                <div class="social-item">
+                                    <i class="fab fa-github"></i>
+                                    <input type="url" name="github_url" value="<?= e($settings['github_url'] ?? '') ?>" placeholder="https://github.com/username">
+                                </div>
+                                <div class="social-item">
+                                    <i class="fab fa-linkedin"></i>
+                                    <input type="url" name="linkedin_url" value="<?= e($settings['linkedin_url'] ?? '') ?>" placeholder="https://linkedin.com/in/username">
+                                </div>
+                                <div class="social-item">
+                                    <i class="fab fa-instagram"></i>
+                                    <input type="url" name="instagram_url" value="<?= e($settings['instagram_url'] ?? '') ?>" placeholder="https://instagram.com/username">
+                                </div>
+                                <div class="social-item">
+                                    <i class="fab fa-facebook"></i>
+                                    <input type="url" name="facebook_url" value="<?= e($settings['facebook_url'] ?? '') ?>" placeholder="https://facebook.com/username">
+                                </div>
+                                <div class="social-item">
+                                    <i class="fab fa-whatsapp"></i>
+                                    <input type="text" name="whatsapp" value="<?= e($settings['whatsapp'] ?? '') ?>" placeholder="9800000000 (without country code)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Tab -->
+                        <div class="settings-section" data-section="security">
+                            <div class="section-header">
+                                <h2>Security</h2>
+                                <p>Change your admin password</p>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>New Password</label>
+                                    <input type="password" name="new_password" placeholder="Leave blank to keep current">
+                                    <div class="form-hint">Minimum 6 characters recommended</div>
+                                </div>
+                            </div>
+
+                            <div class="card" style="margin-top: 24px; padding: 16px; background: var(--warning-bg); border-color: var(--warning);">
+                                <p style="color: var(--warning); font-size: 13px;"><i class="fas fa-exclamation-triangle"></i> Make sure to remember your password. There's no password recovery.</p>
+                            </div>
+                        </div>
+
+                        <div class="save-bar">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save All Changes</button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>GitHub URL</label>
-                        <input type="url" name="github_url" value="<?= e($settings['github_url'] ?? '') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>LinkedIn URL</label>
-                        <input type="url" name="linkedin_url" value="<?= e($settings['linkedin_url'] ?? '') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Instagram URL</label>
-                        <input type="url" name="instagram_url" value="<?= e($settings['instagram_url'] ?? '') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Facebook URL</label>
-                        <input type="url" name="facebook_url" value="<?= e($settings['facebook_url'] ?? '') ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>WhatsApp Number</label>
-                        <input type="text" name="whatsapp" value="<?= e($settings['whatsapp'] ?? '') ?>"
-                            placeholder="e.g., 9806176120">
-                        <div class="form-hint">Just the number, without country code prefix</div>
-                    </div>
                 </div>
-
-                <!-- Password -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Change Password</h3>
-                    </div>
-                    <div class="form-group">
-                        <label>New Password</label>
-                        <input type="password" name="new_password">
-                        <div class="form-hint">Leave blank to keep current password</div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Save Changes
-                </button>
             </form>
         </main>
     </div>
 
-    <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">
-        <i class="fas fa-bars"></i>
-    </button>
+    <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
 
     <script>
-        // Photo upload area setup
-        const photoArea = document.getElementById('photoUploadArea');
+        // Tab navigation
+        document.querySelectorAll('.settings-nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                
+                document.querySelectorAll('.settings-nav-item').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.querySelector(`[data-section="${tab}"]`).classList.add('active');
+            });
+        });
+
+        // Photo upload
         const photoInput = document.getElementById('photo_file');
-        const photoPlaceholder = document.getElementById('photoPlaceholder');
-        const photoPreview = document.getElementById('photoPreview');
-        const photoPreviewImg = document.getElementById('photoPreviewImg');
-        const photoUrlInput = document.getElementById('photo_url');
-
-        photoArea.addEventListener('click', (e) => {
-            if (!e.target.closest('.remove-image')) {
-                photoInput.click();
-            }
-        });
-
-        photoArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            photoArea.classList.add('dragover');
-        });
-
-        photoArea.addEventListener('dragleave', () => {
-            photoArea.classList.remove('dragover');
-        });
-
-        photoArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            photoArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length) {
-                handlePhotoFile(e.dataTransfer.files[0]);
-            }
-        });
+        const photoPreview = document.getElementById('photoPreviewImg');
+        const photoUrl = document.getElementById('photo_url');
 
         photoInput.addEventListener('change', () => {
             if (photoInput.files.length) {
-                handlePhotoFile(photoInput.files[0]);
+                uploadPhoto(photoInput.files[0]);
             }
         });
 
-        // Clipboard paste support
-        document.addEventListener('paste', (e) => {
-            const items = e.clipboardData?.items;
-            if (!items) return;
-
-            for (const item of items) {
-                if (item.type.startsWith('image/')) {
-                    e.preventDefault();
-                    const file = item.getAsFile();
-                    if (file) {
-                        handlePhotoFile(file);
-                    }
-                    break;
-                }
-            }
-        });
-
-        function handlePhotoFile(file) {
+        function uploadPhoto(file) {
             const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-            const maxSize = 5 * 1024 * 1024;
-
             if (!allowedTypes.includes(file.type)) {
-                alert('Invalid file type. Please upload JPG, PNG, GIF, or WebP.');
+                alert('Invalid file type. Use JPG, PNG, GIF, or WebP.');
                 return;
             }
-
-            if (file.size > maxSize) {
-                alert('File too large. Maximum size is 5MB.');
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File too large. Max 5MB.');
                 return;
             }
-
-            photoPlaceholder.innerHTML = '<div class="upload-loading active"><div class="spinner"></div><span>Uploading...</span></div>';
 
             const formData = new FormData();
             formData.append('image', file);
+
+            photoPreview.style.opacity = '0.5';
 
             fetch('upload.php', {
                 method: 'POST',
                 body: formData
             })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        photoUrlInput.value = data.path;
-                        photoPreviewImg.src = '../' + data.path;
-                        photoPlaceholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click, drag, or paste image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
-                        photoPlaceholder.style.display = 'none';
-                        photoPreview.style.display = 'block';
-                    } else {
-                        alert(data.error || 'Upload failed');
-                        resetPlaceholder();
-                    }
-                })
-                .catch(err => {
-                    alert('Upload failed. Please try again.');
-                    resetPlaceholder();
-                });
-        }
-
-        function resetPlaceholder() {
-            photoPlaceholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click, drag, or paste image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
-        }
-
-        function removePhoto() {
-            photoUrlInput.value = '';
-            photoPlaceholder.style.display = 'flex';
-            photoPreview.style.display = 'none';
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    photoUrl.value = data.path;
+                    photoPreview.src = '../' + data.path;
+                } else {
+                    alert(data.error || 'Upload failed');
+                }
+                photoPreview.style.opacity = '1';
+            })
+            .catch(() => {
+                alert('Upload failed');
+                photoPreview.style.opacity = '1';
+            });
         }
     </script>
 </body>
-
 </html>
