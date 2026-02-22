@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5" />
+  <title>Zenith Kandel — Portfolio</title>
+  <meta name="description"
+    content="Zenith Kandel — self‑taught frontend developer & designer. Ultra‑minimal, retro‑styled, black & white portfolio.">
+  <meta name="color-scheme" content="dark">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/fontawesome.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/sharp-solid.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/sharp-regular.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/brands.css">
+  <style>
+    /* ====== RESET ====== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: #000;
+      /* pure black */
+      color: #fff;
+      /* pure white */
+      font: 16px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      /* retro feel */
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      letter-spacing: 0.2px;
+      scroll-behavior: smooth;
+      /* smooth scrolling */
+      cursor: none;
+      /* hide default cursor for custom */
+    }
+
+    :root {
+      --maxw: 1080px;
+      --grid-gap: 24px;
+      --muted: #cfcfcf;
+      /* neutral gray (still monochrome) */
+      --dim: #7a7a7a;
+      --line: #1a1a1a;
+      --accent: #fff;
+      /* we will use opacity for effects, no other colors */
+    }
+
+    /* ====== GLOBAL LAYOUT ====== */
+    .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      padding: 96px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section:first-of-type {
+      border-top: none;
+    }
+
+    .grid {
+      display: grid;
+      gap: var(--grid-gap);
+    }
+
+    /* ====== TOP BAR (super minimal) ====== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(2px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .logo {
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Desktop Navigation */
+    nav {
+      display: flex;
+      gap: 16px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 0 10px;
+      opacity: 0.8;
+      border-bottom: 2px solid transparent;
+    }
+
+    nav a:hover {
+      opacity: 1;
+      border-bottom: 2px solid #fff;
+    }
+
+    /* Mobile Navigation */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 100;
+      padding: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mobile-menu.active {
+      display: block;
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 12px 0;
+      color: white;
+      text-decoration: none;
+      opacity: 0.8;
+    }
+
+    .mobile-menu a:hover {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .hero {
+        min-height: 90vh;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .about-content {
+        grid-template-columns: 1fr !important;
+      }
+
+      .contact .grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    /* ====== HERO ====== */
+    .hero {
+      min-height: calc(100vh - 56px);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .hero-inner {
+      width: 100%;
+    }
+
+    .tag {
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 12px;
+    }
+
+    .title {
+      font-size: clamp(32px, 6vw, 80px);
+      line-height: 1.05;
+      margin: 12px 0 12px;
+      font-weight: 900;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: clamp(14px, 2.2vw, 18px);
+      max-width: 68ch;
+    }
+
+    @media (max-width: 480px) {
+      .section {
+        padding: 60px 0;
+      }
+
+      .title {
+        font-size: 32px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+      }
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      gap: 18px;
+      align-items: center;
+      margin-top: 28px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid #fff;
+      background: transparent;
+      color: #fff;
+      padding: 10px 16px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: transform .2s ease, background .2s ease, color .2s ease;
+      border-radius: 0;
+      /* no rounded */
+    }
+
+    .btn:hover,
+    .btn:active {
+      background: #fff;
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    @media (hover: none) {
+      .btn:hover {
+        background: transparent;
+        color: #fff;
+        transform: none;
+      }
+
+      .btn:active {
+        background: #fff;
+        color: #000;
+        transform: translateY(-2px);
+      }
+    }
+
+    /* ====== ABOUT ====== */
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .about-text {
+      color: var(--muted);
+    }
+
+    .about-text p {
+      max-width: 75ch;
+    }
+
+    .about-photo {
+      border: 1px solid var(--line);
+      aspect-ratio: 1;
+      background: #0a0a0a;
+      display: grid;
+      place-items: center;
+      color: var(--dim);
+      transition: transform .2s ease, border-color .2s ease;
+    }
+
+    .about-photo:hover {
+      transform: translateY(-2px);
+      border-color: #222;
+    }
+
+    /* ====== SKILLS (icon grid) ====== */
+    .skills {
+      --col: 5;
+    }
+
+    @media (max-width: 900px) {
+      .skills {
+        --col: 4;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .skills {
+        --col: 3;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .skills {
+        --col: 2;
+      }
+    }
+
+    .skill-grid {
+      grid-template-columns: repeat(var(--col), minmax(0, 1fr));
+    }
+
+    .skill {
+      border: 1px solid var(--line);
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background .2s ease, transform .2s ease;
+    }
+
+    .skill:hover {
+      background: #0a0a0a;
+      transform: translateY(-2px);
+    }
+
+    .skill i {
+      width: 22px;
+      height: 22px;
+      flex: none;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .skill span {
+      color: var(--muted);
+    }
+
+    /* ====== PROJECTS ====== */
+    .projects .cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 1024px) {
+      .projects .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .projects .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      padding: 20px;
+      display: grid;
+      gap: 12px;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      background: #0a0a0a;
+      border-color: #222;
+    }
+
+    .card .meta {
+      font-size: 12px;
+      color: var(--dim);
+      display: flex;
+      gap: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card h3 {
+      margin: 6px 0;
+      font-size: 20px;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    /* ====== CONTACT ====== */
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
+    @media (max-width: 768px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    .contact .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+      text-decoration: none;
+      color: #fff;
+      opacity: 0.9;
+    }
+
+    .link:hover {
+      opacity: 1;
+      background: #0a0a0a;
+      transform: translateY(-2px);
+    }
+
+    /* ====== FOOTER ====== */
+    footer {
+      border-top: 1px solid var(--line);
+      color: var(--dim);
+    }
+
+    footer .wrap {
+      padding: 28px 20px;
+    }
+
+    /* ====== RETRO SCANLINES OVERLAY (very subtle) ====== */
+    .scanlines::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.06;
+      background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0px, rgba(255, 255, 255, 0.25) 1px, transparent 2px, transparent 3px);
+      mix-blend-mode: overlay;
+      animation: flicker 4s linear infinite both;
+    }
+
+    @keyframes flicker {
+
+      0%,
+      100% {
+        opacity: 0.05;
+      }
+
+      50% {
+        opacity: 0.08;
+      }
+    }
+
+    /* ====== ANIMATE ON SCROLL (utility classes) ====== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ====== CUSTOM CURSOR ====== */
+    .cursor {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #fff;
+      pointer-events: none;
+      z-index: 100;
+      transform: translate(-50%, -50%);
+      transition: width .15s ease, height .15s ease, background .08s ease;
+    }
+
+    .cursor.dot {
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border: none;
+    }
+
+    a:hover~.cursor,
+    .btn:hover~.cursor,
+    .card:hover~.cursor,
+    .link:hover~.cursor {
+      width: 28px;
+      height: 28px;
+    }
+
+    @media (pointer: coarse),
+    (prefers-reduced-motion: reduce) {
+      .cursor {
+        display: none;
+      }
+
+      body {
+        scroll-behavior: auto;
+      }
+
+      .reveal {
+        transition: none;
+      }
+    }
+
+    /* ====== PARTICLES ====== */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      background: #fff;
+      opacity: 0.5;
+      border-radius: 50%;
+    }
+
+    /* ====== UTIL ====== */
+    .muted {
+      color: var(--muted);
+    }
+
+    .hr {
+      height: 1px;
+      background: var(--line);
+      margin: 24px 0;
+    }
+
+    .kbd {
+      border: 1px solid var(--line);
+      padding: 2px 4px;
+      font-size: 12px;
+    }
+
+    /* ====== ICONS (stroke, monochrome, inline) ====== */
+    .ico {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      vertical-align: -3px;
+    }
+  </style>
+</head>
+
+<body class="scanlines">
+  <div id="particles"></div>
+  <header>
+    <div class="wrap bar">
+      <div class="logo">ZENITH</div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="mobile-menu-btn" aria-label="Menu">☰</button>
+      <div class="mobile-menu">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero section">
+      <div class="wrap hero-inner">
+        <div class="tag reveal">Self‑taught Frontend Developer • Kathmandu, Nepal</div>
+        <h1 class="title reveal" style="transition-delay:.06s">Hi, I’m Zenith Kandel.</h1>
+        <p class="subtitle reveal" style="transition-delay:.12s">I build clean, fast, and functional web experiences
+          with <span class="kbd">HTML</span> <span class="kbd">CSS</span> <span class="kbd">JavaScript</span>. I love
+          minimal UI, retro aesthetics, and shipping pragmatic solutions.
+        </p>
+        <div class="hero-cta reveal" style="transition-delay:.18s">
+          <a class="btn" href="#projects" aria-label="View projects">View Projects</a>
+          <a class="btn" href="#contact" aria-label="Contact Zenith">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section about">
+      <div class="wrap">
+        <h2 class="reveal">About</h2>
+        <div class="hr"></div>
+        <div class="about-content">
+          <div class="about-text">
+            <p class="reveal" style="transition-delay:.06s">I’m a Grade 11 student and a self‑taught web
+              developer/designer from Nepal. I enjoy frontend craft, quick prototyping, and turning ideas into simple
+              UIs. Currently exploring Node.js, PHP, MongoDB, and building portfolio projects while staying open to
+              internships and collaborations.</p>
+            <p class="reveal" style="transition-delay:.12s">When not coding, I sketch interfaces, tweak
+              micro‑interactions, and learn by doing. I prefer minimal code, no frameworks when possible, and strong
+              fundamentals.</p>
+          </div>
+          <div class="about-photo reveal" style="transition-delay:.18s">
+            <img src="me.jpg" alt="Zenith Kandel"
+              style="width:100%; height:100%; max-width: 100%; max-height: 350px; object-fit:cover;">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="section skills">
+      <div class="wrap">
+        <h2 class="reveal">Skills</h2>
+        <div class="hr"></div>
+        <div class="grid skill-grid">
+          <!-- Each skill: vector icon (inline SVG) + label -->
+          <div class="skill reveal">
+            <i class="fa-sharp fa-solid fa-code"></i>
+            <span>HTML</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.02s">
+            <i class="fa-sharp fa-solid fa-paintbrush"></i>
+            <span>CSS</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.04s">
+            <i class="fa-brands fa-js"></i>
+            <span>JavaScript</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.06s">
+            <i class="fa-brands fa-node-js"></i>
+            <span>Node.js</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.08s">
+            <i class="fa-sharp fa-solid fa-server"></i>
+            <span>PHP</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.10s">
+            <i class="fa-sharp fa-solid fa-database"></i>
+            <span>MySQL</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.12s">
+            <i class="fa-sharp fa-solid fa-leaf"></i>
+            <span>MongoDB</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.14s">
+            <i class="fa-sharp fa-solid fa-pen-ruler"></i>
+            <span>UI/UX</span>
+          </div>
+          <div class="skill reveal" style="transition-delay:.16s">
+            <i class="fa-sharp fa-solid fa-mobile-screen"></i>
+            <span>Responsive Design</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section projects">
+      <div class="wrap">
+        <h2 class="reveal">Projects</h2>
+        <div class="hr"></div>
+        <div class="grid cards">
+          <a class="card reveal" href="https://github.com/zenithkandel/STREAMFLIX" target="_blank" rel="noopener">
+            <div class="meta"><span>PHP</span><span>Full‑stack</span></div>
+            <h3>STREAMFLIX</h3>
+            <p>Movie streaming platform with chunked uploads, subtitles, and HLS processing.</p>
+          </a>
+          <a class="card reveal" style="transition-delay:.04s" href="https://github.com/zenithkandel" target="_blank"
+            rel="noopener">
+            <div class="meta"><span>Showcase</span><span>Frontend</span></div>
+            <h3>Kushma Art Project</h3>
+            <p>Modern bilingual art site with gallery, events, and donation flows.</p>
+          </a>
+          <a class="card reveal" style="transition-delay:.08s" href="https://github.com/zenithkandel" target="_blank"
+            rel="noopener">
+            <div class="meta"><span>Landing</span><span>SPA</span></div>
+            <h3>Rageni Agro Resort</h3>
+            <p>Single‑page resort website with parallax and theme switch experiments.</p>
+          </a>
+          <a class="card reveal" style="transition-delay:.12s"
+            href="https://github.com/zenithkandel/Javascript-Calculator" target="_blank" rel="noopener">
+            <div class="meta"><span>HTML</span><span>JS</span></div>
+            <h3>JavaScript Calculator</h3>
+            <p>Compact, dependency‑free calculator built with just HTML/CSS/JS.</p>
+          </a>
+          <a class="card reveal" style="transition-delay:.16s"
+            href="https://github.com/zenithkandel/Random-Color-Generator" target="_blank" rel="noopener">
+            <div class="meta"><span>Utility</span><span>JS</span></div>
+            <h3>Random Color Generator</h3>
+            <p>Generates random colors for design/dev workflows—simple and handy.</p>
+          </a>
+          <a class="card reveal" style="transition-delay:.20s" href="https://github.com/zenithkandel/Css-Login"
+            target="_blank" rel="noopener">
+            <div class="meta"><span>CSS</span><span>UI</span></div>
+            <h3>CSS Login</h3>
+            <p>Minimal login interface with basic client‑side validation.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section contact">
+      <div class="wrap">
+        <h2 class="reveal">Contact</h2>
+        <div class="hr"></div>
+        <p class="muted reveal">Open to internships, collaborations, and freelance work. Let's build something clean and
+          useful.</p>
+
+        <div class="grid contact-grid">
+          <!-- Contact Form -->
+          <div class="reveal">
+            <form id="contact-form" class="grid" style="gap: 16px;">
+              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                  <label for="name" class="muted"
+                    style="display: block; margin-bottom: 8px; font-size: 14px;">Name</label>
+                  <input type="text" id="name" name="name" required
+                    style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;">
+                </div>
+                <div>
+                  <label for="email" class="muted"
+                    style="display: block; margin-bottom: 8px; font-size: 14px;">Email</label>
+                  <input type="email" id="email" name="email" required
+                    style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;">
+                </div>
+              </div>
+              <div>
+                <label for="subject" class="muted"
+                  style="display: block; margin-bottom: 8px; font-size: 14px;">Subject</label>
+                <input type="text" id="subject" name="subject" required
+                  style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;">
+              </div>
+              <div>
+                <label for="message" class="muted"
+                  style="display: block; margin-bottom: 8px; font-size: 14px;">Message</label>
+                <textarea id="message" name="message" rows="5" required
+                  style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;"></textarea>
+              </div>
+              <button type="submit" class="btn" style="margin-top: 12px; width: fit-content;">Send Message</button>
+            </form>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="reveal" style="transition-delay:.1s">
+            <div class="links" style="display: grid; gap: 16px;">
+              <a class="link" href="mailto:zenithkandel0@gmail.com" aria-label="Email">
+                <i class="fa-sharp fa-solid fa-envelope"></i>
+                zenithkandel0@gmail.com
+              </a>
+              <a class="link" href="tel:9806176120" aria-label="Phone">
+                <i class="fa-sharp fa-solid fa-phone"></i>
+                +977 9806176120
+              </a>
+              <a class="link" href="https://github.com/zenithkandel" target="_blank" rel="noopener" aria-label="GitHub">
+                <i class="fa-brands fa-github"></i>
+                github.com/zenithkandel
+              </a>
+              <a class="link" href="https://www.linkedin.com/in/zenithkandel" target="_blank" rel="noopener"
+                aria-label="LinkedIn">
+                <i class="fa-brands fa-linkedin"></i>
+                linkedin.com/in/zenithkandel
+              </a>
+              <a class="link" href="https://instagram.com/kandel.zenith" target="_blank" rel="noopener"
+                aria-label="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+                instagram.com/kandel.zenith
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="y"></span> Zenith Kandel</span>
+    </div>
+  </footer>
+
+  <!-- ====== JS (Vanilla only) ====== -->
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Animate on scroll (IntersectionObserver)
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -5% 0px', threshold: 0.05 });
+    revealEls.forEach(el => io.observe(el));
+
+    // Custom cursor
+    const cursor = document.createElement('div');
+    cursor.className = 'cursor';
+    document.body.appendChild(cursor);
+    let raf; let cx = 0, cy = 0, tx = 0, ty = 0;
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const move = (x, y) => { tx = x; ty = y; if (!raf) raf = requestAnimationFrame(loop); };
+    const loop = () => { cx = lerp(cx, tx, 0.2); cy = lerp(cy, ty, 0.2); cursor.style.transform = `translate(${cx}px, ${cy}px)`; raf = requestAnimationFrame(loop); };
+    window.addEventListener('mousemove', (e) => move(e.clientX, e.clientY));
+    window.addEventListener('mousedown', () => cursor.classList.add('dot'));
+    window.addEventListener('mouseup', () => cursor.classList.remove('dot'));
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+      mobileMenuBtn.textContent = mobileMenu.classList.contains('active') ? '✕' : '☰';
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        mobileMenuBtn.textContent = '☰';
+      });
+    });
+
+    // Contact form handling
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData);
+
+      // Here you would normally send the data to your backend
+      console.log('Form submitted:', data);
+
+      // Show success message
+      alert('Message sent successfully! I will get back to you soon.');
+      this.reset();
+    });
+
+    // Particle background animation
+    const particleCount = 30; // Reduced from 100
+    const particles = [];
+    const container = document.getElementById('particles');
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+
+      // Random initial position
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+
+      // Random size (1-2px)
+      const size = 1 + Math.random() * 1;
+
+      // Random speed (0.05-0.2)
+      const speed = 0.05 + Math.random() * 0.15;
+
+      // Random direction (0-360 degrees)
+      const angle = Math.random() * 360;
+
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.left = `${x}%`;
+      particle.style.top = `${y}%`;
+      particle.style.opacity = 0.2 + Math.random() * 0.2; // Reduced opacity
+
+      container.appendChild(particle);
+
+      particles.push({
+        element: particle,
+        x, y,
+        speed,
+        angle
+      });
+    }
+
+    function updateParticles() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      particles.forEach(p => {
+        // Update position based on angle and speed
+        p.x += Math.cos(p.angle * Math.PI / 180) * p.speed;
+        p.y += Math.sin(p.angle * Math.PI / 180) * p.speed;
+
+        // Wrap around edges
+        if (p.x > 100) p.x = 0;
+        if (p.x < 0) p.x = 100;
+        if (p.y > 100) p.y = 0;
+        if (p.y < 0) p.y = 100;
+
+        // Apply new position
+        p.element.style.left = `${p.x}%`;
+        p.element.style.top = `${p.y}%`;
+      });
+
+      requestAnimationFrame(updateParticles);
+    }
+
+    updateParticles();
+
+    // Smooth internal anchor focus (accessibility)
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if (el) { el.setAttribute('tabindex', '-1'); el.focus({ preventScroll: true }); setTimeout(() => el.removeAttribute('tabindex'), 600); }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
