@@ -397,7 +397,19 @@ section {
     align-items: center;
     cursor: pointer;
     position: relative;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
 }
+
+.project-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.project-item:nth-child(2) { transition-delay: 0.1s; }
+.project-item:nth-child(3) { transition-delay: 0.15s; }
+.project-item:nth-child(4) { transition-delay: 0.2s; }
 
 .project-item:first-child {
     border-top: 1px solid var(--border);
@@ -1071,11 +1083,7 @@ section {
 }
 
 /* === PROJECT HOVER ENHANCED === */
-.project-item {
-    transition: opacity 0.4s var(--ease);
-}
-
-.projects-list:hover .project-item:not(:hover) {
+.projects-list:hover .project-item.visible:not(:hover) {
     opacity: 0.4;
 }
 
