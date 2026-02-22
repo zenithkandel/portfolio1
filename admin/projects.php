@@ -5,6 +5,22 @@ requireLogin();
 $unreadCount = getUnreadMessagesCount($pdo);
 $projects = getProjects($pdo);
 
+// Handle AJAX reorder
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'reorder') {
+    header('Content-Type: application/json');
+    $order = json_decode($_POST['order'] ?? '[]', true);
+    if (is_array($order)) {
+        $stmt = $pdo->prepare("UPDATE projects SET sort_order = ? WHERE id = ?");
+        foreach ($order as $index => $id) {
+            $stmt->execute([$index, (int)$id]);
+        }
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false]);
+    }
+    exit;
+}
+
 // Handle actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
@@ -17,7 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tag2 = trim($_POST['tag2'] ?? '');
         $github_url = trim($_POST['github_url'] ?? '');
         $public_url = trim($_POST['public_url'] ?? '');
-        $sortOrder = (int) ($_POST['sort_order'] ?? 0);
+        
+        // Auto-assign sort order (add to end)
+        $stmt = $pdo->query("SELECT MAX(sort_order) as max_order FROM projects");
+        $maxOrder = $stmt->fetch()['max_order'] ?? 0;
+        $sortOrder = $maxOrder + 1;
 
         if ($title) {
             $stmt = $pdo->prepare("INSERT INTO projects (title, description, image, tag1, tag2, github_url, public_url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -35,11 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tag2 = trim($_POST['tag2'] ?? '');
         $github_url = trim($_POST['github_url'] ?? '');
         $public_url = trim($_POST['public_url'] ?? '');
-        $sortOrder = (int) ($_POST['sort_order'] ?? 0);
 
         if ($id && $title) {
-            $stmt = $pdo->prepare("UPDATE projects SET title = ?, description = ?, image = ?, tag1 = ?, tag2 = ?, github_url = ?, public_url = ?, sort_order = ? WHERE id = ?");
-            $stmt->execute([$title, $description, $image, $tag1, $tag2, $github_url, $public_url, $sortOrder, $id]);
+            $stmt = $pdo->prepare("UPDATE projects SET title = ?, description = ?, image = ?, tag1 = ?, tag2 = ?, github_url = ?, public_url = ? WHERE id = ?");
+            $stmt->execute([$title, $description, $image, $tag1, $tag2, $github_url, $public_url, $id]);
             setFlash('success', 'Project updated successfully!');
         }
     }
@@ -67,7 +86,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
-</head>
+    <style>
+        .projects-sortable { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .project-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; }
+        .project-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .project-card.sortable-ghost { opacity: 0.4; }
+        .project-card.sortable-drag { box-shadow: 0 12px 40px rgba(99,102,241,0.3); }
+        .project-card-image { aspect-ratio: 16/10; background: var(--bg); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .project-card-image img { width: 100%; height: 100%; object-fit: cover; }
+        .project-card-image i { font-size: 2rem; color: var(--text-dim); }
+        .project-card-body { padding: 16px; }
+        .project-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+        .project-card-title { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.3; }
+        .project-card-drag { cursor: grab; color: var(--text-dim); padding: 4px; opacity: 0.5; transition: opacity 0.2s; }
+        .project-card-drag:hover { opacity: 1; }
+        .project-card-drag:active { cursor: grabbing; }
+        .project-card-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .project-card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+        .project-card-tags .badge { font-size: 11px; padding: 4px 8px; }
+        .project-card-actions { display: flex; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border); }
+        .project-card-actions .btn { flex: 1; font-size: 12px; padding: 8px; }
+        .sort-hint { background: var(--accent-dim); color: var(--accent); padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+        .sort-hint i { font-size: 16px; }
+        .saving-indicator { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 1000; }
+        .saving-indicator.show { opacity: 1; transform: translateY(0); }
+    </style></head>
 
 <body>
     <div class="layout">
@@ -126,46 +169,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p>No projects yet. Click "Add Project" to create one.</p>
                 </div>
             <?php else: ?>
-                <div class="items-grid">
+                <div class="sort-hint">
+                    <i class="fas fa-grip-vertical"></i>
+                    Drag projects to reorder. Changes save automatically.
+                </div>
+                <div class="projects-sortable" id="projectsGrid">
                     <?php foreach ($projects as $project): ?>
-                        <div class="item-card">
-                            <?php if ($project['image']): ?>
-                                <img src="../<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>" class="project-preview">
-                            <?php else: ?>
-                                <div class="project-preview-placeholder">
+                        <div class="project-card" data-id="<?= $project['id'] ?>">
+                            <div class="project-card-image">
+                                <?php if ($project['image']): ?>
+                                    <img src="../<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>">
+                                <?php else: ?>
                                     <i class="fas fa-image"></i>
-                                </div>
-                            <?php endif; ?>
-
-                            <h4><?= e($project['title']) ?></h4>
-                            <p><?= e($project['description']) ?></p>
-
-                            <div class="item-meta">
-                                <?php if ($project['tag1']): ?>
-                                    <span class="badge"><?= e($project['tag1']) ?></span>
-                                <?php endif; ?>
-                                <?php if ($project['tag2']): ?>
-                                    <span class="badge"><?= e($project['tag2']) ?></span>
                                 <?php endif; ?>
                             </div>
-
-                            <div class="item-actions">
-                                <button class="btn btn-secondary btn-sm"
-                                    onclick="openEditModal(<?= htmlspecialchars(json_encode($project), ENT_QUOTES, 'UTF-8') ?>)">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <form method="POST" style="display: inline;" onsubmit="return confirm('Delete this project?')">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="id" value="<?= $project['id'] ?>">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i> Delete
+                            <div class="project-card-body">
+                                <div class="project-card-header">
+                                    <span class="project-card-title"><?= e($project['title']) ?></span>
+                                    <span class="project-card-drag" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
+                                </div>
+                                <?php if ($project['description']): ?>
+                                    <p class="project-card-desc"><?= e($project['description']) ?></p>
+                                <?php endif; ?>
+                                <div class="project-card-tags">
+                                    <?php if ($project['tag1']): ?>
+                                        <span class="badge"><?= e($project['tag1']) ?></span>
+                                    <?php endif; ?>
+                                    <?php if ($project['tag2']): ?>
+                                        <span class="badge"><?= e($project['tag2']) ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="project-card-actions">
+                                    <button class="btn btn-secondary btn-sm"
+                                        onclick="openEditModal(<?= htmlspecialchars(json_encode($project), ENT_QUOTES, 'UTF-8') ?>)">
+                                        <i class="fas fa-edit"></i> Edit
                                     </button>
-                                </form>
+                                    <form method="POST" style="flex:1;display:flex;" onsubmit="return confirm('Delete this project?')">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="<?= $project['id'] ?>">
+                                        <button type="submit" class="btn btn-danger btn-sm" style="width:100%">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
+
+            <div class="saving-indicator" id="savingIndicator">
+                <i class="fas fa-check"></i> Order saved!
+            </div>
         </main>
     </div>
 
@@ -219,10 +274,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label>Live/Public URL</label>
                     <input type="url" name="public_url" placeholder="https://example.com/...">
-                </div>
-                <div class="form-group">
-                    <label>Sort Order</label>
-                    <input type="number" name="sort_order" value="0" min="0">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('addModal')">Cancel</button>
@@ -284,10 +335,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label>Live/Public URL</label>
                     <input type="url" name="public_url" id="edit_public_url">
                 </div>
-                <div class="form-group">
-                    <label>Sort Order</label>
-                    <input type="number" name="sort_order" id="edit_sort" min="0">
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -318,7 +365,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById('edit_tag2').value = project.tag2 || '';
             document.getElementById('edit_github_url').value = project.github_url || '';
             document.getElementById('edit_public_url').value = project.public_url || '';
-            document.getElementById('edit_sort').value = project.sort_order || 0;
 
             if (project.image) {
                 document.getElementById('editPlaceholder').style.display = 'none';
@@ -462,6 +508,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (e.target === modal) closeModal(modal.id);
             });
         });
+    </script>
+    
+    <!-- SortableJS for drag and drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        const grid = document.getElementById('projectsGrid');
+        if (grid) {
+            new Sortable(grid, {
+                animation: 200,
+                handle: '.project-card-drag',
+                ghostClass: 'sortable-ghost',
+                dragClass: 'sortable-drag',
+                onEnd: function() {
+                    const order = Array.from(grid.querySelectorAll('.project-card')).map(el => el.dataset.id);
+                    
+                    // Show saving indicator
+                    const indicator = document.getElementById('savingIndicator');
+                    indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                    indicator.classList.add('show');
+                    
+                    // Save order via AJAX
+                    fetch('projects.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'action=reorder&order=' + encodeURIComponent(JSON.stringify(order))
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        indicator.innerHTML = '<i class="fas fa-check"></i> Order saved!';
+                        setTimeout(() => indicator.classList.remove('show'), 2000);
+                    })
+                    .catch(() => {
+                        indicator.innerHTML = '<i class="fas fa-times"></i> Save failed';
+                        indicator.style.background = 'var(--error)';
+                        setTimeout(() => {
+                            indicator.classList.remove('show');
+                            indicator.style.background = '';
+                        }, 2000);
+                    });
+                }
+            });
+        }
     </script>
 </body>
 
