@@ -113,29 +113,29 @@ $location = $settings['contact_location'] ?? '';
 
     <div class="projects-list">
       <?php foreach ($projects as $i => $project):
-        $tags = array_map('trim', explode(',', $project['technologies'] ?? ''));
+        $tags = array_filter([$project['tag1'] ?? '', $project['tag2'] ?? '']);
         ?>
         <article class="project-item">
           <div class="project-info">
             <span class="project-number"><?= str_pad($i + 1, 2, '0', STR_PAD_LEFT) ?></span>
             <h2 class="project-title"><?= e($project['title']) ?></h2>
             <div class="project-tags">
-              <?php foreach (array_slice($tags, 0, 3) as $tag): ?>
+              <?php foreach ($tags as $tag): ?>
                 <span class="project-tag"><?= e($tag) ?></span>
               <?php endforeach; ?>
             </div>
           </div>
 
           <div class="project-image">
-            <?php if ($project['image']): ?>
+            <?php if (!empty($project['image'])): ?>
               <img src="<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>">
             <?php else: ?>
               <img src="https://via.placeholder.com/800x500/141414/333?text=<?= urlencode($project['title']) ?>" alt="">
             <?php endif; ?>
           </div>
 
-          <?php if ($project['link']): ?>
-            <a href="<?= e($project['link']) ?>" target="_blank" class="project-link"></a>
+          <?php if (!empty($project['url'])): ?>
+            <a href="<?= e($project['url']) ?>" target="_blank" class="project-link"></a>
           <?php endif; ?>
 
           <span class="project-arrow">→</span>
