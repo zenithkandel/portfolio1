@@ -140,14 +140,6 @@ function initReveal() {
                         tag.style.transitionDelay = `${i * 0.05}s`;
                     });
                 }
-
-                // Add parallax-like effect to sections
-                if (entry.target.classList.contains('about-section')) {
-                    const img = entry.target.querySelector('.about-image');
-                    if (img) {
-                        img.style.animation = 'imageReveal 1.2s var(--ease) forwards';
-                    }
-                }
             }
         });
     }, {
@@ -156,24 +148,6 @@ function initReveal() {
     });
 
     reveals.forEach(el => observer.observe(el));
-
-    // Add smooth parallax on scroll
-    initParallax();
-}
-
-// Subtle parallax effect
-function initParallax() {
-    const parallaxElements = document.querySelectorAll('.hero-title, .about-image');
-
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-
-        parallaxElements.forEach(el => {
-            const speed = el.classList.contains('hero-title') ? 0.3 : 0.1;
-            const yPos = -(scrolled * speed);
-            el.style.transform = `translateY(${yPos}px)`;
-        });
-    }, { passive: true });
 }
 
 // Mobile navigation
