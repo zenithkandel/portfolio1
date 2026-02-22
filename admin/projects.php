@@ -421,19 +421,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Check if we're in a modal that has an upload area
             const addModal = document.getElementById('addModal');
             const editModal = document.getElementById('editModal');
-            
+
             let prefix = null;
             if (addModal && addModal.classList.contains('active')) {
                 prefix = 'add';
             } else if (editModal && editModal.classList.contains('active')) {
                 prefix = 'edit';
             }
-            
+
             if (!prefix) return;
-            
+
             const items = e.clipboardData?.items;
             if (!items) return;
-            
+
             for (const item of items) {
                 if (item.type.startsWith('image/')) {
                     e.preventDefault();

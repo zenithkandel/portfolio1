@@ -186,8 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="upload-preview" id="photoPreview"
                                 style="<?= $currentPhoto ? 'display:block' : 'display:none' ?>">
                                 <img id="photoPreviewImg" src="../<?= e($currentPhoto) ?>" alt="Preview">
-                                <button type="button" class="remove-image"
-                                    onclick="removePhoto()">&times;</button>
+                                <button type="button" class="remove-image" onclick="removePhoto()">&times;</button>
                             </div>
                         </div>
                     </div>
@@ -330,9 +329,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             formData.append('image', file);
 
             fetch('upload.php', {
-                    method: 'POST',
-                    body: formData
-                })
+                method: 'POST',
+                body: formData
+            })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
