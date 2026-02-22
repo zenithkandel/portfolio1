@@ -832,12 +832,7 @@ section {
     }
 
     .project-item {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .project-image {
-        order: -1;
+        flex: 0 0 min(350px, 85vw);
     }
 }
 
@@ -1483,23 +1478,11 @@ body:not(.loaded) {
 }
 
 .project-item:hover {
-    transform: translateY(-8px);
+    transform: scale(1.02);
 }
 
 .project-item::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--text-dim), transparent);
-    transform: scaleX(0);
-    transition: transform 0.5s var(--ease);
-}
-
-.project-item:hover::after {
-    transform: scaleX(1);
+    display: none;
 }
 
 /* Skill tags hover animation */
