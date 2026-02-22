@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     if (is_array($order)) {
         $stmt = $pdo->prepare("UPDATE skills SET sort_order = ? WHERE id = ?");
         foreach ($order as $index => $id) {
-            $stmt->execute([$index, (int)$id]);
+            $stmt->execute([$index, (int) $id]);
         }
         echo json_encode(['success' => true]);
     } else {
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 // Handle AJAX delete
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajax_delete') {
     header('Content-Type: application/json');
-    $id = (int)($_POST['id'] ?? 0);
+    $id = (int) ($_POST['id'] ?? 0);
     if ($id) {
         $pdo->prepare("DELETE FROM skills WHERE id = ?")->execute([$id]);
         echo json_encode(['success' => true]);
