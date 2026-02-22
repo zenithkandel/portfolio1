@@ -195,7 +195,7 @@ $location = $settings['contact_location'] ?? '';
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="contact-section reveal">
+  <section id="contact" class="contact-section">
     <h2 class="contact-title">
       Let's work<br><em>together</em>
     </h2>
@@ -247,7 +247,7 @@ $location = $settings['contact_location'] ?? '';
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
+  <footer class="footer reveal">
     <span>© <?= date('Y') ?> <?= e($name) ?></span>
 
     <div class="footer-links">

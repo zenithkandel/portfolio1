@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initLoader() {
     const loader = document.querySelector('.loader');
     if (!loader) return;
-    
+
     // Wait for everything to load
     window.addEventListener('load', () => {
         setTimeout(() => {
@@ -23,7 +23,7 @@ function initLoader() {
             document.body.classList.add('loaded');
         }, 2000);
     });
-    
+
     // Fallback
     setTimeout(() => {
         loader.classList.add('hidden');
@@ -35,18 +35,18 @@ function initLoader() {
 function initHeader() {
     const header = document.querySelector('.header');
     if (!header) return;
-    
+
     let lastScroll = 0;
-    
+
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
-        
+
         if (currentScroll > 100) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
         }
-        
+
         lastScroll = currentScroll;
     });
 }
@@ -93,7 +93,7 @@ function initReveal() {
                 entry.target.classList.add('visible');
             }
         });
-    }, { 
+    }, {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     });

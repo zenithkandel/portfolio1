@@ -850,14 +850,37 @@ section {
     transform: translateY(100%);
 }
 
-.loader-text span:nth-child(1) { animation-delay: 0.1s; }
-.loader-text span:nth-child(2) { animation-delay: 0.15s; }
-.loader-text span:nth-child(3) { animation-delay: 0.2s; }
-.loader-text span:nth-child(4) { animation-delay: 0.25s; }
-.loader-text span:nth-child(5) { animation-delay: 0.3s; }
-.loader-text span:nth-child(6) { animation-delay: 0.35s; }
-.loader-text span:nth-child(7) { animation-delay: 0.4s; }
-.loader-text span:nth-child(8) { animation-delay: 0.45s; }
+.loader-text span:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.loader-text span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.loader-text span:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.loader-text span:nth-child(4) {
+    animation-delay: 0.25s;
+}
+
+.loader-text span:nth-child(5) {
+    animation-delay: 0.3s;
+}
+
+.loader-text span:nth-child(6) {
+    animation-delay: 0.35s;
+}
+
+.loader-text span:nth-child(7) {
+    animation-delay: 0.4s;
+}
+
+.loader-text span:nth-child(8) {
+    animation-delay: 0.45s;
+}
 
 @keyframes loaderReveal {
     to {
@@ -886,7 +909,9 @@ section {
 }
 
 @keyframes loaderProgress {
-    to { width: 100%; }
+    to {
+        width: 100%;
+    }
 }
 
 /* === HEADER ANIMATIONS === */
@@ -896,7 +921,9 @@ section {
 }
 
 @keyframes headerSlide {
-    to { transform: translateY(0); }
+    to {
+        transform: translateY(0);
+    }
 }
 
 .header.scrolled {
@@ -912,9 +939,17 @@ section {
     animation: navFade 0.5s var(--ease) forwards;
 }
 
-.nav-menu li:nth-child(1) { animation-delay: 2.1s; }
-.nav-menu li:nth-child(2) { animation-delay: 2.2s; }
-.nav-menu li:nth-child(3) { animation-delay: 2.3s; }
+.nav-menu li:nth-child(1) {
+    animation-delay: 2.1s;
+}
+
+.nav-menu li:nth-child(2) {
+    animation-delay: 2.2s;
+}
+
+.nav-menu li:nth-child(3) {
+    animation-delay: 2.3s;
+}
 
 @keyframes navFade {
     to {
@@ -978,11 +1013,25 @@ section {
 }
 
 /* Stagger delays */
-.stagger-1 { transition-delay: 0.1s; }
-.stagger-2 { transition-delay: 0.2s; }
-.stagger-3 { transition-delay: 0.3s; }
-.stagger-4 { transition-delay: 0.4s; }
-.stagger-5 { transition-delay: 0.5s; }
+.stagger-1 {
+    transition-delay: 0.1s;
+}
+
+.stagger-2 {
+    transition-delay: 0.2s;
+}
+
+.stagger-3 {
+    transition-delay: 0.3s;
+}
+
+.stagger-4 {
+    transition-delay: 0.4s;
+}
+
+.stagger-5 {
+    transition-delay: 0.5s;
+}
 
 /* === HERO ENTRANCE === */
 .hero-intro {
@@ -997,9 +1046,17 @@ section {
     animation: revealWord 1s var(--ease) forwards;
 }
 
-.hero-title .line:nth-child(1) .word { animation-delay: 2.3s; }
-.hero-title .line:nth-child(2) .word { animation-delay: 2.45s; }
-.hero-title .line:nth-child(3) .word { animation-delay: 2.6s; }
+.hero-title .line:nth-child(1) .word {
+    animation-delay: 2.3s;
+}
+
+.hero-title .line:nth-child(2) .word {
+    animation-delay: 2.45s;
+}
+
+.hero-title .line:nth-child(3) .word {
+    animation-delay: 2.6s;
+}
 
 .hero-bottom {
     opacity: 0;
@@ -1034,16 +1091,45 @@ section {
     transform: translateY(0);
 }
 
-.skills-grid.visible .skill-tag:nth-child(1) { transition-delay: 0.05s; }
-.skills-grid.visible .skill-tag:nth-child(2) { transition-delay: 0.1s; }
-.skills-grid.visible .skill-tag:nth-child(3) { transition-delay: 0.15s; }
-.skills-grid.visible .skill-tag:nth-child(4) { transition-delay: 0.2s; }
-.skills-grid.visible .skill-tag:nth-child(5) { transition-delay: 0.25s; }
-.skills-grid.visible .skill-tag:nth-child(6) { transition-delay: 0.3s; }
-.skills-grid.visible .skill-tag:nth-child(7) { transition-delay: 0.35s; }
-.skills-grid.visible .skill-tag:nth-child(8) { transition-delay: 0.4s; }
-.skills-grid.visible .skill-tag:nth-child(9) { transition-delay: 0.45s; }
-.skills-grid.visible .skill-tag:nth-child(10) { transition-delay: 0.5s; }
+.skills-grid.visible .skill-tag:nth-child(1) {
+    transition-delay: 0.05s;
+}
+
+.skills-grid.visible .skill-tag:nth-child(2) {
+    transition-delay: 0.1s;
+}
+
+.skills-grid.visible .skill-tag:nth-child(3) {
+    transition-delay: 0.15s;
+}
+
+.skills-grid.visible .skill-tag:nth-child(4) {
+    transition-delay: 0.2s;
+}
+
+.skills-grid.visible .skill-tag:nth-child(5) {
+    transition-delay: 0.25s;
+}
+
+.skills-grid.visible .skill-tag:nth-child(6) {
+    transition-delay: 0.3s;
+}
+
+.skills-grid.visible .skill-tag:nth-child(7) {
+    transition-delay: 0.35s;
+}
+
+.skills-grid.visible .skill-tag:nth-child(8) {
+    transition-delay: 0.4s;
+}
+
+.skills-grid.visible .skill-tag:nth-child(9) {
+    transition-delay: 0.45s;
+}
+
+.skills-grid.visible .skill-tag:nth-child(10) {
+    transition-delay: 0.5s;
+}
 
 /* === SMOOTH SECTION TRANSITIONS === */
 .section-label {
