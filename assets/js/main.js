@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileNav();
     initTime();
     initHeader();
+    initContactForm();
 });
 
 // Loader
@@ -150,3 +151,50 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
+
+// Contact form AJAX
+function initContactForm() {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+
+    const successAlert = document.getElementById('formSuccess');
+    const errorAlert = document.getElementById('formError');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Hide alerts
+        successAlert.style.display = 'none';
+        errorAlert.style.display = 'none';
+
+        // Disable button
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('handle_message.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                successAlert.style.display = 'block';
+                form.reset();
+            } else {
+                errorAlert.textContent = data.errors ? data.errors.join(', ') : (data.error || 'Something went wrong');
+                errorAlert.style.display = 'block';
+            }
+        } catch (err) {
+            errorAlert.textContent = 'Failed to send message. Please try again.';
+            errorAlert.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message';
+        }
+    });
+}
