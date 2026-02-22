@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     if (is_array($order)) {
         $stmt = $pdo->prepare("UPDATE skills SET sort_order = ? WHERE id = ?");
         foreach ($order as $index => $id) {
-            $stmt->execute([$index, (int) $id]);
+            $stmt->execute([$index, (int)$id]);
         }
         echo json_encode(['success' => true]);
     } else {
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 // Handle AJAX delete
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajax_delete') {
     header('Content-Type: application/json');
-    $id = (int) ($_POST['id'] ?? 0);
+    $id = (int)($_POST['id'] ?? 0);
     if ($id) {
         $pdo->prepare("DELETE FROM skills WHERE id = ?")->execute([$id]);
         echo json_encode(['success' => true]);
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-// Handle actions (form fallbacks)
+// Handle form actions (fallback)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
@@ -60,31 +60,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $icon = trim($_POST['icon'] ?? 'fa-solid fa-code');
         $stmt = $pdo->query("SELECT MAX(sort_order) as max_order FROM skills");
         $maxOrder = $stmt->fetch()['max_order'] ?? 0;
-
         if ($name) {
             $stmt = $pdo->prepare("INSERT INTO skills (name, icon, sort_order) VALUES (?, ?, ?)");
             $stmt->execute([$name, $icon, $maxOrder + 1]);
-            setFlash('success', 'Skill added successfully!');
+            setFlash('success', 'Skill added!');
         }
     }
 
     if ($action === 'edit') {
-        $id = (int) ($_POST['id'] ?? 0);
+        $id = (int)($_POST['id'] ?? 0);
         $name = trim($_POST['name'] ?? '');
         $icon = trim($_POST['icon'] ?? 'fa-solid fa-code');
-
         if ($id && $name) {
             $stmt = $pdo->prepare("UPDATE skills SET name = ?, icon = ? WHERE id = ?");
             $stmt->execute([$name, $icon, $id]);
-            setFlash('success', 'Skill updated successfully!');
+            setFlash('success', 'Skill updated!');
         }
     }
 
     if ($action === 'delete') {
-        $id = (int) ($_POST['id'] ?? 0);
+        $id = (int)($_POST['id'] ?? 0);
         if ($id) {
             $pdo->prepare("DELETE FROM skills WHERE id = ?")->execute([$id]);
-            setFlash('success', 'Skill deleted successfully!');
+            setFlash('success', 'Skill deleted!');
         }
     }
 
@@ -94,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -109,195 +106,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .quick-add-input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text); font-size: 14px; }
         .quick-add-input:focus { outline: none; border-color: var(--accent); }
         .quick-add-input::placeholder { color: var(--text-dim); }
-        .quick-add-btn { padding: 12px 20px; }
-        
         .skills-list { display: flex; flex-direction: column; gap: 8px; }
         .skill-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; transition: all 0.2s; }
         .skill-item:hover { border-color: var(--border-light); }
         .skill-item.sortable-ghost { opacity: 0.4; }
         .skill-item.sortable-drag { box-shadow: 0 8px 24px rgba(99,102,241,0.3); }
-        
         .skill-drag { cursor: grab; color: var(--text-dim); padding: 4px; opacity: 0.5; transition: opacity 0.2s; }
         .skill-drag:hover { opacity: 1; }
         .skill-drag:active { cursor: grabbing; }
-        
         .skill-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--accent-dim); border-radius: 8px; color: var(--accent); font-size: 14px; }
         .skill-name { flex: 1; font-weight: 500; color: var(--text); }
         .skill-actions { display: flex; gap: 8px; }
         .skill-actions .btn { padding: 8px 12px; font-size: 12px; }
-        
         .sort-hint { background: var(--accent-dim); color: var(--accent); padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
-        .sort-hint i { font-size: 16px; }
-        
         .empty-skills { text-align: center; padding: 60px 20px; color: var(--text-muted); }
-        .empty-skills i { font-size: 3rem; margin-bottom: 16px; opacity: 0.3; }
-        
+        .empty-skills i { font-size: 3rem; margin-bottom: 16px; opacity: 0.3; display: block; }
         .icon-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; }
         .icon-option { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
         .icon-option:hover, .icon-option.selected { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-        
         .saving-indicator { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 1000; }
         .saving-indicator.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
-
 <body>
     <div class="layout">
-        <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="sidebar-logo">
-                <i class="fas fa-terminal"></i>
-                Portfolio
-            </div>
-
+            <div class="sidebar-logo"><i class="fas fa-terminal"></i> Portfolio</div>
             <ul class="sidebar-nav">
                 <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="settings.php"><i class="fas fa-sliders"></i> Settings</a></li>
                 <li><a href="skills.php" class="active"><i class="fas fa-code"></i> Skills</a></li>
                 <li><a href="projects.php"><i class="fas fa-folder"></i> Projects</a></li>
-                <li>
-                    <a href="messages.php">
-                        <i class="fas fa-envelope"></i> Messages
-                        <?php if ($unreadCount > 0): ?>
-                            <span class="nav-badge">
-                                <?= $unreadCount ?>
-                            </span>
-                        <?php endif; ?>
-                    </a>
-                </li>
+                <li><a href="messages.php"><i class="fas fa-envelope"></i> Messages <?php if ($unreadCount > 0): ?><span class="nav-badge"><?= $unreadCount ?></span><?php endif; ?></a></li>
             </ul>
-
             <div class="sidebar-divider"></div>
-
             <ul class="sidebar-nav">
                 <li><a href="../index.php" target="_blank"><i class="fas fa-external-link-alt"></i> View Site</a></li>
                 <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <div class="page-header">
                 <div>
                     <h1>Skills</h1>
                     <p>Manage your technical skills and expertise</p>
                 </div>
-                <button class="btn btn-primary" onclick="openAddModal()">
-                    <i class="fas fa-plus"></i> Add Skill
-                </button>
             </div>
 
             <?php if ($flash = getFlash()): ?>
-                <div class="alert alert-<?= $flash['type'] ?>">
-                    <i class="fas fa-check-circle"></i>
-                    <?= e($flash['message']) ?>
-                </div>
+                <div class="alert alert-<?= $flash['type'] ?>"><i class="fas fa-check-circle"></i> <?= e($flash['message']) ?></div>
             <?php endif; ?>
 
-            <div class="card">
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 60px;">Icon</th>
-                                <th>Name</th>
-                                <th style="width: 100px;">Order</th>
-                                <th style="width: 150px;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($skills)): ?>
-                                <tr>
-                                    <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">
-                                        No skills yet. Click "Add Skill" to create one.
-                                    </td>
-                                </tr>
-                            <?php else: ?>
-                                <?php foreach ($skills as $skill): ?>
-                                    <tr>
-                                        <td class="icon-preview"><i class="<?= e($skill['icon']) ?>"></i></td>
-                                        <td>
-                                            <?= e($skill['name']) ?>
-                                        </td>
-                                        <td>
-                                            <?= $skill['sort_order'] ?>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-secondary btn-sm"
-                                                onclick="openEditModal(<?= $skill['id'] ?>, '<?= e($skill['name']) ?>', '<?= e($skill['icon']) ?>', <?= $skill['sort_order'] ?>)">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <form method="POST" style="display: inline;"
-                                                onsubmit="return confirm('Delete this skill?')">
-                                                <input type="hidden" name="action" value="delete">
-                                                <input type="hidden" name="id" value="<?= $skill['id'] ?>">
-                                                <button type="submit" class="btn btn-danger btn-sm">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+            <div class="quick-add">
+                <div class="quick-add-form">
+                    <input type="text" class="quick-add-input" id="quickAddInput" placeholder="Type a skill and press Enter (e.g., JavaScript, React, Python...)">
+                    <button class="btn btn-primary" onclick="quickAddSkill()"><i class="fas fa-plus"></i> Add</button>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h3>Common Icons</h3>
-                </div>
-                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;">Copy any of these icon
-                    classes:</p>
-                <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                    <code class="icon-code">fa-solid fa-code</code>
-                    <code class="icon-code">fa-solid fa-paintbrush</code>
-                    <code class="icon-code">fa-brands fa-js</code>
-                    <code class="icon-code">fa-brands fa-node-js</code>
-                    <code class="icon-code">fa-brands fa-react</code>
-                    <code class="icon-code">fa-brands fa-python</code>
-                    <code class="icon-code">fa-solid fa-database</code>
-                    <code class="icon-code">fa-solid fa-server</code>
-                    <code class="icon-code">fa-solid fa-mobile-screen</code>
-                    <code class="icon-code">fa-solid fa-pen-ruler</code>
-                </div>
-                <p style="color: var(--text-muted); font-size: 13px; margin-top: 12px;">Browse more at <a
-                        href="https://fontawesome.com/icons" target="_blank"
-                        style="color: var(--accent);">fontawesome.com/icons</a></p>
+            <?php if (!empty($skills)): ?>
+                <div class="sort-hint"><i class="fas fa-grip-vertical"></i> Drag skills to reorder. Click edit to change icons.</div>
+            <?php endif; ?>
+
+            <div class="skills-list" id="skillsList">
+                <?php if (empty($skills)): ?>
+                    <div class="empty-skills" id="emptyState">
+                        <i class="fas fa-code"></i>
+                        <p>No skills yet. Add your first skill above!</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($skills as $skill): ?>
+                        <div class="skill-item" data-id="<?= $skill['id'] ?>">
+                            <span class="skill-drag"><i class="fas fa-grip-vertical"></i></span>
+                            <span class="skill-icon"><i class="<?= e($skill['icon']) ?>"></i></span>
+                            <span class="skill-name"><?= e($skill['name']) ?></span>
+                            <div class="skill-actions">
+                                <button class="btn btn-secondary btn-sm" onclick="openEditModal(<?= $skill['id'] ?>, '<?= e(addslashes($skill['name'])) ?>', '<?= e($skill['icon']) ?>')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSkill(<?= $skill['id'] ?>, this)"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
+
+            <div class="saving-indicator" id="savingIndicator"><i class="fas fa-check"></i> Saved!</div>
         </main>
-    </div>
-
-    <!-- Add Modal -->
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add Skill</h3>
-                <button class="modal-close" onclick="closeModal('addModal')">&times;</button>
-            </div>
-            <form method="POST">
-                <input type="hidden" name="action" value="add">
-                <div class="form-group">
-                    <label>Skill Name</label>
-                    <input type="text" name="name" required placeholder="e.g., JavaScript">
-                </div>
-                <div class="form-group">
-                    <label>Icon Class</label>
-                    <input type="text" name="icon" value="fa-solid fa-code" placeholder="e.g., fa-brands fa-js">
-                    <div class="form-hint">FontAwesome class name</div>
-                </div>
-                <div class="form-group">
-                    <label>Sort Order</label>
-                    <input type="number" name="sort_order" value="0" min="0">
-                    <div class="form-hint">Lower numbers appear first</div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Skill</button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <!-- Edit Modal -->
@@ -315,12 +209,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" name="name" id="edit_name" required>
                 </div>
                 <div class="form-group">
-                    <label>Icon Class</label>
-                    <input type="text" name="icon" id="edit_icon">
-                </div>
-                <div class="form-group">
-                    <label>Sort Order</label>
-                    <input type="number" name="sort_order" id="edit_sort" min="0">
+                    <label>Icon</label>
+                    <input type="hidden" name="icon" id="edit_icon">
+                    <div class="icon-picker">
+                        <div class="icon-option" data-icon="fa-solid fa-code"><i class="fa-solid fa-code"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-js"><i class="fa-brands fa-js"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-react"><i class="fa-brands fa-react"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-node-js"><i class="fa-brands fa-node-js"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-python"><i class="fa-brands fa-python"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-php"><i class="fa-brands fa-php"></i></div>
+                        <div class="icon-option" data-icon="fa-solid fa-database"><i class="fa-solid fa-database"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-git-alt"><i class="fa-brands fa-git-alt"></i></div>
+                        <div class="icon-option" data-icon="fa-solid fa-paintbrush"><i class="fa-solid fa-paintbrush"></i></div>
+                        <div class="icon-option" data-icon="fa-solid fa-mobile-screen"><i class="fa-solid fa-mobile-screen"></i></div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
@@ -330,20 +232,104 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">
-        <i class="fas fa-bars"></i>
-    </button>
+    <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
 
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
-        function openAddModal() {
-            document.getElementById('addModal').classList.add('active');
+        // Quick add skill
+        const quickInput = document.getElementById('quickAddInput');
+        quickInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                quickAddSkill();
+            }
+        });
+
+        function quickAddSkill() {
+            const name = quickInput.value.trim();
+            if (!name) return;
+
+            const indicator = document.getElementById('savingIndicator');
+            indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            indicator.classList.add('show');
+
+            fetch('skills.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'action=quick_add&name=' + encodeURIComponent(name)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove empty state if exists
+                    const emptyState = document.getElementById('emptyState');
+                    if (emptyState) emptyState.remove();
+
+                    // Add new skill to list
+                    const list = document.getElementById('skillsList');
+                    const newItem = document.createElement('div');
+                    newItem.className = 'skill-item';
+                    newItem.dataset.id = data.id;
+                    newItem.innerHTML = `
+                        <span class="skill-drag"><i class="fas fa-grip-vertical"></i></span>
+                        <span class="skill-icon"><i class="fa-solid fa-code"></i></span>
+                        <span class="skill-name">${escapeHtml(data.name)}</span>
+                        <div class="skill-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="openEditModal(${data.id}, '${escapeHtml(data.name)}', 'fa-solid fa-code')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteSkill(${data.id}, this)"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    list.appendChild(newItem);
+
+                    quickInput.value = '';
+                    indicator.innerHTML = '<i class="fas fa-check"></i> Added!';
+                    setTimeout(() => indicator.classList.remove('show'), 2000);
+                }
+            })
+            .catch(() => {
+                indicator.innerHTML = '<i class="fas fa-times"></i> Failed';
+                indicator.style.background = 'var(--error)';
+                setTimeout(() => { indicator.classList.remove('show'); indicator.style.background = ''; }, 2000);
+            });
         }
 
-        function openEditModal(id, name, icon, sort) {
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Delete skill
+        function deleteSkill(id, btn) {
+            if (!confirm('Delete this skill?')) return;
+
+            const item = btn.closest('.skill-item');
+            item.style.opacity = '0.5';
+
+            fetch('skills.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'action=ajax_delete&id=' + id
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    item.remove();
+                    showIndicator('<i class="fas fa-check"></i> Deleted!');
+                }
+            });
+        }
+
+        // Edit modal
+        function openEditModal(id, name, icon) {
             document.getElementById('edit_id').value = id;
             document.getElementById('edit_name').value = name;
             document.getElementById('edit_icon').value = icon;
-            document.getElementById('edit_sort').value = sort;
+
+            document.querySelectorAll('.icon-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.icon === icon);
+            });
+
             document.getElementById('editModal').classList.add('active');
         }
 
@@ -351,12 +337,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById(id).classList.remove('active');
         }
 
+        // Icon picker
+        document.querySelectorAll('.icon-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('.icon-option').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                document.getElementById('edit_icon').value = opt.dataset.icon;
+            });
+        });
+
+        // Saving indicator helper
+        function showIndicator(html) {
+            const indicator = document.getElementById('savingIndicator');
+            indicator.innerHTML = html;
+            indicator.classList.add('show');
+            setTimeout(() => indicator.classList.remove('show'), 2000);
+        }
+
+        // Modal close on background click
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) closeModal(modal.id);
             });
         });
+
+        // Drag and drop sorting
+        const list = document.getElementById('skillsList');
+        if (list && list.querySelector('.skill-item')) {
+            new Sortable(list, {
+                animation: 200,
+                handle: '.skill-drag',
+                ghostClass: 'sortable-ghost',
+                dragClass: 'sortable-drag',
+                onEnd: function() {
+                    const order = Array.from(list.querySelectorAll('.skill-item')).map(el => el.dataset.id);
+                    
+                    const indicator = document.getElementById('savingIndicator');
+                    indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                    indicator.classList.add('show');
+
+                    fetch('skills.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'action=reorder&order=' + encodeURIComponent(JSON.stringify(order))
+                    })
+                    .then(res => res.json())
+                    .then(() => {
+                        indicator.innerHTML = '<i class="fas fa-check"></i> Order saved!';
+                        setTimeout(() => indicator.classList.remove('show'), 2000);
+                    });
+                }
+            });
+        }
     </script>
 </body>
-
 </html>
