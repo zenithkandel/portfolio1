@@ -5,18 +5,65 @@ requireLogin();
 $unreadCount = getUnreadMessagesCount($pdo);
 $skills = getSkills($pdo);
 
-// Handle actions
+// Handle AJAX reorder
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'reorder') {
+    header('Content-Type: application/json');
+    $order = json_decode($_POST['order'] ?? '[]', true);
+    if (is_array($order)) {
+        $stmt = $pdo->prepare("UPDATE skills SET sort_order = ? WHERE id = ?");
+        foreach ($order as $index => $id) {
+            $stmt->execute([$index, (int)$id]);
+        }
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false]);
+    }
+    exit;
+}
+
+// Handle AJAX quick add
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'quick_add') {
+    header('Content-Type: application/json');
+    $name = trim($_POST['name'] ?? '');
+    if ($name) {
+        $stmt = $pdo->query("SELECT MAX(sort_order) as max_order FROM skills");
+        $maxOrder = $stmt->fetch()['max_order'] ?? 0;
+        $stmt = $pdo->prepare("INSERT INTO skills (name, icon, sort_order) VALUES (?, 'fa-solid fa-code', ?)");
+        $stmt->execute([$name, $maxOrder + 1]);
+        $id = $pdo->lastInsertId();
+        echo json_encode(['success' => true, 'id' => $id, 'name' => $name]);
+    } else {
+        echo json_encode(['success' => false]);
+    }
+    exit;
+}
+
+// Handle AJAX delete
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajax_delete') {
+    header('Content-Type: application/json');
+    $id = (int)($_POST['id'] ?? 0);
+    if ($id) {
+        $pdo->prepare("DELETE FROM skills WHERE id = ?")->execute([$id]);
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false]);
+    }
+    exit;
+}
+
+// Handle actions (form fallbacks)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     if ($action === 'add') {
         $name = trim($_POST['name'] ?? '');
         $icon = trim($_POST['icon'] ?? 'fa-solid fa-code');
-        $sortOrder = (int) ($_POST['sort_order'] ?? 0);
+        $stmt = $pdo->query("SELECT MAX(sort_order) as max_order FROM skills");
+        $maxOrder = $stmt->fetch()['max_order'] ?? 0;
 
         if ($name) {
             $stmt = $pdo->prepare("INSERT INTO skills (name, icon, sort_order) VALUES (?, ?, ?)");
-            $stmt->execute([$name, $icon, $sortOrder]);
+            $stmt->execute([$name, $icon, $maxOrder + 1]);
             setFlash('success', 'Skill added successfully!');
         }
     }
@@ -25,11 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = (int) ($_POST['id'] ?? 0);
         $name = trim($_POST['name'] ?? '');
         $icon = trim($_POST['icon'] ?? 'fa-solid fa-code');
-        $sortOrder = (int) ($_POST['sort_order'] ?? 0);
 
         if ($id && $name) {
-            $stmt = $pdo->prepare("UPDATE skills SET name = ?, icon = ?, sort_order = ? WHERE id = ?");
-            $stmt->execute([$name, $icon, $sortOrder, $id]);
+            $stmt = $pdo->prepare("UPDATE skills SET name = ?, icon = ? WHERE id = ?");
+            $stmt->execute([$name, $icon, $id]);
             setFlash('success', 'Skill updated successfully!');
         }
     }
