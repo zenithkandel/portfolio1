@@ -104,19 +104,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
     <style>
-        .icon-preview {
-            font-size: 20px;
-            color: var(--accent);
-        }
-
-        .icon-code {
-            background: var(--bg);
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 13px;
-            font-family: monospace;
-            color: var(--text-muted);
-        }
+        .quick-add { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid var(--border); }
+        .quick-add-form { display: flex; gap: 12px; align-items: center; }
+        .quick-add-input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text); font-size: 14px; }
+        .quick-add-input:focus { outline: none; border-color: var(--accent); }
+        .quick-add-input::placeholder { color: var(--text-dim); }
+        .quick-add-btn { padding: 12px 20px; }
+        
+        .skills-list { display: flex; flex-direction: column; gap: 8px; }
+        .skill-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; transition: all 0.2s; }
+        .skill-item:hover { border-color: var(--border-light); }
+        .skill-item.sortable-ghost { opacity: 0.4; }
+        .skill-item.sortable-drag { box-shadow: 0 8px 24px rgba(99,102,241,0.3); }
+        
+        .skill-drag { cursor: grab; color: var(--text-dim); padding: 4px; opacity: 0.5; transition: opacity 0.2s; }
+        .skill-drag:hover { opacity: 1; }
+        .skill-drag:active { cursor: grabbing; }
+        
+        .skill-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--accent-dim); border-radius: 8px; color: var(--accent); font-size: 14px; }
+        .skill-name { flex: 1; font-weight: 500; color: var(--text); }
+        .skill-actions { display: flex; gap: 8px; }
+        .skill-actions .btn { padding: 8px 12px; font-size: 12px; }
+        
+        .sort-hint { background: var(--accent-dim); color: var(--accent); padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+        .sort-hint i { font-size: 16px; }
+        
+        .empty-skills { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .empty-skills i { font-size: 3rem; margin-bottom: 16px; opacity: 0.3; }
+        
+        .icon-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; }
+        .icon-option { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+        .icon-option:hover, .icon-option.selected { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        
+        .saving-indicator { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 1000; }
+        .saving-indicator.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 
