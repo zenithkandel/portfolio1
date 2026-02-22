@@ -29,7 +29,7 @@ const Loader = {
         const progress = document.querySelector('.loader-progress');
         const percentage = document.querySelector('.loader-percentage');
         const text = document.querySelector('.loader-text');
-        
+
         if (!loader) return;
 
         const messages = [
@@ -48,12 +48,12 @@ const Loader = {
         const animate = (currentTime) => {
             const elapsed = currentTime - startTime;
             const progress_val = Math.min((elapsed / duration) * targetProgress, targetProgress);
-            
+
             currentProgress = Math.floor(progress_val);
-            
+
             if (progress) progress.style.width = `${currentProgress}%`;
             if (percentage) percentage.textContent = `${currentProgress}%`;
-            
+
             // Update message based on progress
             const messageIndex = Math.min(Math.floor(currentProgress / 25), messages.length - 1);
             if (text) text.textContent = messages[messageIndex];
@@ -64,7 +64,7 @@ const Loader = {
                 setTimeout(() => {
                     loader.classList.add('loaded');
                     document.body.style.overflow = 'auto';
-                    
+
                     // Trigger entrance animations
                     setTimeout(() => {
                         Animations.triggerEntrance();
@@ -97,7 +97,7 @@ const Cursor = {
 
         this.cursor = document.querySelector('.cursor');
         this.cursorDot = document.querySelector('.cursor-dot');
-        
+
         if (!this.cursor || !this.cursorDot) return;
 
         document.addEventListener('mousemove', (e) => {
@@ -115,7 +115,7 @@ const Cursor = {
 
         // Add hover effect to interactive elements
         const interactiveElements = document.querySelectorAll('a, button, .skill-card, .project-card, .contact-link, input, textarea');
-        
+
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
                 this.cursor.classList.add('hover');
@@ -131,10 +131,10 @@ const Cursor = {
     animate() {
         // Smooth cursor following with easing
         const ease = 0.15;
-        
+
         this.cursorX += (this.mouseX - this.cursorX) * ease;
         this.cursorY += (this.mouseY - this.cursorY) * ease;
-        
+
         this.dotX += (this.mouseX - this.dotX) * 0.5;
         this.dotY += (this.mouseY - this.dotY) * 0.5;
 
@@ -142,7 +142,7 @@ const Cursor = {
             this.cursor.style.left = `${this.cursorX}px`;
             this.cursor.style.top = `${this.cursorY}px`;
         }
-        
+
         if (this.cursorDot) {
             this.cursorDot.style.left = `${this.dotX}px`;
             this.cursorDot.style.top = `${this.dotY}px`;
@@ -166,16 +166,16 @@ const Navigation = {
 
         // Scroll behavior
         let lastScroll = 0;
-        
+
         window.addEventListener('scroll', () => {
             const currentScroll = window.pageYOffset;
-            
+
             if (currentScroll > 50) {
                 nav.classList.add('scrolled');
             } else {
                 nav.classList.remove('scrolled');
             }
-            
+
             lastScroll = currentScroll;
         });
 
@@ -195,7 +195,7 @@ const Navigation = {
 
             if (mobileClose) mobileClose.addEventListener('click', closeMenu);
             mobileOverlay.addEventListener('click', closeMenu);
-            
+
             mobileLinks.forEach(link => {
                 link.addEventListener('click', closeMenu);
             });
@@ -211,11 +211,11 @@ const Navigation = {
 
         window.addEventListener('scroll', () => {
             let current = '';
-            
+
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.clientHeight;
-                
+
                 if (window.pageYOffset >= sectionTop - 200) {
                     current = section.getAttribute('id');
                 }
@@ -250,7 +250,7 @@ const Particles = {
         this.animate();
 
         window.addEventListener('resize', () => this.resize());
-        
+
         document.addEventListener('mousemove', (e) => {
             this.mouse.x = e.clientX;
             this.mouse.y = e.clientY;
@@ -269,7 +269,7 @@ const Particles = {
 
     createParticles() {
         const numberOfParticles = Math.floor((window.innerWidth * window.innerHeight) / 15000);
-        
+
         for (let i = 0; i < numberOfParticles; i++) {
             this.particles.push({
                 x: Math.random() * this.canvas.width,
@@ -421,10 +421,10 @@ const Tilt = {
         const rect = el.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
+
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        
+
         const rotateX = (y - centerY) / 20;
         const rotateY = (centerX - x) / 20;
 
@@ -461,7 +461,7 @@ const TypedText = {
 
     type() {
         const currentString = this.strings[this.stringIndex];
-        
+
         if (this.isDeleting) {
             this.element.textContent = currentString.substring(0, this.charIndex - 1);
             this.charIndex--;
@@ -494,10 +494,10 @@ const SmoothScroll = {
             anchor.addEventListener('click', (e) => {
                 e.preventDefault();
                 const target = document.querySelector(anchor.getAttribute('href'));
-                
+
                 if (target) {
                     const offsetTop = target.offsetTop - 80;
-                    
+
                     window.scrollTo({
                         top: offsetTop,
                         behavior: 'smooth'
@@ -517,13 +517,13 @@ const FormHandler = {
         if (!form) return;
 
         const inputs = form.querySelectorAll('.form-input, .form-textarea');
-        
+
         // Add floating label effect
         inputs.forEach(input => {
             input.addEventListener('focus', () => {
                 input.parentElement.classList.add('focused');
             });
-            
+
             input.addEventListener('blur', () => {
                 if (!input.value) {
                     input.parentElement.classList.remove('focused');
@@ -547,7 +547,7 @@ const FormHandler = {
 const CountUp = {
     init() {
         const counters = document.querySelectorAll('.stat-number');
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -568,11 +568,11 @@ const CountUp = {
         const update = (currentTime) => {
             const elapsed = currentTime - start;
             const progress = Math.min(elapsed / duration, 1);
-            
+
             // Easing function
             const easeOut = 1 - Math.pow(1 - progress, 3);
             const current = Math.floor(easeOut * target);
-            
+
             element.textContent = current + '+';
 
             if (progress < 1) {
@@ -595,7 +595,7 @@ window.addEventListener('load', () => {
 const GlitchEffect = {
     init() {
         const glitchElements = document.querySelectorAll('.glitch');
-        
+
         glitchElements.forEach(el => {
             el.dataset.text = el.textContent;
         });
@@ -613,10 +613,10 @@ document.addEventListener('DOMContentLoaded', () => {
 const Parallax = {
     init() {
         const parallaxElements = document.querySelectorAll('[data-parallax]');
-        
+
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
-            
+
             parallaxElements.forEach(el => {
                 const speed = el.dataset.parallax || 0.5;
                 const yPos = -(scrolled * speed);
@@ -637,16 +637,16 @@ document.addEventListener('DOMContentLoaded', () => {
 const MagneticButtons = {
     init() {
         const buttons = document.querySelectorAll('.btn, .nav-cta');
-        
+
         buttons.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
                 const rect = btn.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
-                
+
                 btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
             });
-            
+
             btn.addEventListener('mouseleave', () => {
                 btn.style.transform = 'translate(0, 0)';
             });
@@ -674,7 +674,7 @@ class TextScramble {
         const length = Math.max(oldText.length, newText.length);
         const promise = new Promise((resolve) => this.resolve = resolve);
         this.queue = [];
-        
+
         for (let i = 0; i < length; i++) {
             const from = oldText[i] || '';
             const to = newText[i] || '';
@@ -682,7 +682,7 @@ class TextScramble {
             const end = start + Math.floor(Math.random() * 40);
             this.queue.push({ from, to, start, end });
         }
-        
+
         cancelAnimationFrame(this.frameRequest);
         this.frame = 0;
         this.update();
@@ -692,10 +692,10 @@ class TextScramble {
     update() {
         let output = '';
         let complete = 0;
-        
+
         for (let i = 0, n = this.queue.length; i < n; i++) {
             let { from, to, start, end, char } = this.queue[i];
-            
+
             if (this.frame >= end) {
                 complete++;
                 output += to;
@@ -709,9 +709,9 @@ class TextScramble {
                 output += from;
             }
         }
-        
+
         this.el.innerHTML = output;
-        
+
         if (complete === this.queue.length) {
             this.resolve();
         } else {
