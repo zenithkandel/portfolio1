@@ -235,14 +235,31 @@ function initMobileNav() {
 
     if (!toggle || !nav) return;
 
-    toggle.addEventListener('click', () => nav.classList.add('active'));
+    function openNav() {
+        nav.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeNav() {
+        nav.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    toggle.addEventListener('click', openNav);
 
     if (close) {
-        close.addEventListener('click', () => nav.classList.remove('active'));
+        close.addEventListener('click', closeNav);
     }
 
     links.forEach(link => {
-        link.addEventListener('click', () => nav.classList.remove('active'));
+        link.addEventListener('click', closeNav);
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && nav.classList.contains('active')) {
+            closeNav();
+        }
     });
 }
 
