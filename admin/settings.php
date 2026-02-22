@@ -171,9 +171,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <textarea name="about_text_2" rows="4"><?= e($settings['about_text_2'] ?? '') ?></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Photo Filename</label>
-                        <input type="text" name="photo_url" value="<?= e($settings['photo_url'] ?? 'me.jpg') ?>">
-                        <div class="form-hint">Place your photo in the portfolio folder (e.g., me.jpg)</div>
+                        <label>Profile Photo</label>
+                        <input type="hidden" name="photo_url" id="photo_url"
+                            value="<?= e($settings['photo_url'] ?? 'me.jpg') ?>">
+                        <div class="upload-area" id="photoUploadArea">
+                            <input type="file" id="photo_file" accept="image/*" style="display:none">
+                            <?php $currentPhoto = $settings['photo_url'] ?? 'me.jpg'; ?>
+                            <div class="upload-placeholder" id="photoPlaceholder"
+                                style="<?= $currentPhoto ? 'display:none' : '' ?>">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Click, drag, or paste image here</span>
+                                <small>JPG, PNG, GIF, WebP (Max 5MB)</small>
+                            </div>
+                            <div class="upload-preview" id="photoPreview"
+                                style="<?= $currentPhoto ? 'display:block' : 'display:none' ?>">
+                                <img id="photoPreviewImg" src="../<?= e($currentPhoto) ?>" alt="Preview">
+                                <button type="button" class="remove-image"
+                                    onclick="removePhoto()">&times;</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -238,6 +254,114 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">
         <i class="fas fa-bars"></i>
     </button>
+
+    <script>
+        // Photo upload area setup
+        const photoArea = document.getElementById('photoUploadArea');
+        const photoInput = document.getElementById('photo_file');
+        const photoPlaceholder = document.getElementById('photoPlaceholder');
+        const photoPreview = document.getElementById('photoPreview');
+        const photoPreviewImg = document.getElementById('photoPreviewImg');
+        const photoUrlInput = document.getElementById('photo_url');
+
+        photoArea.addEventListener('click', (e) => {
+            if (!e.target.closest('.remove-image')) {
+                photoInput.click();
+            }
+        });
+
+        photoArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            photoArea.classList.add('dragover');
+        });
+
+        photoArea.addEventListener('dragleave', () => {
+            photoArea.classList.remove('dragover');
+        });
+
+        photoArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            photoArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                handlePhotoFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        photoInput.addEventListener('change', () => {
+            if (photoInput.files.length) {
+                handlePhotoFile(photoInput.files[0]);
+            }
+        });
+
+        // Clipboard paste support
+        document.addEventListener('paste', (e) => {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+
+            for (const item of items) {
+                if (item.type.startsWith('image/')) {
+                    e.preventDefault();
+                    const file = item.getAsFile();
+                    if (file) {
+                        handlePhotoFile(file);
+                    }
+                    break;
+                }
+            }
+        });
+
+        function handlePhotoFile(file) {
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            const maxSize = 5 * 1024 * 1024;
+
+            if (!allowedTypes.includes(file.type)) {
+                alert('Invalid file type. Please upload JPG, PNG, GIF, or WebP.');
+                return;
+            }
+
+            if (file.size > maxSize) {
+                alert('File too large. Maximum size is 5MB.');
+                return;
+            }
+
+            photoPlaceholder.innerHTML = '<div class="upload-loading active"><div class="spinner"></div><span>Uploading...</span></div>';
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('upload.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        photoUrlInput.value = data.path;
+                        photoPreviewImg.src = '../' + data.path;
+                        photoPlaceholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click, drag, or paste image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
+                        photoPlaceholder.style.display = 'none';
+                        photoPreview.style.display = 'block';
+                    } else {
+                        alert(data.error || 'Upload failed');
+                        resetPlaceholder();
+                    }
+                })
+                .catch(err => {
+                    alert('Upload failed. Please try again.');
+                    resetPlaceholder();
+                });
+        }
+
+        function resetPlaceholder() {
+            photoPlaceholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click, drag, or paste image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
+        }
+
+        function removePhoto() {
+            photoUrlInput.value = '';
+            photoPlaceholder.style.display = 'flex';
+            photoPreview.style.display = 'none';
+        }
+    </script>
 </body>
 
 </html>
