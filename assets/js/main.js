@@ -20,12 +20,12 @@ function initProjectsSlider() {
     const prevBtn = document.querySelector('.projects-nav-prev');
     const nextBtn = document.querySelector('.projects-nav-next');
     const indicatorsContainer = document.querySelector('.projects-indicators');
-    
+
     if (!slider) return;
 
     const items = slider.querySelectorAll('.project-item');
     if (items.length === 0) return;
-    
+
     // Create indicators
     items.forEach((_, index) => {
         const indicator = document.createElement('button');
@@ -34,16 +34,16 @@ function initProjectsSlider() {
         indicator.addEventListener('click', () => scrollToProject(index));
         indicatorsContainer?.appendChild(indicator);
     });
-    
+
     const indicators = indicatorsContainer?.querySelectorAll('.projects-indicator');
-    
+
     // Get card width for scrolling
     function getScrollAmount() {
         const item = items[0];
         if (!item) return 300;
         return item.offsetWidth + parseInt(getComputedStyle(slider).gap) || 16;
     }
-    
+
     // Scroll to specific project
     function scrollToProject(index) {
         const scrollAmount = getScrollAmount();
@@ -52,40 +52,40 @@ function initProjectsSlider() {
             behavior: 'smooth'
         });
     }
-    
+
     // Update active indicator
     function updateIndicators() {
         const scrollAmount = getScrollAmount();
         const activeIndex = Math.round(slider.scrollLeft / scrollAmount);
-        
+
         indicators?.forEach((indicator, index) => {
             indicator.classList.toggle('active', index === activeIndex);
         });
-        
+
         // Update nav button states
         if (prevBtn) prevBtn.disabled = slider.scrollLeft <= 10;
         if (nextBtn) nextBtn.disabled = slider.scrollLeft >= slider.scrollWidth - slider.clientWidth - 10;
     }
-    
+
     // Navigation buttons
     if (prevBtn) {
         prevBtn.addEventListener('click', () => {
             slider.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
         });
     }
-    
+
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
             slider.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
         });
     }
-    
+
     // Listen for scroll changes
     slider.addEventListener('scroll', updateIndicators, { passive: true });
-    
+
     // Initial state
     updateIndicators();
-    
+
     // Touch/swipe support is native via scroll-snap
 }
 

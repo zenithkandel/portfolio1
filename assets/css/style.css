@@ -287,6 +287,7 @@ img {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 0.5rem;
     padding: 1rem 2rem;
     font-size: 0.875rem;
     font-weight: 500;
@@ -898,7 +899,7 @@ section {
     .project-item {
         flex: 0 0 min(320px, 80vw);
     }
-    
+
     .projects-nav {
         width: 40px;
         height: 40px;
@@ -909,7 +910,7 @@ section {
     html {
         font-size: 15px;
     }
-    
+
     .header {
         padding: 1rem;
     }
@@ -921,11 +922,11 @@ section {
     .menu-toggle {
         display: block;
     }
-    
+
     .header-actions {
         gap: 1rem;
     }
-    
+
     .header-time {
         display: none;
     }
@@ -934,11 +935,11 @@ section {
         padding: 5rem 1rem 2rem;
         min-height: auto;
     }
-    
+
     .hero-intro {
         font-size: 0.9rem;
     }
-    
+
     .hero-title {
         font-size: clamp(2rem, 12vw, 4rem);
     }
@@ -961,7 +962,7 @@ section {
         text-align: center;
         padding: 0.875rem 1.5rem;
     }
-    
+
     .hero-scroll {
         display: none;
     }
@@ -969,50 +970,50 @@ section {
     section {
         padding: 4rem 1rem;
     }
-    
+
     #work {
         padding: 4rem 0;
     }
-    
+
     #work .section-label {
         padding: 0 1rem;
         margin-bottom: 2rem;
     }
-    
+
     .projects-list {
         padding: 0 1rem 1.5rem;
         gap: 1rem;
     }
-    
+
     .project-item {
         flex: 0 0 calc(100vw - 3rem);
     }
-    
+
     .project-image {
         aspect-ratio: 16/10;
     }
-    
+
     .project-title {
         font-size: 1.25rem;
     }
-    
+
     .project-ctas {
         padding: 0;
     }
-    
+
     .project-cta {
         font-size: 0.75rem;
         padding: 0.4rem 0.75rem;
     }
-    
+
     .projects-nav {
         display: none;
     }
-    
+
     .projects-indicators {
         padding: 0.75rem 0;
     }
-    
+
     .section-label {
         font-size: 0.7rem;
     }
@@ -1020,25 +1021,25 @@ section {
     .skills-section {
         padding: 4rem 1rem;
     }
-    
+
     .skills-grid {
         gap: 0.5rem;
     }
-    
+
     .skill-tag {
         padding: 0.5rem 0.75rem;
         font-size: 0.75rem;
     }
-    
+
     .about {
         padding: 4rem 1rem;
         gap: 2rem;
     }
-    
+
     .about-image {
         max-width: 280px;
     }
-    
+
     .about-text {
         font-size: 0.95rem;
     }
@@ -1051,21 +1052,21 @@ section {
     .contact-section {
         padding: 6rem 1rem;
     }
-    
+
     .contact-title {
         font-size: clamp(2rem, 10vw, 4rem);
         margin-bottom: 2rem;
     }
-    
+
     .contact-email {
         font-size: 0.9rem;
         padding: 0.875rem 1.5rem;
     }
-    
+
     .contact-form {
         padding: 0;
     }
-    
+
     .form-row {
         grid-template-columns: 1fr;
     }
@@ -1076,16 +1077,16 @@ section {
         text-align: center;
         padding: 3rem 1rem;
     }
-    
+
     .footer-social {
         gap: 1rem;
     }
-    
+
     .footer-social a {
         width: 40px;
         height: 40px;
     }
-    
+
     .marquee-item {
         padding: 0 1.5rem;
         font-size: 1.25rem;
@@ -1097,24 +1098,24 @@ section {
     html {
         font-size: 14px;
     }
-    
+
     .hero-title {
         font-size: clamp(1.75rem, 14vw, 3rem);
     }
-    
+
     .btn {
         padding: 0.75rem 1.25rem;
         font-size: 0.8rem;
     }
-    
+
     .project-item {
         flex: 0 0 calc(100vw - 2rem);
     }
-    
+
     .projects-list {
         padding: 0 1rem 1rem;
     }
-    
+
     .about-image {
         max-width: 100%;
     }

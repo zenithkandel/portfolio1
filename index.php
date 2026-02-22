@@ -81,8 +81,7 @@ $location = $settings['contact_location'] ?? '';
 
       <div class="hero-bottom">
         <div class="hero-cta">
-          <a href="#work" class="btn btn-primary">View Work</a>
-          <a href="#contact" class="btn btn-outline">Get In Touch</a>
+          <a href="#contact" class="btn btn-primary">Get In Touch</a>
           <a href="cv.html" target="_blank" class="btn btn-outline"><i class="fas fa-download"></i> Download CV</a>
         </div>
 
