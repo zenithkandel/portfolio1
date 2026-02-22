@@ -14,11 +14,11 @@ try {
     $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-    
+
     // Create database
     $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
     $pdo->exec("USE `$dbname`");
-    
+
     // Create settings table
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS settings (
@@ -42,7 +42,7 @@ try {
             CONSTRAINT single_row CHECK (id = 1)
         ) ENGINE=InnoDB
     ");
-    
+
     // Create skills table
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS skills (
@@ -53,7 +53,7 @@ try {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB
     ");
-    
+
     // Create projects table
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS projects (
@@ -67,7 +67,7 @@ try {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB
     ");
-    
+
     // Create messages table
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS messages (
@@ -80,7 +80,7 @@ try {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB
     ");
-    
+
     // Insert default settings
     $defaultPassword = password_hash('admin123', PASSWORD_DEFAULT);
     $stmt = $pdo->prepare("
@@ -105,7 +105,7 @@ try {
         )
     ");
     $stmt->execute([$defaultPassword]);
-    
+
     // Insert default skills
     $skills = [
         ['HTML', 'fa-solid fa-code', 1],
@@ -118,12 +118,12 @@ try {
         ['UI/UX', 'fa-solid fa-pen-ruler', 8],
         ['Responsive Design', 'fa-solid fa-mobile-screen', 9]
     ];
-    
+
     $stmt = $pdo->prepare("INSERT IGNORE INTO skills (name, icon, sort_order) VALUES (?, ?, ?)");
     foreach ($skills as $skill) {
         $stmt->execute($skill);
     }
-    
+
     // Insert default projects
     $projects = [
         ['STREAMFLIX', 'Movie streaming platform with chunked uploads, subtitles, and HLS processing.', 'PHP', 'Full-stack', 'https://github.com/zenithkandel/STREAMFLIX', 1],
@@ -133,12 +133,12 @@ try {
         ['Random Color Generator', 'Generates random colors for design/dev workflows—simple and handy.', 'Utility', 'JS', 'https://github.com/zenithkandel/Random-Color-Generator', 5],
         ['CSS Login', 'Minimal login interface with basic client-side validation.', 'CSS', 'UI', 'https://github.com/zenithkandel/Css-Login', 6]
     ];
-    
+
     $stmt = $pdo->prepare("INSERT IGNORE INTO projects (title, description, tag1, tag2, url, sort_order) VALUES (?, ?, ?, ?, ?, ?)");
     foreach ($projects as $project) {
         $stmt->execute($project);
     }
-    
+
     echo "<!DOCTYPE html>
     <html>
     <head>

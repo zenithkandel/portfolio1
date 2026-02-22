@@ -39,7 +39,8 @@ try {
 /**
  * Get site settings
  */
-function getSettings($pdo) {
+function getSettings($pdo)
+{
     $stmt = $pdo->query("SELECT * FROM settings WHERE id = 1");
     return $stmt->fetch() ?: [];
 }
@@ -47,7 +48,8 @@ function getSettings($pdo) {
 /**
  * Get all skills
  */
-function getSkills($pdo) {
+function getSkills($pdo)
+{
     $stmt = $pdo->query("SELECT * FROM skills ORDER BY sort_order ASC");
     return $stmt->fetchAll();
 }
@@ -55,7 +57,8 @@ function getSkills($pdo) {
 /**
  * Get all projects
  */
-function getProjects($pdo) {
+function getProjects($pdo)
+{
     $stmt = $pdo->query("SELECT * FROM projects ORDER BY sort_order ASC");
     return $stmt->fetchAll();
 }
@@ -63,7 +66,8 @@ function getProjects($pdo) {
 /**
  * Get unread messages count
  */
-function getUnreadMessagesCount($pdo) {
+function getUnreadMessagesCount($pdo)
+{
     $stmt = $pdo->query("SELECT COUNT(*) as count FROM messages WHERE is_read = 0");
     $result = $stmt->fetch();
     return $result['count'];
@@ -72,21 +76,24 @@ function getUnreadMessagesCount($pdo) {
 /**
  * Sanitize output
  */
-function e($string) {
+function e($string)
+{
     return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
 }
 
 /**
  * Check if user is logged in
  */
-function isLoggedIn() {
+function isLoggedIn()
+{
     return isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
 }
 
 /**
  * Require login for admin pages
  */
-function requireLogin() {
+function requireLogin()
+{
     if (!isLoggedIn()) {
         header('Location: login.php');
         exit;
@@ -96,11 +103,13 @@ function requireLogin() {
 /**
  * Flash messages
  */
-function setFlash($type, $message) {
+function setFlash($type, $message)
+{
     $_SESSION['flash'] = ['type' => $type, 'message' => $message];
 }
 
-function getFlash() {
+function getFlash()
+{
     if (isset($_SESSION['flash'])) {
         $flash = $_SESSION['flash'];
         unset($_SESSION['flash']);
