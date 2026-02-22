@@ -120,10 +120,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </div>
 
-            <?php if ($flash = getFlash('success')): ?>
-                <div class="alert alert-success">
+            <?php if ($flash = getFlash()): ?>
+                <div class="alert alert-<?= $flash['type'] ?>">
                     <i class="fas fa-check-circle"></i>
-                    <?= e($flash) ?>
+                    <?= e($flash['message']) ?>
                 </div>
             <?php endif; ?>
 
