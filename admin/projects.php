@@ -134,10 +134,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <i class="fas fa-image"></i>
                                 </div>
                             <?php endif; ?>
-                            
+
                             <h4><?= e($project['title']) ?></h4>
                             <p><?= e($project['description']) ?></p>
-                            
+
                             <div class="item-meta">
                                 <?php if ($project['tag1']): ?>
                                     <span class="badge"><?= e($project['tag1']) ?></span>
@@ -146,9 +146,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <span class="badge"><?= e($project['tag2']) ?></span>
                                 <?php endif; ?>
                             </div>
-                            
+
                             <div class="item-actions">
-                                <button class="btn btn-secondary btn-sm" onclick="openEditModal(<?= htmlspecialchars(json_encode($project), ENT_QUOTES, 'UTF-8') ?>)">
+                                <button class="btn btn-secondary btn-sm"
+                                    onclick="openEditModal(<?= htmlspecialchars(json_encode($project), ENT_QUOTES, 'UTF-8') ?>)">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <form method="POST" style="display: inline;" onsubmit="return confirm('Delete this project?')">
@@ -307,7 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById('edit_tag2').value = project.tag2 || '';
             document.getElementById('edit_url').value = project.url || '';
             document.getElementById('edit_sort').value = project.sort_order || 0;
-            
+
             if (project.image) {
                 document.getElementById('editPlaceholder').style.display = 'none';
                 document.getElementById('editPreview').style.display = 'block';
@@ -316,7 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 document.getElementById('editPlaceholder').style.display = 'flex';
                 document.getElementById('editPreview').style.display = 'none';
             }
-            
+
             document.getElementById('editModal').classList.add('active');
         }
 
@@ -325,8 +326,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         function removeImage(prefix) {
-            const pathInput = prefix === 'add' ? 
-                document.getElementById('add_image_path') : 
+            const pathInput = prefix === 'add' ?
+                document.getElementById('add_image_path') :
                 document.getElementById('edit_image');
             pathInput.value = '';
             document.getElementById(prefix + 'Placeholder').style.display = 'flex';
@@ -380,8 +381,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const placeholder = document.getElementById(prefix + 'Placeholder');
             const preview = document.getElementById(prefix + 'Preview');
             const previewImg = document.getElementById(prefix + 'PreviewImg');
-            const pathInput = prefix === 'add' ? 
-                document.getElementById('add_image_path') : 
+            const pathInput = prefix === 'add' ?
+                document.getElementById('add_image_path') :
                 document.getElementById('edit_image');
 
             placeholder.innerHTML = '<div class="upload-loading active"><div class="spinner"></div><span>Uploading...</span></div>';
@@ -393,23 +394,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 method: 'POST',
                 body: formData
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    pathInput.value = data.path;
-                    previewImg.src = '../' + data.path;
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        pathInput.value = data.path;
+                        previewImg.src = '../' + data.path;
+                        placeholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click to upload or drag image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
+                        placeholder.style.display = 'none';
+                        preview.style.display = 'block';
+                    } else {
+                        alert(data.error || 'Upload failed');
+                        placeholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click to upload or drag image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
+                    }
+                })
+                .catch(err => {
+                    alert('Upload failed. Please try again.');
                     placeholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click to upload or drag image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
-                    placeholder.style.display = 'none';
-                    preview.style.display = 'block';
-                } else {
-                    alert(data.error || 'Upload failed');
-                    placeholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click to upload or drag image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
-                }
-            })
-            .catch(err => {
-                alert('Upload failed. Please try again.');
-                placeholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click to upload or drag image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
-            });
+                });
         }
 
         setupUploadArea('add');

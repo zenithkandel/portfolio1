@@ -234,7 +234,9 @@ if (isset($_GET['view'])) {
             }
 
             .message-view {
-                display: <?= $viewMessage ? 'flex' : 'none' ?>;
+                display:
+                    <?= $viewMessage ? 'flex' : 'none' ?>
+                ;
             }
         }
     </style>
@@ -310,7 +312,8 @@ if (isset($_GET['view'])) {
                         </div>
                         <div class="message-list-items">
                             <?php foreach ($messages as $msg): ?>
-                                <a href="?view=<?= $msg['id'] ?>" class="msg-item <?= !$msg['is_read'] ? 'unread' : '' ?> <?= ($viewMessage && $viewMessage['id'] == $msg['id']) ? 'active' : '' ?>">
+                                <a href="?view=<?= $msg['id'] ?>"
+                                    class="msg-item <?= !$msg['is_read'] ? 'unread' : '' ?> <?= ($viewMessage && $viewMessage['id'] == $msg['id']) ? 'active' : '' ?>">
                                     <div class="msg-avatar">
                                         <?= strtoupper(substr($msg['name'], 0, 1)) ?>
                                     </div>
@@ -319,7 +322,8 @@ if (isset($_GET['view'])) {
                                             <span class="msg-name"><?= e($msg['name']) ?></span>
                                             <span class="msg-time"><?= date('M j', strtotime($msg['created_at'])) ?></span>
                                         </div>
-                                        <div class="msg-subject"><?= e($msg['subject'] ?: substr($msg['message'], 0, 50)) ?></div>
+                                        <div class="msg-subject"><?= e($msg['subject'] ?: substr($msg['message'], 0, 50)) ?>
+                                        </div>
                                     </div>
                                 </a>
                             <?php endforeach; ?>
@@ -333,19 +337,23 @@ if (isset($_GET['view'])) {
                                 <h2><?= e($viewMessage['subject'] ?: 'No Subject') ?></h2>
                                 <div class="message-meta">
                                     <span><i class="fas fa-user"></i> <?= e($viewMessage['name']) ?></span>
-                                    <span><i class="fas fa-envelope"></i> <a href="mailto:<?= e($viewMessage['email']) ?>"><?= e($viewMessage['email']) ?></a></span>
-                                    <span><i class="fas fa-clock"></i> <?= date('F j, Y \a\t g:i A', strtotime($viewMessage['created_at'])) ?></span>
+                                    <span><i class="fas fa-envelope"></i> <a
+                                            href="mailto:<?= e($viewMessage['email']) ?>"><?= e($viewMessage['email']) ?></a></span>
+                                    <span><i class="fas fa-clock"></i>
+                                        <?= date('F j, Y \a\t g:i A', strtotime($viewMessage['created_at'])) ?></span>
                                 </div>
                             </div>
                             <div class="message-view-body">
                                 <div class="message-content"><?= e($viewMessage['message']) ?></div>
                             </div>
                             <div class="message-view-actions">
-                                <a href="mailto:<?= e($viewMessage['email']) ?>?subject=Re: <?= e($viewMessage['subject']) ?>" class="btn btn-primary">
+                                <a href="mailto:<?= e($viewMessage['email']) ?>?subject=Re: <?= e($viewMessage['subject']) ?>"
+                                    class="btn btn-primary">
                                     <i class="fas fa-reply"></i> Reply
                                 </a>
                                 <form method="POST" style="display: inline;">
-                                    <input type="hidden" name="action" value="<?= $viewMessage['is_read'] ? 'mark_unread' : 'mark_read' ?>">
+                                    <input type="hidden" name="action"
+                                        value="<?= $viewMessage['is_read'] ? 'mark_unread' : 'mark_read' ?>">
                                     <input type="hidden" name="id" value="<?= $viewMessage['id'] ?>">
                                     <button type="submit" class="btn btn-secondary">
                                         <i class="fas fa-<?= $viewMessage['is_read'] ? 'envelope' : 'envelope-open' ?>"></i>
@@ -361,7 +369,8 @@ if (isset($_GET['view'])) {
                                 </form>
                             </div>
                         <?php else: ?>
-                            <div class="empty-state" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+                            <div class="empty-state"
+                                style="flex:1; display:flex; flex-direction:column; justify-content:center;">
                                 <i class="fas fa-envelope-open-text"></i>
                                 <p>Select a message to view</p>
                             </div>
