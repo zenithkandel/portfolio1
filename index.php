@@ -74,18 +74,17 @@ $location = $settings['contact_location'] ?? '';
   <!-- Hero -->
   <section class="hero">
     <div class="hero-content">
-      <p class="hero-intro">Creative Developer</p>
+      <p class="hero-intro"><?= e($role) ?></p>
 
       <h1 class="hero-title">
-        <span class="line"><span class="word">I craft</span></span>
-        <span class="line"><span class="word"><em>digital</em> experiences</span></span>
-        <span class="line"><span class="word">that matter.</span></span>
+        <span class="line"><span class="word"><?= e($name) ?></span></span>
       </h1>
 
       <div class="hero-bottom">
-        <p class="hero-desc">
-          <?= e($role) ?>. Building thoughtful interfaces and scalable solutions for brands that care about quality.
-        </p>
+        <div class="hero-cta">
+          <a href="#work" class="btn btn-primary">View Work</a>
+          <a href="#contact" class="btn btn-outline">Get In Touch</a>
+        </div>
 
         <div class="hero-scroll">
           <span>Scroll</span>
