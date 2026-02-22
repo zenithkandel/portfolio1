@@ -24,7 +24,68 @@ $location = $settings['contact_location'] ?? '';
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= e($settings['site_title'] ?? 'Portfolio') ?></title>
+  
+  <!-- SEO: Title Tag - Name + Role + Brand -->
+  <title><?= e($name) ?> – <?= e($role) ?> | Portfolio</title>
+  
+  <!-- SEO: Meta Description -->
+  <meta name="description" content="<?= e($name) ?> is a <?= e(strtolower($role)) ?><?= $location ? ' based in ' . e($location) : '' ?>. View portfolio, projects, and get in touch for collaborations.">
+  
+  <!-- SEO: Canonical URL -->
+  <link rel="canonical" href="<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>">
+  
+  <!-- SEO: Robots -->
+  <meta name="robots" content="index, follow">
+  
+  <!-- SEO: Additional Meta -->
+  <meta name="author" content="<?= e($name) ?>">
+  <meta name="theme-color" content="#0a0a0a">
+  
+  <!-- SEO: Open Graph Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<?= e($name) ?> – <?= e($role) ?>">
+  <meta property="og:description" content="<?= e($name) ?> is a <?= e(strtolower($role)) ?>. Explore projects, skills, and connect for collaborations.">
+  <meta property="og:url" content="<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>">
+  <meta property="og:image" content="<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>/me.jpg">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="<?= e($name) ?> Portfolio">
+  
+  <!-- SEO: Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<?= e($name) ?> – <?= e($role) ?>">
+  <meta name="twitter:description" content="Portfolio showcasing projects and skills. Open to collaborations.">
+  <meta name="twitter:image" content="<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>/me.jpg">
+  
+  <!-- SEO: JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "mainEntity": {
+      "@type": "Person",
+      "name": "<?= e($name) ?>",
+      "jobTitle": "<?= e($role) ?>",
+      "description": "<?= e(substr(strip_tags($about), 0, 200)) ?>",
+      "url": "<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>",
+      "image": "<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>/me.jpg",
+      <?php if ($email): ?>"email": "<?= e($email) ?>",<?php endif; ?>
+      <?php if ($location): ?>"address": { "@type": "PostalAddress", "addressLocality": "<?= e($location) ?>" },<?php endif; ?>
+      "sameAs": [
+        <?php 
+        $socials = array_filter([
+          $settings['github_url'] ?? '',
+          $settings['linkedin_url'] ?? '',
+          $settings['instagram_url'] ?? '',
+          $settings['facebook_url'] ?? ''
+        ]);
+        echo implode(",\n        ", array_map(fn($s) => '"' . e($s) . '"', $socials));
+        ?>
+      ],
+      "knowsAbout": [<?= implode(', ', array_map(fn($s) => '"' . e($s['name']) . '"', array_slice($skills, 0, 10))) ?>]
+    }
+  }
+  </script>
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
