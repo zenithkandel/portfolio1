@@ -1,805 +1,716 @@
+<?php
+require_once 'includes/config.php';
+
+// Get data from database
+$settings = getSettings($pdo);
+$skills = getSkills($pdo);
+$projects = getProjects($pdo);
+
+// Handle contact form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
+  $name = trim($_POST['name'] ?? '');
+  $email = trim($_POST['email'] ?? '');
+  $subject = trim($_POST['subject'] ?? '');
+  $message = trim($_POST['message'] ?? '');
+
+  if ($name && $email && $message) {
+    $stmt = $pdo->prepare("INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$name, $email, $subject, $message]);
+    $formSuccess = true;
+  } else {
+    $formError = "Please fill in all required fields.";
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5" />
-  <title>Zenith Kandel — Portfolio</title>
-  <meta name="description"
-    content="Zenith Kandel — self‑taught frontend developer & designer. Ultra‑minimal, retro‑styled, black & white portfolio.">
-  <meta name="color-scheme" content="dark">
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/fontawesome.css">
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/sharp-solid.css">
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/sharp-regular.css">
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.0.0/css/brands.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><?= e($settings['site_title'] ?? 'Portfolio') ?></title>
+  <meta name="description" content="<?= e($settings['site_description'] ?? '') ?>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* ====== RESET ====== */
     *,
     *::before,
     *::after {
       box-sizing: border-box;
-    }
-
-    html,
-    body {
-      height: 100%;
-    }
-
-    body {
       margin: 0;
-      background: #000;
-      /* pure black */
-      color: #fff;
-      /* pure white */
-      font: 16px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      /* retro feel */
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-      letter-spacing: 0.2px;
-      scroll-behavior: smooth;
-      /* smooth scrolling */
-      cursor: none;
-      /* hide default cursor for custom */
+      padding: 0;
     }
 
     :root {
-      --maxw: 1080px;
-      --grid-gap: 24px;
-      --muted: #cfcfcf;
-      /* neutral gray (still monochrome) */
-      --dim: #7a7a7a;
-      --line: #1a1a1a;
-      --accent: #fff;
-      /* we will use opacity for effects, no other colors */
+      --bg: #fafafa;
+      --text: #1a1a1a;
+      --text-muted: #666;
+      --border: #e5e5e5;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --card-bg: #fff;
+      --section-bg: #f5f5f5;
+      --max-width: 1100px;
     }
 
-    /* ====== GLOBAL LAYOUT ====== */
-    .wrap {
-      max-width: var(--maxw);
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* Layout */
+    .container {
+      max-width: var(--max-width);
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
     }
 
-    .section {
-      padding: 96px 0;
-      border-top: 1px solid var(--line);
+    section {
+      padding: 80px 0;
     }
 
-    .section:first-of-type {
-      border-top: none;
+    section:nth-child(even) {
+      background: var(--section-bg);
     }
 
-    .grid {
-      display: grid;
-      gap: var(--grid-gap);
-    }
-
-    /* ====== TOP BAR (super minimal) ====== */
+    /* Header */
     header {
       position: sticky;
       top: 0;
-      z-index: 50;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(2px);
-      border-bottom: 1px solid var(--line);
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
     }
 
-    .bar {
+    .nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 56px;
+      height: 64px;
     }
 
     .logo {
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    /* Desktop Navigation */
-    nav {
-      display: flex;
-      gap: 16px;
-    }
-
-    nav a {
-      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--text);
       text-decoration: none;
-      padding: 0 10px;
-      opacity: 0.8;
-      border-bottom: 2px solid transparent;
     }
 
-    nav a:hover {
-      opacity: 1;
-      border-bottom: 2px solid #fff;
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
     }
 
-    /* Mobile Navigation */
-    .mobile-menu-btn {
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .menu-toggle {
       display: none;
       background: none;
       border: none;
-      color: white;
       font-size: 24px;
       cursor: pointer;
+      color: var(--text);
     }
 
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      top: 56px;
-      left: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 100;
-      padding: 20px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .mobile-menu.active {
-      display: block;
-    }
-
-    .mobile-menu a {
-      display: block;
-      padding: 12px 0;
-      color: white;
-      text-decoration: none;
-      opacity: 0.8;
-    }
-
-    .mobile-menu a:hover {
-      opacity: 1;
-    }
-
-    @media (max-width: 768px) {
-      nav {
-        display: none;
-      }
-
-      .mobile-menu-btn {
-        display: block;
-      }
-
-      .hero {
-        min-height: 90vh;
-      }
-
-      .hero-cta {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .about-content {
-        grid-template-columns: 1fr !important;
-      }
-
-      .contact .grid {
-        grid-template-columns: 1fr !important;
-      }
-    }
-
-    /* ====== HERO ====== */
+    /* Hero */
     .hero {
-      min-height: calc(100vh - 56px);
-      display: grid;
-      place-items: center;
-      position: relative;
-    }
-
-    .hero-inner {
-      width: 100%;
-    }
-
-    .tag {
-      color: var(--dim);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 12px;
-    }
-
-    .title {
-      font-size: clamp(32px, 6vw, 80px);
-      line-height: 1.05;
-      margin: 12px 0 12px;
-      font-weight: 900;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: clamp(14px, 2.2vw, 18px);
-      max-width: 68ch;
-    }
-
-    @media (max-width: 480px) {
-      .section {
-        padding: 60px 0;
-      }
-
-      .title {
-        font-size: 32px;
-      }
-
-      .subtitle {
-        font-size: 14px;
-      }
-    }
-
-    .hero-cta {
-      display: inline-flex;
-      gap: 18px;
+      min-height: calc(100vh - 64px);
+      display: flex;
       align-items: center;
-      margin-top: 28px;
+      padding: 60px 0;
+    }
+
+    .hero-content {
+      max-width: 680px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
     }
 
     .btn {
-      appearance: none;
-      border: 1px solid #fff;
-      background: transparent;
-      color: #fff;
-      padding: 10px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
       text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      transition: transform .2s ease, background .2s ease, color .2s ease;
-      border-radius: 0;
-      /* no rounded */
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
     }
 
-    .btn:hover,
-    .btn:active {
-      background: #fff;
-      color: #000;
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
       transform: translateY(-2px);
     }
 
-    @media (hover: none) {
-      .btn:hover {
-        background: transparent;
-        color: #fff;
-        transform: none;
-      }
-
-      .btn:active {
-        background: #fff;
-        color: #000;
-        transform: translateY(-2px);
-      }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--border);
     }
 
-    /* ====== ABOUT ====== */
-    .about-content {
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Section Header */
+    .section-header {
+      margin-bottom: 48px;
+    }
+
+    .section-header h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 17px;
+    }
+
+    /* About */
+    .about-grid {
       display: grid;
-      grid-template-columns: 1fr 200px;
-      gap: 40px;
+      grid-template-columns: 1fr 280px;
+      gap: 48px;
       align-items: start;
     }
 
-    .about-text {
-      color: var(--muted);
-    }
-
     .about-text p {
-      max-width: 75ch;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-size: 16px;
     }
 
     .about-photo {
-      border: 1px solid var(--line);
-      aspect-ratio: 1;
-      background: #0a0a0a;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .about-photo img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Skills */
+    .skills-grid {
       display: grid;
-      place-items: center;
-      color: var(--dim);
-      transition: transform .2s ease, border-color .2s ease;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
     }
 
-    .about-photo:hover {
-      transform: translateY(-2px);
-      border-color: #222;
-    }
-
-    /* ====== SKILLS (icon grid) ====== */
-    .skills {
-      --col: 5;
-    }
-
-    @media (max-width: 900px) {
-      .skills {
-        --col: 4;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .skills {
-        --col: 3;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .skills {
-        --col: 2;
-      }
-    }
-
-    .skill-grid {
-      grid-template-columns: repeat(var(--col), minmax(0, 1fr));
-    }
-
-    .skill {
-      border: 1px solid var(--line);
-      padding: 18px;
+    .skill-card {
       display: flex;
       align-items: center;
-      gap: 12px;
-      transition: background .2s ease, transform .2s ease;
+      gap: 14px;
+      padding: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all 0.2s;
     }
 
-    .skill:hover {
-      background: #0a0a0a;
-      transform: translateY(-2px);
+    .skill-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
     }
 
-    .skill i {
-      width: 22px;
-      height: 22px;
-      flex: none;
-      font-size: 22px;
+    .skill-card i {
+      font-size: 24px;
+      color: var(--accent);
+      width: 28px;
       text-align: center;
     }
 
-    .skill span {
-      color: var(--muted);
+    .skill-card span {
+      font-weight: 500;
+      font-size: 15px;
     }
 
-    /* ====== PROJECTS ====== */
-    .projects .cards {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @media (max-width: 1024px) {
-      .projects .cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 680px) {
-      .projects .cards {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      border: 1px solid var(--line);
-      padding: 20px;
+    /* Projects */
+    .projects-grid {
       display: grid;
-      gap: 12px;
-      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
       text-decoration: none;
       color: inherit;
+      transition: all 0.2s;
+      display: block;
     }
 
-    .card:hover {
+    .project-card:hover {
       transform: translateY(-4px);
-      background: #0a0a0a;
-      border-color: #222;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+      border-color: var(--accent);
     }
 
-    .card .meta {
-      font-size: 12px;
-      color: var(--dim);
+    .project-tags {
       display: flex;
-      gap: 16px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      gap: 8px;
+      margin-bottom: 14px;
     }
 
-    .card h3 {
-      margin: 6px 0;
-      font-size: 20px;
+    .project-tags span {
+      background: var(--section-bg);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
     }
 
-    .card p {
-      margin: 0;
-      color: var(--muted);
+    .project-card h3 {
+      font-size: 19px;
+      font-weight: 600;
+      margin-bottom: 10px;
     }
 
-    /* ====== CONTACT ====== */
+    .project-card p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Contact */
     .contact-grid {
+      display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 48px;
     }
 
-    @media (max-width: 768px) {
-      .contact-grid {
-        grid-template-columns: 1fr;
-        gap: 32px;
-      }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .contact .links {
-      display: flex;
-      flex-wrap: wrap;
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
 
-    .link {
-      display: inline-flex;
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      background: var(--card-bg);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 140px;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-link {
+      display: flex;
       align-items: center;
-      gap: 10px;
-      border: 1px solid var(--line);
-      padding: 12px 14px;
+      gap: 14px;
+      padding: 18px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
       text-decoration: none;
-      color: #fff;
-      opacity: 0.9;
+      color: inherit;
+      transition: all 0.2s;
     }
 
-    .link:hover {
-      opacity: 1;
-      background: #0a0a0a;
-      transform: translateY(-2px);
+    .contact-link:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
     }
 
-    /* ====== FOOTER ====== */
+    .contact-link i {
+      font-size: 20px;
+      color: var(--accent);
+      width: 24px;
+      text-align: center;
+    }
+
+    .contact-link span {
+      font-size: 15px;
+    }
+
+    /* Alert */
+    .alert {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    /* Footer */
     footer {
-      border-top: 1px solid var(--line);
-      color: var(--dim);
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
     }
 
-    footer .wrap {
-      padding: 28px 20px;
-    }
-
-    /* ====== RETRO SCANLINES OVERLAY (very subtle) ====== */
-    .scanlines::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 5;
-      opacity: 0.06;
-      background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0px, rgba(255, 255, 255, 0.25) 1px, transparent 2px, transparent 3px);
-      mix-blend-mode: overlay;
-      animation: flicker 4s linear infinite both;
-    }
-
-    @keyframes flicker {
-
-      0%,
-      100% {
-        opacity: 0.05;
+    /* Mobile */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+        border-bottom: 1px solid var(--border);
       }
 
-      50% {
-        opacity: 0.08;
+      .nav-links.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      section {
+        padding: 60px 0;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-photo {
+        order: -1;
+        max-width: 200px;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        justify-content: center;
       }
     }
 
-    /* ====== ANIMATE ON SCROLL (utility classes) ====== */
-    .reveal {
+    /* Animations */
+    .fade-in {
       opacity: 0;
-      transform: translateY(12px);
-      transition: opacity .6s ease, transform .6s ease;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
-    .reveal.in {
+    .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
-    }
-
-    /* ====== CUSTOM CURSOR ====== */
-    .cursor {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 18px;
-      height: 18px;
-      border: 1.5px solid #fff;
-      pointer-events: none;
-      z-index: 100;
-      transform: translate(-50%, -50%);
-      transition: width .15s ease, height .15s ease, background .08s ease;
-    }
-
-    .cursor.dot {
-      width: 6px;
-      height: 6px;
-      background: #fff;
-      border: none;
-    }
-
-    a:hover~.cursor,
-    .btn:hover~.cursor,
-    .card:hover~.cursor,
-    .link:hover~.cursor {
-      width: 28px;
-      height: 28px;
-    }
-
-    @media (pointer: coarse),
-    (prefers-reduced-motion: reduce) {
-      .cursor {
-        display: none;
-      }
-
-      body {
-        scroll-behavior: auto;
-      }
-
-      .reveal {
-        transition: none;
-      }
-    }
-
-    /* ====== PARTICLES ====== */
-    #particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .particle {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      background: #fff;
-      opacity: 0.5;
-      border-radius: 50%;
-    }
-
-    /* ====== UTIL ====== */
-    .muted {
-      color: var(--muted);
-    }
-
-    .hr {
-      height: 1px;
-      background: var(--line);
-      margin: 24px 0;
-    }
-
-    .kbd {
-      border: 1px solid var(--line);
-      padding: 2px 4px;
-      font-size: 12px;
-    }
-
-    /* ====== ICONS (stroke, monochrome, inline) ====== */
-    .ico {
-      width: 18px;
-      height: 18px;
-      display: inline-block;
-      vertical-align: -3px;
     }
   </style>
 </head>
 
-<body class="scanlines">
-  <div id="particles"></div>
+<body>
   <header>
-    <div class="wrap bar">
-      <div class="logo">ZENITH</div>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
+    <div class="container">
+      <nav class="nav">
+        <a href="#" class="logo">ZENITH</a>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="menu-toggle" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
       </nav>
-      <button class="mobile-menu-btn" aria-label="Menu">☰</button>
-      <div class="mobile-menu">
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-      </div>
     </div>
   </header>
 
   <main>
-    <!-- HERO -->
-    <section class="hero section">
-      <div class="wrap hero-inner">
-        <div class="tag reveal">Self‑taught Frontend Developer • Kathmandu, Nepal</div>
-        <h1 class="title reveal" style="transition-delay:.06s">Hi, I’m Zenith Kandel.</h1>
-        <p class="subtitle reveal" style="transition-delay:.12s">I build clean, fast, and functional web experiences
-          with <span class="kbd">HTML</span> <span class="kbd">CSS</span> <span class="kbd">JavaScript</span>. I love
-          minimal UI, retro aesthetics, and shipping pragmatic solutions.
-        </p>
-        <div class="hero-cta reveal" style="transition-delay:.18s">
-          <a class="btn" href="#projects" aria-label="View projects">View Projects</a>
-          <a class="btn" href="#contact" aria-label="Contact Zenith">Contact</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" class="section about">
-      <div class="wrap">
-        <h2 class="reveal">About</h2>
-        <div class="hr"></div>
-        <div class="about-content">
-          <div class="about-text">
-            <p class="reveal" style="transition-delay:.06s">I’m a Grade 11 student and a self‑taught web
-              developer/designer from Nepal. I enjoy frontend craft, quick prototyping, and turning ideas into simple
-              UIs. Currently exploring Node.js, PHP, MongoDB, and building portfolio projects while staying open to
-              internships and collaborations.</p>
-            <p class="reveal" style="transition-delay:.12s">When not coding, I sketch interfaces, tweak
-              micro‑interactions, and learn by doing. I prefer minimal code, no frameworks when possible, and strong
-              fundamentals.</p>
-          </div>
-          <div class="about-photo reveal" style="transition-delay:.18s">
-            <img src="me.jpg" alt="Zenith Kandel"
-              style="width:100%; height:100%; max-width: 100%; max-height: 350px; object-fit:cover;">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-tag"><?= e($settings['hero_tagline'] ?? 'Frontend Developer') ?></span>
+          <h1><?= e($settings['hero_title'] ?? 'Hi, I\'m Zenith Kandel.') ?></h1>
+          <p><?= e($settings['hero_subtitle'] ?? 'I build clean, fast, and functional web experiences.') ?></p>
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-primary">
+              View Projects
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="#contact" class="btn btn-secondary">Get in Touch</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SKILLS -->
-    <section id="skills" class="section skills">
-      <div class="wrap">
-        <h2 class="reveal">Skills</h2>
-        <div class="hr"></div>
-        <div class="grid skill-grid">
-          <!-- Each skill: vector icon (inline SVG) + label -->
-          <div class="skill reveal">
-            <i class="fa-sharp fa-solid fa-code"></i>
-            <span>HTML</span>
+    <!-- About -->
+    <section id="about">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>About Me</h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-text fade-in">
+            <p><?= nl2br(e($settings['about_text'] ?? '')) ?></p>
+            <?php if (!empty($settings['about_text_2'])): ?>
+              <p><?= nl2br(e($settings['about_text_2'])) ?></p>
+            <?php endif; ?>
           </div>
-          <div class="skill reveal" style="transition-delay:.02s">
-            <i class="fa-sharp fa-solid fa-paintbrush"></i>
-            <span>CSS</span>
-          </div>
-          <div class="skill reveal" style="transition-delay:.04s">
-            <i class="fa-brands fa-js"></i>
-            <span>JavaScript</span>
-          </div>
-          <div class="skill reveal" style="transition-delay:.06s">
-            <i class="fa-brands fa-node-js"></i>
-            <span>Node.js</span>
-          </div>
-          <div class="skill reveal" style="transition-delay:.08s">
-            <i class="fa-sharp fa-solid fa-server"></i>
-            <span>PHP</span>
-          </div>
-          <div class="skill reveal" style="transition-delay:.10s">
-            <i class="fa-sharp fa-solid fa-database"></i>
-            <span>MySQL</span>
-          </div>
-          <div class="skill reveal" style="transition-delay:.12s">
-            <i class="fa-sharp fa-solid fa-leaf"></i>
-            <span>MongoDB</span>
-          </div>
-          <div class="skill reveal" style="transition-delay:.14s">
-            <i class="fa-sharp fa-solid fa-pen-ruler"></i>
-            <span>UI/UX</span>
-          </div>
-          <div class="skill reveal" style="transition-delay:.16s">
-            <i class="fa-sharp fa-solid fa-mobile-screen"></i>
-            <span>Responsive Design</span>
+          <div class="about-photo fade-in">
+            <img src="<?= e($settings['photo_url'] ?? 'me.jpg') ?>" alt="Photo">
           </div>
         </div>
       </div>
     </section>
 
-    <!-- PROJECTS -->
-    <section id="projects" class="section projects">
-      <div class="wrap">
-        <h2 class="reveal">Projects</h2>
-        <div class="hr"></div>
-        <div class="grid cards">
-          <a class="card reveal" href="https://github.com/zenithkandel/STREAMFLIX" target="_blank" rel="noopener">
-            <div class="meta"><span>PHP</span><span>Full‑stack</span></div>
-            <h3>STREAMFLIX</h3>
-            <p>Movie streaming platform with chunked uploads, subtitles, and HLS processing.</p>
-          </a>
-          <a class="card reveal" style="transition-delay:.04s" href="https://github.com/zenithkandel" target="_blank"
-            rel="noopener">
-            <div class="meta"><span>Showcase</span><span>Frontend</span></div>
-            <h3>Kushma Art Project</h3>
-            <p>Modern bilingual art site with gallery, events, and donation flows.</p>
-          </a>
-          <a class="card reveal" style="transition-delay:.08s" href="https://github.com/zenithkandel" target="_blank"
-            rel="noopener">
-            <div class="meta"><span>Landing</span><span>SPA</span></div>
-            <h3>Rageni Agro Resort</h3>
-            <p>Single‑page resort website with parallax and theme switch experiments.</p>
-          </a>
-          <a class="card reveal" style="transition-delay:.12s"
-            href="https://github.com/zenithkandel/Javascript-Calculator" target="_blank" rel="noopener">
-            <div class="meta"><span>HTML</span><span>JS</span></div>
-            <h3>JavaScript Calculator</h3>
-            <p>Compact, dependency‑free calculator built with just HTML/CSS/JS.</p>
-          </a>
-          <a class="card reveal" style="transition-delay:.16s"
-            href="https://github.com/zenithkandel/Random-Color-Generator" target="_blank" rel="noopener">
-            <div class="meta"><span>Utility</span><span>JS</span></div>
-            <h3>Random Color Generator</h3>
-            <p>Generates random colors for design/dev workflows—simple and handy.</p>
-          </a>
-          <a class="card reveal" style="transition-delay:.20s" href="https://github.com/zenithkandel/Css-Login"
-            target="_blank" rel="noopener">
-            <div class="meta"><span>CSS</span><span>UI</span></div>
-            <h3>CSS Login</h3>
-            <p>Minimal login interface with basic client‑side validation.</p>
-          </a>
+    <!-- Skills -->
+    <section id="skills">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Skills & Technologies</h2>
+          <p>Tools and technologies I work with</p>
+        </div>
+        <div class="skills-grid">
+          <?php foreach ($skills as $skill): ?>
+            <div class="skill-card fade-in">
+              <i class="<?= e($skill['icon']) ?>"></i>
+              <span><?= e($skill['name']) ?></span>
+            </div>
+          <?php endforeach; ?>
         </div>
       </div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="section contact">
-      <div class="wrap">
-        <h2 class="reveal">Contact</h2>
-        <div class="hr"></div>
-        <p class="muted reveal">Open to internships, collaborations, and freelance work. Let's build something clean and
-          useful.</p>
+    <!-- Projects -->
+    <section id="projects">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Projects</h2>
+          <p>Some things I've built</p>
+        </div>
+        <div class="projects-grid">
+          <?php foreach ($projects as $project): ?>
+            <a href="<?= e($project['url']) ?>" target="_blank" rel="noopener" class="project-card fade-in">
+              <div class="project-tags">
+                <?php if (!empty($project['tag1'])): ?>
+                  <span><?= e($project['tag1']) ?></span>
+                <?php endif; ?>
+                <?php if (!empty($project['tag2'])): ?>
+                  <span><?= e($project['tag2']) ?></span>
+                <?php endif; ?>
+              </div>
+              <h3><?= e($project['title']) ?></h3>
+              <p><?= e($project['description']) ?></p>
+              <span class="project-link">
+                View Project <i class="fas fa-external-link-alt"></i>
+              </span>
+            </a>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
 
-        <div class="grid contact-grid">
-          <!-- Contact Form -->
-          <div class="reveal">
-            <form id="contact-form" class="grid" style="gap: 16px;">
-              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 16px;">
-                <div>
-                  <label for="name" class="muted"
-                    style="display: block; margin-bottom: 8px; font-size: 14px;">Name</label>
-                  <input type="text" id="name" name="name" required
-                    style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;">
+    <!-- Contact -->
+    <section id="contact">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Get in Touch</h2>
+          <p>Open to internships, collaborations, and freelance work</p>
+        </div>
+        <div class="contact-grid">
+          <div class="fade-in">
+            <?php if (isset($formSuccess)): ?>
+              <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> Message sent successfully! I'll get back to you soon.
+              </div>
+            <?php endif; ?>
+            <?php if (isset($formError)): ?>
+              <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i> <?= e($formError) ?>
+              </div>
+            <?php endif; ?>
+            <form class="contact-form" method="POST" action="#contact">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Name *</label>
+                  <input type="text" id="name" name="name" required>
                 </div>
-                <div>
-                  <label for="email" class="muted"
-                    style="display: block; margin-bottom: 8px; font-size: 14px;">Email</label>
-                  <input type="email" id="email" name="email" required
-                    style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;">
+                <div class="form-group">
+                  <label for="email">Email *</label>
+                  <input type="email" id="email" name="email" required>
                 </div>
               </div>
-              <div>
-                <label for="subject" class="muted"
-                  style="display: block; margin-bottom: 8px; font-size: 14px;">Subject</label>
-                <input type="text" id="subject" name="subject" required
-                  style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;">
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject">
               </div>
-              <div>
-                <label for="message" class="muted"
-                  style="display: block; margin-bottom: 8px; font-size: 14px;">Message</label>
-                <textarea id="message" name="message" rows="5" required
-                  style="width: 100%; padding: 10px; background: transparent; border: 1px solid #333; color: #fff;"></textarea>
+              <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" required></textarea>
               </div>
-              <button type="submit" class="btn" style="margin-top: 12px; width: fit-content;">Send Message</button>
+              <button type="submit" name="contact_submit" class="btn btn-primary">
+                Send Message <i class="fas fa-paper-plane"></i>
+              </button>
             </form>
           </div>
-
-          <!-- Contact Info -->
-          <div class="reveal" style="transition-delay:.1s">
-            <div class="links" style="display: grid; gap: 16px;">
-              <a class="link" href="mailto:zenithkandel0@gmail.com" aria-label="Email">
-                <i class="fa-sharp fa-solid fa-envelope"></i>
-                zenithkandel0@gmail.com
+          <div class="contact-info fade-in">
+            <?php if (!empty($settings['email'])): ?>
+              <a href="mailto:<?= e($settings['email']) ?>" class="contact-link">
+                <i class="fas fa-envelope"></i>
+                <span><?= e($settings['email']) ?></span>
               </a>
-              <a class="link" href="tel:9806176120" aria-label="Phone">
-                <i class="fa-sharp fa-solid fa-phone"></i>
-                +977 9806176120
+            <?php endif; ?>
+            <?php if (!empty($settings['phone'])): ?>
+              <a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $settings['phone'])) ?>" class="contact-link">
+                <i class="fas fa-phone"></i>
+                <span><?= e($settings['phone']) ?></span>
               </a>
-              <a class="link" href="https://github.com/zenithkandel" target="_blank" rel="noopener" aria-label="GitHub">
-                <i class="fa-brands fa-github"></i>
-                github.com/zenithkandel
+            <?php endif; ?>
+            <?php if (!empty($settings['github_url'])): ?>
+              <a href="<?= e($settings['github_url']) ?>" target="_blank" rel="noopener" class="contact-link">
+                <i class="fab fa-github"></i>
+                <span>GitHub</span>
               </a>
-              <a class="link" href="https://www.linkedin.com/in/zenithkandel" target="_blank" rel="noopener"
-                aria-label="LinkedIn">
-                <i class="fa-brands fa-linkedin"></i>
-                linkedin.com/in/zenithkandel
+            <?php endif; ?>
+            <?php if (!empty($settings['linkedin_url'])): ?>
+              <a href="<?= e($settings['linkedin_url']) ?>" target="_blank" rel="noopener" class="contact-link">
+                <i class="fab fa-linkedin"></i>
+                <span>LinkedIn</span>
               </a>
-              <a class="link" href="https://instagram.com/kandel.zenith" target="_blank" rel="noopener"
-                aria-label="Instagram">
-                <i class="fa-brands fa-instagram"></i>
-                instagram.com/kandel.zenith
+            <?php endif; ?>
+            <?php if (!empty($settings['instagram_url'])): ?>
+              <a href="<?= e($settings['instagram_url']) ?>" target="_blank" rel="noopener" class="contact-link">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
               </a>
-            </div>
+            <?php endif; ?>
           </div>
         </div>
       </div>
@@ -807,140 +718,50 @@
   </main>
 
   <footer>
-    <div class="wrap">
-      <span>© <span id="y"></span> Zenith Kandel</span>
+    <div class="container">
+      <p>&copy; <?= date('Y') ?> Zenith Kandel. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- ====== JS (Vanilla only) ====== -->
   <script>
-    // Year
-    document.getElementById('y').textContent = new Date().getFullYear();
-
-    // Animate on scroll (IntersectionObserver)
-    const revealEls = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      });
-    }, { rootMargin: '0px 0px -5% 0px', threshold: 0.05 });
-    revealEls.forEach(el => io.observe(el));
-
-    // Custom cursor
-    const cursor = document.createElement('div');
-    cursor.className = 'cursor';
-    document.body.appendChild(cursor);
-    let raf; let cx = 0, cy = 0, tx = 0, ty = 0;
-    const lerp = (a, b, t) => a + (b - a) * t;
-    const move = (x, y) => { tx = x; ty = y; if (!raf) raf = requestAnimationFrame(loop); };
-    const loop = () => { cx = lerp(cx, tx, 0.2); cy = lerp(cy, ty, 0.2); cursor.style.transform = `translate(${cx}px, ${cy}px)`; raf = requestAnimationFrame(loop); };
-    window.addEventListener('mousemove', (e) => move(e.clientX, e.clientY));
-    window.addEventListener('mousedown', () => cursor.classList.add('dot'));
-    window.addEventListener('mouseup', () => cursor.classList.remove('dot'));
-
     // Mobile menu toggle
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    mobileMenuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('active');
-      mobileMenuBtn.textContent = mobileMenu.classList.contains('active') ? '✕' : '☰';
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const icon = menuToggle.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
     });
 
-    // Close mobile menu when clicking a link
-    document.querySelectorAll('.mobile-menu a').forEach(link => {
+    // Close menu on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
       link.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-        mobileMenuBtn.textContent = '☰';
+        navLinks.classList.remove('active');
+        const icon = menuToggle.querySelector('i');
+        icon.classList.add('fa-bars');
+        icon.classList.remove('fa-times');
       });
     });
 
-    // Contact form handling
-    document.getElementById('contact-form').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-      const data = Object.fromEntries(formData);
+    // Scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
 
-      // Here you would normally send the data to your backend
-      console.log('Form submitted:', data);
-
-      // Show success message
-      alert('Message sent successfully! I will get back to you soon.');
-      this.reset();
-    });
-
-    // Particle background animation
-    const particleCount = 30; // Reduced from 100
-    const particles = [];
-    const container = document.getElementById('particles');
-
-    for (let i = 0; i < particleCount; i++) {
-      const particle = document.createElement('div');
-      particle.classList.add('particle');
-
-      // Random initial position
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-
-      // Random size (1-2px)
-      const size = 1 + Math.random() * 1;
-
-      // Random speed (0.05-0.2)
-      const speed = 0.05 + Math.random() * 0.15;
-
-      // Random direction (0-360 degrees)
-      const angle = Math.random() * 360;
-
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      particle.style.left = `${x}%`;
-      particle.style.top = `${y}%`;
-      particle.style.opacity = 0.2 + Math.random() * 0.2; // Reduced opacity
-
-      container.appendChild(particle);
-
-      particles.push({
-        element: particle,
-        x, y,
-        speed,
-        angle
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
       });
-    }
+    }, observerOptions);
 
-    function updateParticles() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      particles.forEach(p => {
-        // Update position based on angle and speed
-        p.x += Math.cos(p.angle * Math.PI / 180) * p.speed;
-        p.y += Math.sin(p.angle * Math.PI / 180) * p.speed;
-
-        // Wrap around edges
-        if (p.x > 100) p.x = 0;
-        if (p.x < 0) p.x = 100;
-        if (p.y > 100) p.y = 0;
-        if (p.y < 0) p.y = 100;
-
-        // Apply new position
-        p.element.style.left = `${p.x}%`;
-        p.element.style.top = `${p.y}%`;
-      });
-
-      requestAnimationFrame(updateParticles);
-    }
-
-    updateParticles();
-
-    // Smooth internal anchor focus (accessibility)
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        const id = a.getAttribute('href').slice(1);
-        const el = document.getElementById(id);
-        if (el) { el.setAttribute('tabindex', '-1'); el.focus({ preventScroll: true }); setTimeout(() => el.removeAttribute('tabindex'), 600); }
-      });
-    });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
-
 </body>
 
 </html>
