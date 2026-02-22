@@ -3,6 +3,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     initLoader();
     initCursor();
     initReveal();
@@ -11,6 +12,24 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeader();
     initContactForm();
 });
+
+// Theme Toggle
+function initTheme() {
+    const toggle = document.querySelector('.theme-toggle');
+    if (!toggle) return;
+
+    // Check for saved theme preference or default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    toggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+}
 
 // Loader
 function initLoader() {
@@ -52,7 +71,7 @@ function initHeader() {
     });
 }
 
-// Subtle cursor
+// Subtle cursor with glow
 function initCursor() {
     if (window.matchMedia('(pointer: coarse)').matches) return;
 
@@ -60,7 +79,23 @@ function initCursor() {
     cursor.className = 'cursor';
     document.body.appendChild(cursor);
 
+    // Glow element that follows mouse
+    const glow = document.createElement('div');
+    glow.className = 'cursor-glow';
+    glow.style.cssText = `
+        position: fixed;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: -1;
+        transform: translate(-50%, -50%);
+        transition: opacity 0.3s;
+    `;
+    document.body.appendChild(glow);
+
     let x = 0, y = 0;
+    let glowX = 0, glowY = 0;
     let targetX = 0, targetY = 0;
 
     document.addEventListener('mousemove', e => {
@@ -77,21 +112,42 @@ function initCursor() {
     function animate() {
         x += (targetX - x) * 0.15;
         y += (targetY - y) * 0.15;
+        glowX += (targetX - glowX) * 0.05;
+        glowY += (targetY - glowY) * 0.05;
+
         cursor.style.left = x + 'px';
         cursor.style.top = y + 'px';
+        glow.style.left = glowX + 'px';
+        glow.style.top = glowY + 'px';
         requestAnimationFrame(animate);
     }
     animate();
 }
 
-// Scroll reveal - handles all reveal types
+// Scroll reveal - handles all reveal types with stagger
 function initReveal() {
-    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-fade, .section-label, .skills-grid, .contact-title, .contact-section, .project-item');
+    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-fade, .section-label, .skills-grid, .contact-title, .contact-section, .project-item, .about-section');
 
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
+
+                // Stagger children for skills-grid
+                if (entry.target.classList.contains('skills-grid')) {
+                    const tags = entry.target.querySelectorAll('.skill-tag');
+                    tags.forEach((tag, i) => {
+                        tag.style.transitionDelay = `${i * 0.05}s`;
+                    });
+                }
+
+                // Add parallax-like effect to sections
+                if (entry.target.classList.contains('about-section')) {
+                    const img = entry.target.querySelector('.about-image');
+                    if (img) {
+                        img.style.animation = 'imageReveal 1.2s var(--ease) forwards';
+                    }
+                }
             }
         });
     }, {
@@ -100,6 +156,24 @@ function initReveal() {
     });
 
     reveals.forEach(el => observer.observe(el));
+
+    // Add smooth parallax on scroll
+    initParallax();
+}
+
+// Subtle parallax effect
+function initParallax() {
+    const parallaxElements = document.querySelectorAll('.hero-title, .about-image');
+
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+
+        parallaxElements.forEach(el => {
+            const speed = el.classList.contains('hero-title') ? 0.3 : 0.1;
+            const yPos = -(scrolled * speed);
+            el.style.transform = `translateY(${yPos}px)`;
+        });
+    }, { passive: true });
 }
 
 // Mobile navigation

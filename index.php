@@ -13,6 +13,13 @@ $location = $settings['contact_location'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<script>
+  // Apply theme before render to prevent flash
+  (function () {
+    const theme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
 
 <head>
   <meta charset="UTF-8">
