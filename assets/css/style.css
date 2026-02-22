@@ -5,6 +5,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
+/* Dark theme (default) */
 :root {
     --bg: #0c0c0c;
     --bg-light: #141414;
@@ -17,6 +18,16 @@
     --font-serif: 'Instrument Serif', Georgia, serif;
 
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Light theme */
+[data-theme="light"] {
+    --bg: #f8f8f8;
+    --bg-light: #ffffff;
+    --text: #0c0c0c;
+    --text-dim: #555;
+    --accent: #1a1a1a;
+    --border: rgba(0, 0, 0, 0.1);
 }
 
 *,

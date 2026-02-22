@@ -250,16 +250,20 @@ $location = $settings['contact_location'] ?? '';
         <a href="<?= e($settings['github_url']) ?>" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
       <?php endif; ?>
       <?php if (!empty($settings['linkedin_url'])): ?>
-        <a href="<?= e($settings['linkedin_url']) ?>" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="<?= e($settings['linkedin_url']) ?>" target="_blank" aria-label="LinkedIn"><i
+            class="fab fa-linkedin"></i></a>
       <?php endif; ?>
       <?php if (!empty($settings['instagram_url'])): ?>
-        <a href="<?= e($settings['instagram_url']) ?>" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="<?= e($settings['instagram_url']) ?>" target="_blank" aria-label="Instagram"><i
+            class="fab fa-instagram"></i></a>
       <?php endif; ?>
       <?php if (!empty($settings['facebook_url'])): ?>
-        <a href="<?= e($settings['facebook_url']) ?>" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="<?= e($settings['facebook_url']) ?>" target="_blank" aria-label="Facebook"><i
+            class="fab fa-facebook"></i></a>
       <?php endif; ?>
       <?php if (!empty($settings['whatsapp'])): ?>
-        <a href="https://wa.me/977<?= e($settings['whatsapp']) ?>" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://wa.me/977<?= e($settings['whatsapp']) ?>" target="_blank" aria-label="WhatsApp"><i
+            class="fab fa-whatsapp"></i></a>
       <?php endif; ?>
     </div>
 
