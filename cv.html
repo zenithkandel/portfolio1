@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - Developer Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #fff;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #1a1a1a;
+        }
+        
+        .name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .title {
+            font-size: 1.25rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+        
+        .contact-info a {
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+        
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+        
+        section {
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.25rem;
+        }
+        
+        .item-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .item-date {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .item-subtitle {
+            font-size: 0.95rem;
+            color: #444;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-description {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        ul {
+            padding-left: 1.25rem;
+        }
+        
+        li {
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+        
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .skill-tag {
+            background: #f5f5f5;
+            padding: 0.35rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+        }
+        
+        .download-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+        }
+        
+        @media print {
+            .download-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="name">Your Name</h1>
+        <p class="title">Full-Stack Developer & Designer</p>
+        <div class="contact-info">
+            <span>📧 your.email@example.com</span>
+            <span>📱 +977 980-617-6120</span>
+            <span>📍 Kathmandu, Nepal</span>
+            <a href="https://github.com/yourusername">GitHub</a>
+            <a href="https://linkedin.com/in/yourusername">LinkedIn</a>
+        </div>
+    </header>
+    
+    <section>
+        <h2>Professional Summary</h2>
+        <p class="item-description">
+            Passionate full-stack developer with 3+ years of experience building modern web applications. 
+            Skilled in creating responsive, user-friendly interfaces and robust backend systems. 
+            Strong problem-solving abilities and a keen eye for design details.
+        </p>
+    </section>
+    
+    <section>
+        <h2>Skills</h2>
+        <div class="skills-grid">
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">TypeScript</span>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">PHP</span>
+            <span class="skill-tag">MySQL</span>
+            <span class="skill-tag">MongoDB</span>
+            <span class="skill-tag">HTML/CSS</span>
+            <span class="skill-tag">Tailwind CSS</span>
+            <span class="skill-tag">Git</span>
+            <span class="skill-tag">REST APIs</span>
+            <span class="skill-tag">UI/UX Design</span>
+            <span class="skill-tag">Figma</span>
+        </div>
+    </section>
+    
+    <section>
+        <h2>Experience</h2>
+        <div class="item">
+            <div class="item-header">
+                <span class="item-title">Full-Stack Developer</span>
+                <span class="item-date">2023 - Present</span>
+            </div>
+            <p class="item-subtitle">Tech Company Name</p>
+            <ul>
+                <li>Developed and maintained multiple client-facing web applications using React and Node.js</li>
+                <li>Implemented responsive designs that improved mobile user engagement by 40%</li>
+                <li>Collaborated with cross-functional teams to deliver projects on time</li>
+                <li>Optimized database queries resulting in 60% faster page load times</li>
+            </ul>
+        </div>
+        
+        <div class="item">
+            <div class="item-header">
+                <span class="item-title">Junior Web Developer</span>
+                <span class="item-date">2021 - 2023</span>
+            </div>
+            <p class="item-subtitle">Startup Name</p>
+            <ul>
+                <li>Built responsive websites and landing pages for various clients</li>
+                <li>Maintained and updated existing codebases</li>
+                <li>Integrated third-party APIs and payment systems</li>
+            </ul>
+        </div>
+    </section>
+    
+    <section>
+        <h2>Education</h2>
+        <div class="item">
+            <div class="item-header">
+                <span class="item-title">Bachelor of Computer Science</span>
+                <span class="item-date">2017 - 2021</span>
+            </div>
+            <p class="item-subtitle">University Name, Kathmandu</p>
+        </div>
+    </section>
+    
+    <section>
+        <h2>Projects</h2>
+        <div class="item">
+            <div class="item-header">
+                <span class="item-title">E-Commerce Platform</span>
+            </div>
+            <p class="item-description">
+                Full-stack e-commerce solution with React frontend, Node.js backend, and Stripe payment integration.
+            </p>
+        </div>
+        <div class="item">
+            <div class="item-header">
+                <span class="item-title">Portfolio Website</span>
+            </div>
+            <p class="item-description">
+                Modern portfolio with custom CMS admin panel, dark/light theme, and responsive design.
+            </p>
+        </div>
+    </section>
+    
+    <button class="download-btn" onclick="window.print()">
+        📄 Download PDF
+    </button>
+</body>
+</html>

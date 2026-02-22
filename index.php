@@ -83,6 +83,7 @@ $location = $settings['contact_location'] ?? '';
         <div class="hero-cta">
           <a href="#work" class="btn btn-primary">View Work</a>
           <a href="#contact" class="btn btn-outline">Get In Touch</a>
+          <a href="cv.html" target="_blank" class="btn btn-outline"><i class="fas fa-download"></i> Download CV</a>
         </div>
 
         <div class="hero-scroll">
@@ -109,7 +110,12 @@ $location = $settings['contact_location'] ?? '';
   <section id="work">
     <div class="section-label">Selected Work</div>
 
-    <div class="projects-list">
+    <div class="projects-wrapper">
+      <button class="projects-nav projects-nav-prev" aria-label="Previous">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <div class="projects-list">
       <?php foreach ($projects as $i => $project):
         $tags = array_filter([$project['tag1'] ?? '', $project['tag2'] ?? '']);
         $githubUrl = $project['github_url'] ?? '';
@@ -151,6 +157,13 @@ $location = $settings['contact_location'] ?? '';
           <?php endif; ?>
         </article>
       <?php endforeach; ?>
+    </div>
+    
+      <button class="projects-nav projects-nav-next" aria-label="Next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      
+      <div class="projects-indicators"></div>
     </div>
   </section>
 
