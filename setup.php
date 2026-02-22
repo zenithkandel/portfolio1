@@ -60,6 +60,7 @@ try {
             id INT AUTO_INCREMENT PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
             description TEXT,
+            image VARCHAR(255),
             tag1 VARCHAR(50),
             tag2 VARCHAR(50),
             url VARCHAR(255),
