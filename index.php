@@ -33,7 +33,7 @@ $location = $settings['contact_location'] ?? '';
     content="<?= e($name) ?> is a <?= e(strtolower($role)) ?><?= $location ? ' based in ' . e($location) : '' ?>. View portfolio, projects, and get in touch for collaborations.">
 
   <!-- SEO: Canonical URL -->
-  <link rel="canonical" href="<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>">
+  <link rel="canonical" href="<?= e($settings['site_url'] ?? 'https://zenithkandel.com.np') ?>">
 
   <!-- SEO: Robots -->
   <meta name="robots" content="index, follow">
@@ -47,8 +47,8 @@ $location = $settings['contact_location'] ?? '';
   <meta property="og:title" content="<?= e($name) ?> – <?= e($role) ?>">
   <meta property="og:description"
     content="<?= e($name) ?> is a <?= e(strtolower($role)) ?>. Explore projects, skills, and connect for collaborations.">
-  <meta property="og:url" content="<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>">
-  <meta property="og:image" content="<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>/me.jpg">
+  <meta property="og:url" content="<?= e($settings['site_url'] ?? 'https://zenithkandel.com.np') ?>">
+  <meta property="og:image" content="<?= e($settings['site_url'] ?? 'https://zenithkandel.com.np') ?>/me.jpg">
   <meta property="og:locale" content="en_US">
   <meta property="og:site_name" content="<?= e($name) ?> Portfolio">
 
@@ -56,7 +56,7 @@ $location = $settings['contact_location'] ?? '';
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<?= e($name) ?> – <?= e($role) ?>">
   <meta name="twitter:description" content="Portfolio showcasing projects and skills. Open to collaborations.">
-  <meta name="twitter:image" content="<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>/me.jpg">
+  <meta name="twitter:image" content="<?= e($settings['site_url'] ?? 'https://zenithkandel.com.np') ?>/me.jpg">
 
   <!-- SEO: JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -68,8 +68,8 @@ $location = $settings['contact_location'] ?? '';
       "name": "<?= e($name) ?>",
       "jobTitle": "<?= e($role) ?>",
       "description": "<?= e(substr(strip_tags($about), 0, 200)) ?>",
-      "url": "<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>",
-      "image": "<?= e($settings['site_url'] ?? 'https://zenithkandel.com') ?>/me.jpg",
+      "url": "<?= e($settings['site_url'] ?? 'https://zenithkandel.com.np') ?>",
+      "image": "<?= e($settings['site_url'] ?? 'https://zenithkandel.com.np') ?>/me.jpg",
       <?php if ($email): ?>"email": "<?= e($email) ?>",<?php endif; ?>
       <?php if ($location): ?>"address": { "@type": "PostalAddress", "addressLocality": "<?= e($location) ?>" },<?php endif; ?>
       "sameAs": [
