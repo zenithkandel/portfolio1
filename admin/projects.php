@@ -12,14 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'add') {
         $title = trim($_POST['title'] ?? '');
         $description = trim($_POST['description'] ?? '');
+        $image = trim($_POST['image'] ?? '');
         $tag1 = trim($_POST['tag1'] ?? '');
         $tag2 = trim($_POST['tag2'] ?? '');
         $url = trim($_POST['url'] ?? '');
         $sortOrder = (int) ($_POST['sort_order'] ?? 0);
 
         if ($title) {
-            $stmt = $pdo->prepare("INSERT INTO projects (title, description, tag1, tag2, url, sort_order) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$title, $description, $tag1, $tag2, $url, $sortOrder]);
+            $stmt = $pdo->prepare("INSERT INTO projects (title, description, image, tag1, tag2, url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $description, $image, $tag1, $tag2, $url, $sortOrder]);
             setFlash('success', 'Project added successfully!');
         }
     }
@@ -28,14 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = (int) ($_POST['id'] ?? 0);
         $title = trim($_POST['title'] ?? '');
         $description = trim($_POST['description'] ?? '');
+        $image = trim($_POST['image'] ?? '');
         $tag1 = trim($_POST['tag1'] ?? '');
         $tag2 = trim($_POST['tag2'] ?? '');
         $url = trim($_POST['url'] ?? '');
         $sortOrder = (int) ($_POST['sort_order'] ?? 0);
 
         if ($id && $title) {
-            $stmt = $pdo->prepare("UPDATE projects SET title = ?, description = ?, tag1 = ?, tag2 = ?, url = ?, sort_order = ? WHERE id = ?");
-            $stmt->execute([$title, $description, $tag1, $tag2, $url, $sortOrder, $id]);
+            $stmt = $pdo->prepare("UPDATE projects SET title = ?, description = ?, image = ?, tag1 = ?, tag2 = ?, url = ?, sort_order = ? WHERE id = ?");
+            $stmt->execute([$title, $description, $image, $tag1, $tag2, $url, $sortOrder, $id]);
             setFlash('success', 'Project updated successfully!');
         }
     }
@@ -529,6 +531,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label>Description</label>
                     <textarea name="description" placeholder="Brief description of the project..."></textarea>
                 </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" name="image" placeholder="e.g., projects/myproject.jpg or https://...">
+                </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Tag 1</label>
@@ -573,6 +579,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label>Description</label>
                     <textarea name="description" id="edit_description"></textarea>
                 </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" name="image" id="edit_image" placeholder="e.g., projects/myproject.jpg">
+                </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Tag 1</label>
@@ -608,6 +618,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById('edit_id').value = project.id;
             document.getElementById('edit_title').value = project.title || '';
             document.getElementById('edit_description').value = project.description || '';
+            document.getElementById('edit_image').value = project.image || '';
             document.getElementById('edit_tag1').value = project.tag1 || '';
             document.getElementById('edit_tag2').value = project.tag2 || '';
             document.getElementById('edit_url').value = project.url || '';
