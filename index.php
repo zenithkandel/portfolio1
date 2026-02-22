@@ -114,55 +114,55 @@ $location = $settings['contact_location'] ?? '';
       <button class="projects-nav projects-nav-prev" aria-label="Previous">
         <i class="fas fa-chevron-left"></i>
       </button>
-      
+
       <div class="projects-list">
-      <?php foreach ($projects as $i => $project):
-        $tags = array_filter([$project['tag1'] ?? '', $project['tag2'] ?? '']);
-        $githubUrl = $project['github_url'] ?? '';
-        $publicUrl = $project['public_url'] ?? '';
-        $hasLinks = !empty($githubUrl) || !empty($publicUrl);
-        ?>
-        <article class="project-item">
-          <div class="project-image">
-            <?php if (!empty($project['image'])): ?>
-              <img src="<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>">
-            <?php else: ?>
-              <img src="https://via.placeholder.com/800x600/141414/333?text=<?= urlencode($project['title']) ?>" alt="">
+        <?php foreach ($projects as $i => $project):
+          $tags = array_filter([$project['tag1'] ?? '', $project['tag2'] ?? '']);
+          $githubUrl = $project['github_url'] ?? '';
+          $publicUrl = $project['public_url'] ?? '';
+          $hasLinks = !empty($githubUrl) || !empty($publicUrl);
+          ?>
+          <article class="project-item">
+            <div class="project-image">
+              <?php if (!empty($project['image'])): ?>
+                <img src="<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>">
+              <?php else: ?>
+                <img src="https://via.placeholder.com/800x600/141414/333?text=<?= urlencode($project['title']) ?>" alt="">
+              <?php endif; ?>
+            </div>
+
+            <div class="project-info">
+              <span class="project-number"><?= str_pad($i + 1, 2, '0', STR_PAD_LEFT) ?></span>
+              <h2 class="project-title"><?= e($project['title']) ?></h2>
+              <div class="project-tags">
+                <?php foreach ($tags as $tag): ?>
+                  <span class="project-tag"><?= e($tag) ?></span>
+                <?php endforeach; ?>
+              </div>
+            </div>
+
+            <?php if ($hasLinks): ?>
+              <div class="project-ctas">
+                <?php if (!empty($githubUrl)): ?>
+                  <a href="<?= e($githubUrl) ?>" target="_blank" class="project-cta">
+                    <i class="fab fa-github"></i> Code
+                  </a>
+                <?php endif; ?>
+                <?php if (!empty($publicUrl)): ?>
+                  <a href="<?= e($publicUrl) ?>" target="_blank" class="project-cta">
+                    <i class="fas fa-external-link-alt"></i> Live
+                  </a>
+                <?php endif; ?>
+              </div>
             <?php endif; ?>
-          </div>
+          </article>
+        <?php endforeach; ?>
+      </div>
 
-          <div class="project-info">
-            <span class="project-number"><?= str_pad($i + 1, 2, '0', STR_PAD_LEFT) ?></span>
-            <h2 class="project-title"><?= e($project['title']) ?></h2>
-            <div class="project-tags">
-              <?php foreach ($tags as $tag): ?>
-                <span class="project-tag"><?= e($tag) ?></span>
-              <?php endforeach; ?>
-            </div>
-          </div>
-
-          <?php if ($hasLinks): ?>
-            <div class="project-ctas">
-              <?php if (!empty($githubUrl)): ?>
-                <a href="<?= e($githubUrl) ?>" target="_blank" class="project-cta">
-                  <i class="fab fa-github"></i> Code
-                </a>
-              <?php endif; ?>
-              <?php if (!empty($publicUrl)): ?>
-                <a href="<?= e($publicUrl) ?>" target="_blank" class="project-cta">
-                  <i class="fas fa-external-link-alt"></i> Live
-                </a>
-              <?php endif; ?>
-            </div>
-          <?php endif; ?>
-        </article>
-      <?php endforeach; ?>
-    </div>
-    
       <button class="projects-nav projects-nav-next" aria-label="Next">
         <i class="fas fa-chevron-right"></i>
       </button>
-      
+
       <div class="projects-indicators"></div>
     </div>
   </section>
