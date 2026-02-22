@@ -3,11 +3,53 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    initLoader();
     initCursor();
     initReveal();
     initMobileNav();
     initTime();
+    initHeader();
 });
+
+// Loader
+function initLoader() {
+    const loader = document.querySelector('.loader');
+    if (!loader) return;
+    
+    // Wait for everything to load
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            loader.classList.add('hidden');
+            document.body.classList.add('loaded');
+        }, 2000);
+    });
+    
+    // Fallback
+    setTimeout(() => {
+        loader.classList.add('hidden');
+        document.body.classList.add('loaded');
+    }, 3500);
+}
+
+// Header scroll effect
+function initHeader() {
+    const header = document.querySelector('.header');
+    if (!header) return;
+    
+    let lastScroll = 0;
+    
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+        
+        lastScroll = currentScroll;
+    });
+}
 
 // Subtle cursor
 function initCursor() {
@@ -41,9 +83,9 @@ function initCursor() {
     animate();
 }
 
-// Scroll reveal
+// Scroll reveal - handles all reveal types
 function initReveal() {
-    const reveals = document.querySelectorAll('.reveal');
+    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-fade, .section-label, .skills-grid, .contact-title, .contact-section, .project-item');
 
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
@@ -51,7 +93,10 @@ function initReveal() {
                 entry.target.classList.add('visible');
             }
         });
-    }, { threshold: 0.1 });
+    }, { 
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
 
     reveals.forEach(el => observer.observe(el));
 }

@@ -38,6 +38,16 @@ $location = $settings['contact_location'] ?? '';
 
 <body>
 
+  <!-- Loader -->
+  <div class="loader">
+    <div class="loader-inner">
+      <div class="loader-text">
+        <span>L</span><span>o</span><span>a</span><span>d</span><span>i</span><span>n</span><span>g</span>
+      </div>
+      <div class="loader-line"></div>
+    </div>
+  </div>
+
   <!-- Header -->
   <header class="header">
     <a href="#" class="logo"><?= e(explode(' ', $name)[0]) ?></a>
@@ -135,13 +145,13 @@ $location = $settings['contact_location'] ?? '';
   </section>
 
   <!-- About -->
-  <section id="about" class="about reveal">
-    <div class="about-image">
+  <section id="about" class="about">
+    <div class="about-image reveal-left">
       <img src="me.jpg" alt="<?= e($name) ?>"
         onerror="this.src='https://via.placeholder.com/600x800/141414/333?text=Photo'">
     </div>
 
-    <div class="about-content">
+    <div class="about-content reveal-right">
       <div class="section-label">About</div>
 
       <h2 class="section-title"><?= e($name) ?></h2>
