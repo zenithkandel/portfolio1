@@ -5,21 +5,6 @@ $settings = getSettings($pdo);
 $skills = getSkills($pdo);
 $projects = getProjects($pdo);
 
-// Contact form handling
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $name = trim($_POST['name'] ?? '');
-  $email = trim($_POST['email'] ?? '');
-  $subject = trim($_POST['subject'] ?? '');
-  $message = trim($_POST['message'] ?? '');
-
-  if ($name && $email && $message) {
-    $stmt = $pdo->prepare("INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
-    $success = $stmt->execute([$name, $email, $subject, $message]);
-  } else {
-    $error = true;
-  }
-}
-
 $name = $settings['hero_title'] ?? 'Developer';
 $role = $settings['hero_subtitle'] ?? 'Creative Developer';
 $about = $settings['about_text'] ?? '';
@@ -203,14 +188,9 @@ $location = $settings['contact_location'] ?? '';
       <a href="mailto:<?= e($email) ?>" class="contact-email"><?= e($email) ?></a>
     <?php endif; ?>
 
-    <form class="contact-form" method="POST" action="#contact">
-      <?php if (isset($success)): ?>
-        <div class="alert alert-success">Message sent successfully.</div>
-      <?php endif; ?>
-
-      <?php if (isset($error)): ?>
-        <div class="alert alert-error">Please fill all required fields.</div>
-      <?php endif; ?>
+    <form class="contact-form" id="contactForm">
+      <div class="alert alert-success" id="formSuccess" style="display:none">Message sent successfully!</div>
+      <div class="alert alert-error" id="formError" style="display:none"></div>
 
       <div class="form-group">
         <label class="form-label">Name</label>
@@ -227,7 +207,7 @@ $location = $settings['contact_location'] ?? '';
         <textarea name="message" class="form-textarea" required></textarea>
       </div>
 
-      <button type="submit" class="form-submit">Send Message</button>
+      <button type="submit" class="form-submit" id="submitBtn">Send Message</button>
     </form>
 
     <div class="contact-links">

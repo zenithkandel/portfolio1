@@ -408,6 +408,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 20px;
         }
 
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: var(--accent);
+            background: #f0f7ff;
+        }
+
+        .upload-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+
+        .upload-placeholder i {
+            font-size: 32px;
+            color: var(--border);
+        }
+
+        .upload-placeholder small {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .upload-preview {
+            position: relative;
+            display: inline-block;
+        }
+
+        .upload-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 4px;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e53935;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-image:hover {
+            background: #c62828;
+        }
+
+        .upload-loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            color: var(--text-muted);
+        }
+
+        .upload-loading.active {
+            display: flex;
+        }
+
+        .upload-loading .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         .empty-state {
             text-align: center;
             padding: 60px 40px;
@@ -521,8 +614,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h3>Add Project</h3>
                 <button class="modal-close" onclick="closeModal('addModal')">&times;</button>
             </div>
-            <form method="POST">
+            <form method="POST" id="addForm">
                 <input type="hidden" name="action" value="add">
+                <input type="hidden" name="image" id="add_image_path">
                 <div class="form-group">
                     <label>Project Title</label>
                     <input type="text" name="title" required placeholder="e.g., My Awesome Project">
@@ -532,8 +626,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea name="description" placeholder="Brief description of the project..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Image URL</label>
-                    <input type="text" name="image" placeholder="e.g., projects/myproject.jpg or https://...">
+                    <label>Project Image</label>
+                    <div class="upload-area" id="addUploadArea">
+                        <input type="file" id="add_image_file" accept="image/*" style="display:none">
+                        <div class="upload-placeholder" id="addPlaceholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Click to upload or drag image here</span>
+                            <small>JPG, PNG, GIF, WebP (Max 5MB)</small>
+                        </div>
+                        <div class="upload-preview" id="addPreview" style="display:none">
+                            <img id="addPreviewImg" src="" alt="Preview">
+                            <button type="button" class="remove-image" onclick="removeImage('add')">&times;</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -568,9 +673,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h3>Edit Project</h3>
                 <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
             </div>
-            <form method="POST">
+            <form method="POST" id="editForm">
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" id="edit_id">
+                <input type="hidden" name="image" id="edit_image">
                 <div class="form-group">
                     <label>Project Title</label>
                     <input type="text" name="title" id="edit_title" required>
@@ -580,8 +686,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea name="description" id="edit_description"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Image URL</label>
-                    <input type="text" name="image" id="edit_image" placeholder="e.g., projects/myproject.jpg">
+                    <label>Project Image</label>
+                    <div class="upload-area" id="editUploadArea">
+                        <input type="file" id="edit_image_file" accept="image/*" style="display:none">
+                        <div class="upload-placeholder" id="editPlaceholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Click to upload or drag image here</span>
+                            <small>JPG, PNG, GIF, WebP (Max 5MB)</small>
+                        </div>
+                        <div class="upload-preview" id="editPreview" style="display:none">
+                            <img id="editPreviewImg" src="" alt="Preview">
+                            <button type="button" class="remove-image" onclick="removeImage('edit')">&times;</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -611,6 +728,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script>
         function openAddModal() {
+            // Reset the form
+            document.getElementById('addForm').reset();
+            document.getElementById('add_image_path').value = '';
+            document.getElementById('addPlaceholder').style.display = 'flex';
+            document.getElementById('addPreview').style.display = 'none';
             document.getElementById('addModal').classList.add('active');
         }
 
@@ -623,12 +745,120 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById('edit_tag2').value = project.tag2 || '';
             document.getElementById('edit_url').value = project.url || '';
             document.getElementById('edit_sort').value = project.sort_order || 0;
+            
+            // Show existing image if any
+            if (project.image) {
+                document.getElementById('editPlaceholder').style.display = 'none';
+                document.getElementById('editPreview').style.display = 'block';
+                document.getElementById('editPreviewImg').src = '../' + project.image;
+            } else {
+                document.getElementById('editPlaceholder').style.display = 'flex';
+                document.getElementById('editPreview').style.display = 'none';
+            }
+            
             document.getElementById('editModal').classList.add('active');
         }
 
         function closeModal(id) {
             document.getElementById(id).classList.remove('active');
         }
+
+        function removeImage(prefix) {
+            document.getElementById(prefix + '_image_path') ? 
+                document.getElementById(prefix + '_image_path').value = '' :
+                document.getElementById(prefix + '_image').value = '';
+            document.getElementById(prefix + 'Placeholder').style.display = 'flex';
+            document.getElementById(prefix + 'Preview').style.display = 'none';
+        }
+
+        function setupUploadArea(prefix) {
+            const area = document.getElementById(prefix + 'UploadArea');
+            const fileInput = document.getElementById(prefix + '_image_file');
+            const placeholder = document.getElementById(prefix + 'Placeholder');
+            const preview = document.getElementById(prefix + 'Preview');
+            const previewImg = document.getElementById(prefix + 'PreviewImg');
+            const pathInput = prefix === 'add' ? 
+                document.getElementById('add_image_path') : 
+                document.getElementById('edit_image');
+
+            area.addEventListener('click', () => fileInput.click());
+
+            area.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                area.classList.add('dragover');
+            });
+
+            area.addEventListener('dragleave', () => {
+                area.classList.remove('dragover');
+            });
+
+            area.addEventListener('drop', (e) => {
+                e.preventDefault();
+                area.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0], prefix);
+                }
+            });
+
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length) {
+                    handleFile(fileInput.files[0], prefix);
+                }
+            });
+        }
+
+        function handleFile(file, prefix) {
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            const maxSize = 5 * 1024 * 1024;
+
+            if (!allowedTypes.includes(file.type)) {
+                alert('Invalid file type. Please upload JPG, PNG, GIF, or WebP.');
+                return;
+            }
+
+            if (file.size > maxSize) {
+                alert('File too large. Maximum size is 5MB.');
+                return;
+            }
+
+            const placeholder = document.getElementById(prefix + 'Placeholder');
+            const preview = document.getElementById(prefix + 'Preview');
+            const previewImg = document.getElementById(prefix + 'PreviewImg');
+            const pathInput = prefix === 'add' ? 
+                document.getElementById('add_image_path') : 
+                document.getElementById('edit_image');
+
+            placeholder.innerHTML = '<div class="upload-loading active"><div class="spinner"></div><span>Uploading...</span></div>';
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('upload.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    pathInput.value = data.path;
+                    previewImg.src = '../' + data.path;
+                    placeholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click to upload or drag image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
+                    placeholder.style.display = 'none';
+                    preview.style.display = 'block';
+                } else {
+                    alert(data.error || 'Upload failed');
+                    placeholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click to upload or drag image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
+                }
+            })
+            .catch(err => {
+                alert('Upload failed. Please try again.');
+                placeholder.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Click to upload or drag image here</span><small>JPG, PNG, GIF, WebP (Max 5MB)</small>';
+            });
+        }
+
+        // Initialize upload areas
+        setupUploadArea('add');
+        setupUploadArea('edit');
 
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
