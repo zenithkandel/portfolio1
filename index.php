@@ -112,8 +112,19 @@ $location = $settings['contact_location'] ?? '';
     <div class="projects-list">
       <?php foreach ($projects as $i => $project):
         $tags = array_filter([$project['tag1'] ?? '', $project['tag2'] ?? '']);
+        $githubUrl = $project['github_url'] ?? '';
+        $publicUrl = $project['public_url'] ?? '';
+        $hasLinks = !empty($githubUrl) || !empty($publicUrl);
         ?>
         <article class="project-item">
+          <div class="project-image">
+            <?php if (!empty($project['image'])): ?>
+              <img src="<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>">
+            <?php else: ?>
+              <img src="https://via.placeholder.com/800x600/141414/333?text=<?= urlencode($project['title']) ?>" alt="">
+            <?php endif; ?>
+          </div>
+
           <div class="project-info">
             <span class="project-number"><?= str_pad($i + 1, 2, '0', STR_PAD_LEFT) ?></span>
             <h2 class="project-title"><?= e($project['title']) ?></h2>
@@ -124,19 +135,20 @@ $location = $settings['contact_location'] ?? '';
             </div>
           </div>
 
-          <div class="project-image">
-            <?php if (!empty($project['image'])): ?>
-              <img src="<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>">
-            <?php else: ?>
-              <img src="https://via.placeholder.com/800x500/141414/333?text=<?= urlencode($project['title']) ?>" alt="">
-            <?php endif; ?>
-          </div>
-
-          <?php if (!empty($project['url'])): ?>
-            <a href="<?= e($project['url']) ?>" target="_blank" class="project-link"></a>
+          <?php if ($hasLinks): ?>
+            <div class="project-ctas">
+              <?php if (!empty($githubUrl)): ?>
+                <a href="<?= e($githubUrl) ?>" target="_blank" class="project-cta">
+                  <i class="fab fa-github"></i> Code
+                </a>
+              <?php endif; ?>
+              <?php if (!empty($publicUrl)): ?>
+                <a href="<?= e($publicUrl) ?>" target="_blank" class="project-cta">
+                  <i class="fas fa-external-link-alt"></i> Live
+                </a>
+              <?php endif; ?>
+            </div>
           <?php endif; ?>
-
-          <span class="project-arrow">→</span>
         </article>
       <?php endforeach; ?>
     </div>

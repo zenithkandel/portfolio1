@@ -11,7 +11,44 @@ document.addEventListener('DOMContentLoaded', () => {
     initTime();
     initHeader();
     initContactForm();
+    initProjectsSlider();
 });
+
+// Projects horizontal slider drag scroll
+function initProjectsSlider() {
+    const slider = document.querySelector('.projects-list');
+    if (!slider) return;
+
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.project-cta')) return;
+        isDown = true;
+        slider.style.cursor = 'grabbing';
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.style.cursor = 'grab';
+    });
+
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.style.cursor = 'grab';
+    });
+
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        slider.scrollLeft = scrollLeft - walk;
+    });
+}
 
 // Theme Toggle
 function initTheme() {

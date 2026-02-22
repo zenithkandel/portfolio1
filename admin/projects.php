@@ -15,12 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image = trim($_POST['image'] ?? '');
         $tag1 = trim($_POST['tag1'] ?? '');
         $tag2 = trim($_POST['tag2'] ?? '');
-        $url = trim($_POST['url'] ?? '');
+        $github_url = trim($_POST['github_url'] ?? '');
+        $public_url = trim($_POST['public_url'] ?? '');
         $sortOrder = (int) ($_POST['sort_order'] ?? 0);
 
         if ($title) {
-            $stmt = $pdo->prepare("INSERT INTO projects (title, description, image, tag1, tag2, url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$title, $description, $image, $tag1, $tag2, $url, $sortOrder]);
+            $stmt = $pdo->prepare("INSERT INTO projects (title, description, image, tag1, tag2, github_url, public_url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $description, $image, $tag1, $tag2, $github_url, $public_url, $sortOrder]);
             setFlash('success', 'Project added successfully!');
         }
     }
@@ -32,12 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image = trim($_POST['image'] ?? '');
         $tag1 = trim($_POST['tag1'] ?? '');
         $tag2 = trim($_POST['tag2'] ?? '');
-        $url = trim($_POST['url'] ?? '');
+        $github_url = trim($_POST['github_url'] ?? '');
+        $public_url = trim($_POST['public_url'] ?? '');
         $sortOrder = (int) ($_POST['sort_order'] ?? 0);
 
         if ($id && $title) {
-            $stmt = $pdo->prepare("UPDATE projects SET title = ?, description = ?, image = ?, tag1 = ?, tag2 = ?, url = ?, sort_order = ? WHERE id = ?");
-            $stmt->execute([$title, $description, $image, $tag1, $tag2, $url, $sortOrder, $id]);
+            $stmt = $pdo->prepare("UPDATE projects SET title = ?, description = ?, image = ?, tag1 = ?, tag2 = ?, github_url = ?, public_url = ?, sort_order = ? WHERE id = ?");
+            $stmt->execute([$title, $description, $image, $tag1, $tag2, $github_url, $public_url, $sortOrder, $id]);
             setFlash('success', 'Project updated successfully!');
         }
     }
@@ -211,8 +213,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Project URL</label>
-                    <input type="url" name="url" placeholder="https://github.com/...">
+                    <label>GitHub URL</label>
+                    <input type="url" name="github_url" placeholder="https://github.com/...">
+                </div>
+                <div class="form-group">
+                    <label>Live/Public URL</label>
+                    <input type="url" name="public_url" placeholder="https://example.com/...">
                 </div>
                 <div class="form-group">
                     <label>Sort Order</label>
@@ -271,8 +277,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Project URL</label>
-                    <input type="url" name="url" id="edit_url">
+                    <label>GitHub URL</label>
+                    <input type="url" name="github_url" id="edit_github_url">
+                </div>
+                <div class="form-group">
+                    <label>Live/Public URL</label>
+                    <input type="url" name="public_url" id="edit_public_url">
                 </div>
                 <div class="form-group">
                     <label>Sort Order</label>
@@ -306,7 +316,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById('edit_image').value = project.image || '';
             document.getElementById('edit_tag1').value = project.tag1 || '';
             document.getElementById('edit_tag2').value = project.tag2 || '';
-            document.getElementById('edit_url').value = project.url || '';
+            document.getElementById('edit_github_url').value = project.github_url || '';
+            document.getElementById('edit_public_url').value = project.public_url || '';
             document.getElementById('edit_sort').value = project.sort_order || 0;
 
             if (project.image) {
