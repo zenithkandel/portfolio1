@@ -21,7 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             phone = ?,
             github_url = ?,
             linkedin_url = ?,
-            instagram_url = ?
+            instagram_url = ?,
+            facebook_url = ?,
+            whatsapp = ?
         WHERE id = 1
     ");
 
@@ -38,7 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_POST['phone'] ?? '',
         $_POST['github_url'] ?? '',
         $_POST['linkedin_url'] ?? '',
-        $_POST['instagram_url'] ?? ''
+        $_POST['instagram_url'] ?? '',
+        $_POST['facebook_url'] ?? '',
+        $_POST['whatsapp'] ?? ''
     ]);
 
     // Handle password change
@@ -199,6 +203,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label>Instagram URL</label>
                         <input type="url" name="instagram_url" value="<?= e($settings['instagram_url'] ?? '') ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook URL</label>
+                        <input type="url" name="facebook_url" value="<?= e($settings['facebook_url'] ?? '') ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp Number</label>
+                        <input type="text" name="whatsapp" value="<?= e($settings['whatsapp'] ?? '') ?>" placeholder="e.g., 9806176120">
+                        <div class="form-hint">Just the number, without country code prefix</div>
                     </div>
                 </div>
 

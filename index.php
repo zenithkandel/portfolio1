@@ -18,6 +18,7 @@ $location = $settings['contact_location'] ?? '';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= e($settings['site_title'] ?? 'Portfolio') ?></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -211,16 +212,24 @@ $location = $settings['contact_location'] ?? '';
     </form>
 
     <div class="contact-links">
-      <?php if (!empty($settings['social_github'])): ?>
-        <a href="<?= e($settings['social_github']) ?>" target="_blank">GitHub</a>
+      <?php if (!empty($settings['github_url'])): ?>
+        <a href="<?= e($settings['github_url']) ?>" target="_blank"><i class="fab fa-github"></i> GitHub</a>
       <?php endif; ?>
 
-      <?php if (!empty($settings['social_linkedin'])): ?>
-        <a href="<?= e($settings['social_linkedin']) ?>" target="_blank">LinkedIn</a>
+      <?php if (!empty($settings['linkedin_url'])): ?>
+        <a href="<?= e($settings['linkedin_url']) ?>" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
       <?php endif; ?>
 
-      <?php if (!empty($settings['social_twitter'])): ?>
-        <a href="<?= e($settings['social_twitter']) ?>" target="_blank">Twitter</a>
+      <?php if (!empty($settings['instagram_url'])): ?>
+        <a href="<?= e($settings['instagram_url']) ?>" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+      <?php endif; ?>
+
+      <?php if (!empty($settings['facebook_url'])): ?>
+        <a href="<?= e($settings['facebook_url']) ?>" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+      <?php endif; ?>
+
+      <?php if (!empty($settings['whatsapp'])): ?>
+        <a href="https://wa.me/977<?= e($settings['whatsapp']) ?>" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
       <?php endif; ?>
     </div>
   </section>
