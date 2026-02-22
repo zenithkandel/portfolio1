@@ -121,11 +121,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="form-group">
                         <label>Site Title</label>
-                        <input type="text" name="site_title" value="<?= e($settings['site_title'] ?? '') ?>" placeholder="Portfolio | Your Name">
+                        <input type="text" name="site_title" value="<?= e($settings['site_title'] ?? '') ?>"
+                            placeholder="Portfolio | Your Name">
                     </div>
                     <div class="form-group">
                         <label>Site Description</label>
-                        <textarea name="site_description" rows="2"><?= e($settings['site_description'] ?? '') ?></textarea>
+                        <textarea name="site_description"
+                            rows="2"><?= e($settings['site_description'] ?? '') ?></textarea>
                         <div class="form-hint">Shown in search engine results</div>
                     </div>
                 </div>
@@ -137,11 +139,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="form-group">
                         <label>Tagline</label>
-                        <input type="text" name="hero_tagline" value="<?= e($settings['hero_tagline'] ?? '') ?>" placeholder="e.g., Frontend Developer • Location">
+                        <input type="text" name="hero_tagline" value="<?= e($settings['hero_tagline'] ?? '') ?>"
+                            placeholder="e.g., Frontend Developer • Location">
                     </div>
                     <div class="form-group">
                         <label>Main Heading (Your Name)</label>
-                        <input type="text" name="hero_title" value="<?= e($settings['hero_title'] ?? '') ?>" placeholder="e.g., John Doe">
+                        <input type="text" name="hero_title" value="<?= e($settings['hero_title'] ?? '') ?>"
+                            placeholder="e.g., John Doe">
                     </div>
                     <div class="form-group">
                         <label>Subtitle / Role</label>
