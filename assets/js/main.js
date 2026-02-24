@@ -1,5 +1,6 @@
 /**
- * Portfolio - Minimal interactions
+ * Portfolio - Premium Minimal Interactions
+ * Clean, refined, authentic
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,7 +14,119 @@ document.addEventListener('DOMContentLoaded', () => {
     initContactForm();
     initProjectsSlider();
     initParallax();
+    initSplitText();
+    initMagneticButtons();
+    initSmoothScroll();
+    initTouchEffects();
 });
+
+// Split text animation - reveal characters one by one
+function initSplitText() {
+    const elements = document.querySelectorAll('.hero-title .word');
+    
+    elements.forEach(el => {
+        const text = el.textContent;
+        el.innerHTML = '';
+        el.style.transform = 'none';
+        el.style.animation = 'none';
+        
+        [...text].forEach((char, i) => {
+            const span = document.createElement('span');
+            span.className = 'char';
+            span.textContent = char === ' ' ? '\u00A0' : char;
+            span.style.animationDelay = `${2.2 + i * 0.04}s`; // After loader
+            el.appendChild(span);
+        });
+    });
+}
+
+// Magnetic buttons - subtle pull effect on hover
+function initMagneticButtons() {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    
+    const buttons = document.querySelectorAll('.btn, .nav-icon, .theme-toggle');
+    const strength = 0.3;
+    
+    buttons.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            btn.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+        });
+        
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'translate(0, 0)';
+            btn.style.transition = 'transform 0.3s var(--ease)';
+        });
+        
+        btn.addEventListener('mouseenter', () => {
+            btn.style.transition = 'none';
+        });
+    });
+}
+
+// Enhanced smooth scroll with easing
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', e => {
+            e.preventDefault();
+            const target = document.querySelector(anchor.getAttribute('href'));
+            if (target) {
+                const offset = 80;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// Touch effects for mobile
+function initTouchEffects() {
+    if (!window.matchMedia('(pointer: coarse)').matches) return;
+    
+    // Add active states for touch feedback
+    const touchElements = document.querySelectorAll('.btn, .project-item, .skill-tag, a');
+    
+    touchElements.forEach(el => {
+        el.addEventListener('touchstart', () => {
+            el.style.opacity = '0.7';
+            el.style.transform = 'scale(0.98)';
+        }, { passive: true });
+        
+        el.addEventListener('touchend', () => {
+            el.style.opacity = '';
+            el.style.transform = '';
+        }, { passive: true });
+    });
+    
+    // Gyroscope-based parallax for hero on mobile (subtle)
+    if (window.DeviceOrientationEvent) {
+        let ticking = false;
+        
+        window.addEventListener('deviceorientation', (e) => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const hero = document.querySelector('.hero');
+                    if (hero && e.gamma !== null && e.beta !== null) {
+                        const x = Math.max(-15, Math.min(15, e.gamma)) / 15;
+                        const y = Math.max(-15, Math.min(15, e.beta - 45)) / 15;
+                        
+                        hero.style.setProperty('--tilt-x', `${x * 2}px`);
+                        hero.style.setProperty('--tilt-y', `${y * 2}px`);
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+    }
+}
 
 // 3D Parallax Depth Layers
 function initParallax() {

@@ -138,9 +138,24 @@ $location = $settings['contact_location'] ?? '';
   <!-- Mobile Nav -->
   <nav class="mobile-nav">
     <button class="mobile-close">Close</button>
-    <a href="#work">Work</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
+    <a href="#work" data-number="01">Work</a>
+    <a href="#about" data-number="02">About</a>
+    <a href="#contact" data-number="03">Contact</a>
+    
+    <div class="mobile-nav-footer">
+      <span><?= e($location ?? 'Available Worldwide') ?></span>
+      <div class="mobile-nav-social">
+        <?php if (!empty($settings['github_url'])): ?>
+          <a href="<?= e($settings['github_url']) ?>" target="_blank"><i class="fab fa-github"></i></a>
+        <?php endif; ?>
+        <?php if (!empty($settings['linkedin_url'])): ?>
+          <a href="<?= e($settings['linkedin_url']) ?>" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <?php endif; ?>
+        <?php if (!empty($settings['instagram_url'])): ?>
+          <a href="<?= e($settings['instagram_url']) ?>" target="_blank"><i class="fab fa-instagram"></i></a>
+        <?php endif; ?>
+      </div>
+    </div>
   </nav>
 
   <main id="main-content">
