@@ -2764,13 +2764,13 @@ body:not(.loaded) {
     }
 }
 
-/* Cursor trail effect - very subtle glow follows cursor */
+/* Cursor trail effect - barely visible glow follows cursor */
 body::after {
     content: '';
     position: fixed;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.008) 0%, transparent 70%);
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.003) 0%, transparent 60%);
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
@@ -2783,7 +2783,7 @@ body.loaded::after {
 }
 
 [data-theme="light"] body::after {
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.005) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.002) 0%, transparent 60%);
 }
 
 /* Text reveal mask animation */
