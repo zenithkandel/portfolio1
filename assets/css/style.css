@@ -206,12 +206,244 @@ img {
     justify-content: center;
     padding: 8rem 2rem 4rem;
     position: relative;
+    overflow: hidden;
+}
+
+/* === 3D PARALLAX DEPTH LAYERS === */
+.parallax-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+.parallax-layer {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+}
+
+/* Geometric Elements */
+.geo {
+    position: absolute;
+    opacity: 0;
+    animation: geoFadeIn 1.5s var(--ease) forwards;
+}
+
+@keyframes geoFadeIn {
+    to { opacity: 1; }
+}
+
+/* Ring - Large decorative circle */
+.geo-ring {
+    top: 15%;
+    right: 8%;
+    width: 180px;
+    height: 180px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    animation-delay: 0.2s;
+}
+
+.geo-ring::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: var(--text-dim);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Cross */
+.geo-cross {
+    bottom: 25%;
+    left: 5%;
+    width: 40px;
+    height: 40px;
+    animation-delay: 0.4s;
+}
+
+.geo-cross::before,
+.geo-cross::after {
+    content: '';
+    position: absolute;
+    background: var(--border-strong);
+}
+
+.geo-cross::before {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    transform: translateY(-50%);
+}
+
+.geo-cross::after {
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 100%;
+    transform: translateX(-50%);
+}
+
+/* Lines */
+.geo-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.geo-line-1 {
+    top: 35%;
+    left: -5%;
+    width: 200px;
+    transform: rotate(-25deg);
+    animation-delay: 0.3s;
+}
+
+.geo-line-2 {
+    bottom: 20%;
+    right: -3%;
+    width: 150px;
+    transform: rotate(15deg);
+    animation-delay: 0.5s;
+}
+
+/* Dot cluster */
+.geo-dot {
+    top: 60%;
+    left: 12%;
+    width: 6px;
+    height: 6px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    animation-delay: 0.6s;
+}
+
+.geo-dot::before,
+.geo-dot::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--border-strong);
+    border-radius: 50%;
+}
+
+.geo-dot::before {
+    top: -12px;
+    left: 8px;
+}
+
+.geo-dot::after {
+    top: 8px;
+    left: -10px;
+}
+
+/* Square */
+.geo-square {
+    top: 20%;
+    left: 18%;
+    width: 60px;
+    height: 60px;
+    border: 1px solid var(--border);
+    transform: rotate(45deg);
+    animation-delay: 0.35s;
+}
+
+/* Arc */
+.geo-arc {
+    bottom: 30%;
+    right: 15%;
+    width: 120px;
+    height: 120px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+    animation-delay: 0.45s;
+}
+
+/* Circle outline */
+.geo-circle-outline {
+    top: 45%;
+    right: 25%;
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid var(--text-muted);
+    border-radius: 50%;
+    animation-delay: 0.55s;
+}
+
+/* Plus sign */
+.geo-plus {
+    top: 70%;
+    right: 8%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 0.65s;
+}
+
+.geo-plus::before,
+.geo-plus::after {
+    content: '';
+    position: absolute;
+    background: var(--text-muted);
+}
+
+.geo-plus::before {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    transform: translateY(-50%);
+}
+
+.geo-plus::after {
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    transform: translateX(-50%);
+}
+
+/* Layer-specific animations */
+.layer-1 .geo { animation-duration: 1.8s; }
+.layer-2 .geo { animation-duration: 1.6s; }
+.layer-3 .geo { animation-duration: 1.4s; }
+.layer-4 .geo { animation-duration: 1.2s; }
+
+/* Subtle floating animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+.geo-ring { animation: geoFadeIn 1.5s var(--ease) forwards, float 8s ease-in-out infinite 1.5s; }
+.geo-square { animation: geoFadeIn 1.5s var(--ease) forwards, float 10s ease-in-out infinite 1.5s; transform-origin: center; }
+.geo-arc { animation: geoFadeIn 1.5s var(--ease) forwards, float 12s ease-in-out infinite 1.5s; }
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    .parallax-layer { transition: none; }
+    .geo { animation: none; opacity: 0.5; }
+}
+
+/* Hide on smaller screens for performance */
+@media (max-width: 768px) {
+    .parallax-container { display: none; }
 }
 
 .hero-content {
     max-width: 1400px;
     margin: 0 auto;
     width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 .hero-intro {
