@@ -446,18 +446,21 @@ function initMobileNav() {
     const toggle = document.querySelector('.menu-toggle');
     const nav = document.querySelector('.mobile-nav');
     const close = document.querySelector('.mobile-close');
-    const links = document.querySelectorAll('.mobile-nav a');
+    const links = document.querySelectorAll('.mobile-nav-links a');
 
     if (!toggle || !nav) return;
 
     function openNav() {
         nav.classList.add('active');
         document.body.style.overflow = 'hidden';
+        // Focus management for accessibility
+        if (close) close.focus();
     }
 
     function closeNav() {
         nav.classList.remove('active');
         document.body.style.overflow = '';
+        toggle.focus();
     }
 
     toggle.addEventListener('click', openNav);
