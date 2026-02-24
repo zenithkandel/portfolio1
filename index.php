@@ -132,7 +132,11 @@ $location = $settings['contact_location'] ?? '';
       <span class="header-time"></span>
     </div>
 
-    <button class="menu-toggle">Menu</button>
+    <button class="menu-toggle" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </header>
 
   <!-- Mobile Nav -->

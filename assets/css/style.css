@@ -213,8 +213,23 @@ img {
     background: none;
     border: none;
     color: var(--text);
-    font-size: 0.875rem;
+    font-size: 0;
     cursor: pointer;
+    width: 44px;
+    height: 44px;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    transition: all 0.3s var(--ease);
 }
 
 /* === HERO === */
@@ -1355,12 +1370,8 @@ section {
 
     .menu-toggle {
         display: flex;
-        align-items: center;
-        justify-content: center;
         min-width: 44px;
         min-height: 44px;
-        font-size: 0.875rem;
-        font-weight: 500;
         background: var(--bg-light);
         border: 1px solid var(--border);
         border-radius: 8px;
@@ -1795,19 +1806,6 @@ section {
     .mobile-nav a:first-of-type {
         border-top: 1px solid var(--border);
     }
-
-    .mobile-close {
-        top: 1rem;
-        right: 1rem;
-        min-width: 44px;
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--bg-light);
-        border-radius: 8px;
-        font-size: 0.875rem;
-    }
 }
 
 /* Extra small devices (iPhone SE, etc.) */
@@ -1954,6 +1952,7 @@ section {
     align-items: center;
     justify-content: center;
     transition: all 0.25s var(--ease);
+    z-index: 10;
 }
 
 .mobile-close::before,
@@ -2765,13 +2764,13 @@ body:not(.loaded) {
     }
 }
 
-/* Cursor trail effect - subtle glow follows cursor */
+/* Cursor trail effect - very subtle glow follows cursor */
 body::after {
     content: '';
     position: fixed;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.008) 0%, transparent 70%);
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
@@ -2784,7 +2783,7 @@ body.loaded::after {
 }
 
 [data-theme="light"] body::after {
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.02) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.005) 0%, transparent 70%);
 }
 
 /* Text reveal mask animation */
