@@ -1,6 +1,6 @@
 # Portfolio
 
-A minimal, modern portfolio website built with PHP and MySQL. Features a clean editorial design, dark/light theme support, and a complete admin panel for content management.
+A minimal, modern portfolio website built with PHP and MySQL. Features a clean editorial design with premium animations, dark/light theme support, and a complete admin panel for content management.
 
 ![PHP](https://img.shields.io/badge/PHP-7.4+-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-5.7+-4479A1?logo=mysql&logoColor=white)
@@ -13,8 +13,15 @@ A minimal, modern portfolio website built with PHP and MySQL. Features a clean e
 - **Minimal Editorial Design** — Clean typography with Instrument Serif & Space Grotesk fonts
 - **Dark/Light Theme** — Toggle with localStorage persistence, flash-free on load
 - **Responsive Layout** — Mobile-first design with optimized touch targets (44px+)
+- **3D Parallax Hero** — Geometric shapes (rings, crosses, lines, squares, arcs) respond to mouse movement and scroll
+- **Split Text Animation** — Hero title animates character by character on page load
 - **Horizontal Project Slider** — Swipeable cards with navigation indicators
-- **Smooth Animations** — Reveal effects, custom cursor (desktop), subtle transitions
+- **Magnetic Buttons** — Interactive hover effects on CTA buttons
+- **Smooth Scroll Reveal** — Elements animate into view as you scroll
+- **Custom Cursor** — Subtle dot cursor with hover scaling (desktop only)
+- **Film Texture Overlay** — Static noise texture for depth
+- **Mobile Navigation** — Accessible hamburger menu with staggered animations and social links
+- **Touch Interactions** — Enhanced ripple effects for mobile
 - **Contact Form** — AJAX submission with validation
 - **CV Download** — Printable resume page
 
@@ -23,7 +30,7 @@ A minimal, modern portfolio website built with PHP and MySQL. Features a clean e
 - **Dashboard** — Quick stats and navigation
 - **Settings Management** — Site title, hero content, about text, social links
 - **Projects CRUD** — Add, edit, delete with image upload and drag-drop reordering
-- **Skills Management** — Add/remove technology tags
+- **Skills Management** — Add/remove technology tags with custom icon support
 - **Messages Inbox** — View contact form submissions with read/unread status
 - **Image Upload** — Drag & drop, clipboard paste, file picker support
 
@@ -34,7 +41,7 @@ A minimal, modern portfolio website built with PHP and MySQL. Features a clean e
 | Backend  | PHP 7.4+, PDO (MySQL)                          |
 | Database | MySQL 5.7+ / MariaDB 10.2+                     |
 | Frontend | Vanilla JS, CSS Custom Properties              |
-| Icons    | Font Awesome 6.5                               |
+| Icons    | Font Awesome Premium 7.2.0                     |
 | Fonts    | Google Fonts (Instrument Serif, Space Grotesk) |
 
 ## Installation
@@ -99,17 +106,17 @@ portfolio/
 │   ├── login.php         # Authentication
 │   ├── settings.php      # Site configuration
 │   ├── projects.php      # Project management
-│   ├── skills.php        # Skills/tech tags
+│   ├── skills.php        # Skills/tech tags (with custom icons)
 │   ├── messages.php      # Contact submissions
 │   └── upload.php        # Image upload handler
 ├── assets/
 │   ├── css/
-│   │   └── style.css     # Main stylesheet
+│   │   └── style.css     # Main stylesheet (~2800 lines)
 │   └── js/
-│       └── main.js       # Frontend interactions
+│       └── main.js       # Frontend interactions (~550 lines)
 ├── includes/
 │   └── config.php        # Database & helpers
-├── uploads/              # User uploads
+├── uploads/              # User uploads (projects, CV)
 ├── index.php             # Main portfolio page
 ├── cv.html               # Printable CV page
 ├── handle_message.php    # Contact form handler
@@ -167,22 +174,45 @@ Edit CSS custom properties in `assets/css/style.css`:
 
 ```css
 :root {
-  --bg: #0a0a0a;
-  --bg-light: #141414;
-  --text: #ffffff;
-  --text-dim: #888888;
-  --border: #222222;
-  --accent: #ffffff;
+  --bg: #121416;           /* Deep charcoal background */
+  --bg-light: #1a1c1e;     /* Slightly lighter panels */
+  --text: #f4f4f5;         /* Near-white text */
+  --text-dim: #8a8a8a;     /* Muted text */
+  --text-muted: #555555;   /* Very muted text */
+  --border: #2a2a2a;       /* Subtle borders */
+  --accent: #f4f4f5;       /* Accent color */
+  --glow: rgba(255, 255, 255, 0.1); /* Subtle glow effects */
 }
 
 [data-theme="light"] {
   --bg: #fafafa;
   --bg-light: #ffffff;
-  --text: #0a0a0a;
+  --text: #121416;
   --text-dim: #666666;
-  --border: #e5e5e5;
-  --accent: #0a0a0a;
+  --text-muted: #999999;
+  --border: #e0e0e0;
+  --accent: #121416;
+  --glow: rgba(0, 0, 0, 0.08);
 }
+```
+
+### Animation Settings
+
+Key animation timings can be adjusted:
+
+```css
+:root {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1); /* Smooth easing */
+}
+```
+
+### Parallax Configuration
+
+Adjust parallax depth and speed in `assets/js/main.js`:
+
+```javascript
+const depth = parseFloat(shape.dataset.depth) || 0.5;
+// Modify shape translateX/Y multipliers for intensity
 ```
 
 ### Fonts
@@ -221,6 +251,33 @@ Add new social platforms by:
 - Safari 14+
 - Edge 90+
 - Mobile Safari / Chrome (iOS/Android)
+
+## JavaScript Modules
+
+The frontend is built with vanilla JavaScript. Key functions in `assets/js/main.js`:
+
+| Function | Purpose |
+|----------|---------|
+| `initTheme()` | Dark/light theme toggle with localStorage persistence |
+| `initLoader()` | Animated loading screen with counter |
+| `initCursor()` | Custom cursor with hover effects (desktop) |
+| `initReveal()` | Scroll-triggered reveal animations |
+| `initMobileNav()` | Hamburger menu with accessibility features |
+| `initParallax()` | 3D parallax effect on hero geometric shapes |
+| `initSplitText()` | Character-by-character text reveal animation |
+| `initMagneticButtons()` | Interactive hover effect on buttons |
+| `initSmoothScroll()` | Smooth anchor link scrolling |
+| `initTouchEffects()` | Touch feedback for mobile interactions |
+| `initProjectsSlider()` | Horizontal project carousel |
+| `initContactForm()` | AJAX form submission with validation |
+
+## Performance Notes
+
+- **Parallax disabled on mobile** — Uses ambient floating gradient instead
+- **Custom cursor desktop-only** — Only loads on devices with fine pointer
+- **Lazy-loaded animations** — IntersectionObserver for scroll reveals
+- **Reduced motion support** — Respects `prefers-reduced-motion`
+- **Film grain hidden on mobile** — Improves battery life
 
 ## License
 
