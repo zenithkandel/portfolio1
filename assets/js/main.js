@@ -12,7 +12,84 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeader();
     initContactForm();
     initProjectsSlider();
+    initParallax();
 });
+
+// 3D Parallax Depth Layers
+function initParallax() {
+    const container = document.querySelector('.parallax-container');
+    if (!container) return;
+    
+    const layers = container.querySelectorAll('.parallax-layer');
+    if (layers.length === 0) return;
+    
+    // Check for reduced motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let scrollY = 0;
+    let rafId = null;
+    
+    // Smoothing factor (lower = smoother but slower)
+    const smoothing = 0.08;
+    
+    // Track mouse position
+    document.addEventListener('mousemove', (e) => {
+        // Normalize coordinates to -1 to 1
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+    
+    // Track scroll position
+    window.addEventListener('scroll', () => {
+        scrollY = window.scrollY;
+    }, { passive: true });
+    
+    // Animation loop with smooth interpolation
+    function animate() {
+        // Smooth interpolation
+        currentX += (mouseX - currentX) * smoothing;
+        currentY += (mouseY - currentY) * smoothing;
+        
+        layers.forEach(layer => {
+            const depth = parseFloat(layer.dataset.depth) || 0.1;
+            
+            // Calculate movement based on depth
+            const moveX = currentX * depth * 60;
+            const moveY = currentY * depth * 40;
+            
+            // Add subtle scroll-based vertical shift
+            const scrollOffset = scrollY * depth * 0.3;
+            
+            // Apply transform with slight rotation for depth feel
+            const rotateX = currentY * depth * 2;
+            const rotateY = currentX * depth * -2;
+            
+            layer.style.transform = `
+                translate3d(${moveX}px, ${moveY - scrollOffset}px, 0)
+                rotateX(${rotateX}deg)
+                rotateY(${rotateY}deg)
+            `;
+        });
+        
+        rafId = requestAnimationFrame(animate);
+    }
+    
+    // Start animation
+    animate();
+    
+    // Pause animation when page is not visible
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            cancelAnimationFrame(rafId);
+        } else {
+            rafId = requestAnimationFrame(animate);
+        }
+    });
+}
 
 // Projects horizontal slider with navigation and indicators
 function initProjectsSlider() {
