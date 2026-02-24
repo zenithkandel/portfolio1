@@ -145,6 +145,27 @@ $location = $settings['contact_location'] ?? '';
   <main id="main-content">
     <!-- Hero -->
     <section class="hero" aria-labelledby="hero-title">
+      <!-- 3D Parallax Depth Layers -->
+      <div class="parallax-container" aria-hidden="true">
+        <div class="parallax-layer layer-1" data-depth="0.03">
+          <div class="geo geo-ring"></div>
+          <div class="geo geo-cross"></div>
+        </div>
+        <div class="parallax-layer layer-2" data-depth="0.06">
+          <div class="geo geo-line geo-line-1"></div>
+          <div class="geo geo-line geo-line-2"></div>
+          <div class="geo geo-dot"></div>
+        </div>
+        <div class="parallax-layer layer-3" data-depth="0.1">
+          <div class="geo geo-square"></div>
+          <div class="geo geo-arc"></div>
+        </div>
+        <div class="parallax-layer layer-4" data-depth="0.15">
+          <div class="geo geo-circle-outline"></div>
+          <div class="geo geo-plus"></div>
+        </div>
+      </div>
+      
       <div class="hero-content">
         <p class="hero-intro"><?= e($role) ?></p>
 
