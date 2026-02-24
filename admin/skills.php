@@ -359,10 +359,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById('edit_id').value = id;
             document.getElementById('edit_name').value = name;
             document.getElementById('edit_icon').value = icon;
-
+            
+            // Clear custom input
+            const customInput = document.getElementById('custom_icon_input');
+            customInput.value = '';
+            
+            // Check if icon matches a preset
+            let foundPreset = false;
             document.querySelectorAll('.icon-option').forEach(opt => {
-                opt.classList.toggle('selected', opt.dataset.icon === icon);
+                const isMatch = opt.dataset.icon === icon;
+                opt.classList.toggle('selected', isMatch);
+                if (isMatch) foundPreset = true;
             });
+            
+            // If not a preset, populate custom input
+            if (!foundPreset && icon) {
+                customInput.value = icon;
+            }
+            
+            // Update preview
+            updateCustomIconPreview(icon);
 
             document.getElementById('editModal').classList.add('active');
         }
@@ -377,8 +393,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 document.querySelectorAll('.icon-option').forEach(o => o.classList.remove('selected'));
                 opt.classList.add('selected');
                 document.getElementById('edit_icon').value = opt.dataset.icon;
+                document.getElementById('custom_icon_input').value = '';
+                updateCustomIconPreview(opt.dataset.icon);
             });
         });
+        
+        // Custom icon input
+        const customIconInput = document.getElementById('custom_icon_input');
+        customIconInput.addEventListener('input', (e) => {
+            const iconClass = e.target.value.trim();
+            if (iconClass) {
+                // Deselect all presets
+                document.querySelectorAll('.icon-option').forEach(o => o.classList.remove('selected'));
+                document.getElementById('edit_icon').value = iconClass;
+                updateCustomIconPreview(iconClass);
+            }
+        });
+        
+        function updateCustomIconPreview(iconClass) {
+            const preview = document.getElementById('custom_icon_preview');
+            if (iconClass) {
+                preview.innerHTML = '<i class="' + iconClass + '"></i>';
+            } else {
+                preview.innerHTML = '<i class="fa-solid fa-code"></i>';
+            }
+        }
 
         // Saving indicator helper
         function showIndicator(html) {
