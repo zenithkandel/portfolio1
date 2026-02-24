@@ -128,9 +128,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .sort-hint { background: var(--accent-dim); color: var(--accent); padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
         .empty-skills { text-align: center; padding: 60px 20px; color: var(--text-muted); }
         .empty-skills i { font-size: 3rem; margin-bottom: 16px; opacity: 0.3; display: block; }
-        .icon-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; }
+        .icon-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; max-height: 180px; overflow-y: auto; padding: 4px; }
         .icon-option { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
         .icon-option:hover, .icon-option.selected { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        .custom-icon-wrapper { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .custom-icon-wrapper label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 8px; }
+        .custom-icon-input-row { display: flex; gap: 12px; align-items: center; }
+        .custom-icon-input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 13px; font-family: monospace; }
+        .custom-icon-input:focus { outline: none; border-color: var(--accent); }
+        .custom-icon-input::placeholder { color: var(--text-dim); }
+        .custom-icon-preview { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 8px; color: var(--accent); font-size: 18px; }
+        .custom-icon-hint { display: block; margin-top: 8px; font-size: 11px; color: var(--text-dim); }
+        .custom-icon-hint a { color: var(--accent); text-decoration: underline; }
         .saving-indicator { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 1000; }
         .saving-indicator.show { opacity: 1; transform: translateY(0); }
     </style>
@@ -229,6 +238,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="icon-option" data-icon="fa-brands fa-git-alt"><i class="fa-brands fa-git-alt"></i></div>
                         <div class="icon-option" data-icon="fa-solid fa-paintbrush"><i class="fa-solid fa-paintbrush"></i></div>
                         <div class="icon-option" data-icon="fa-solid fa-mobile-screen"><i class="fa-solid fa-mobile-screen"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-html5"><i class="fa-brands fa-html5"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-css3-alt"><i class="fa-brands fa-css3-alt"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-vuejs"><i class="fa-brands fa-vuejs"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-angular"><i class="fa-brands fa-angular"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-laravel"><i class="fa-brands fa-laravel"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-docker"><i class="fa-brands fa-docker"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-aws"><i class="fa-brands fa-aws"></i></div>
+                        <div class="icon-option" data-icon="fa-brands fa-figma"><i class="fa-brands fa-figma"></i></div>
+                        <div class="icon-option" data-icon="fa-solid fa-server"><i class="fa-solid fa-server"></i></div>
+                        <div class="icon-option" data-icon="fa-solid fa-cloud"><i class="fa-solid fa-cloud"></i></div>
+                    </div>
+                    <div class="custom-icon-wrapper">
+                        <label>Or enter custom FontAwesome class:</label>
+                        <div class="custom-icon-input-row">
+                            <input type="text" id="custom_icon_input" class="custom-icon-input" placeholder="e.g. fa-solid fa-rocket">
+                            <div class="custom-icon-preview" id="custom_icon_preview"><i class="fa-solid fa-code"></i></div>
+                        </div>
+                        <small class="custom-icon-hint">Browse icons at <a href="https://fontawesome.com/icons" target="_blank">fontawesome.com/icons</a></small>
                     </div>
                 </div>
                 <div class="modal-footer">
