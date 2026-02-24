@@ -184,21 +184,46 @@ function initTheme() {
     });
 }
 
-// Loader
+// Loader with counter animation
 function initLoader() {
     const loader = document.querySelector('.loader');
+    const counter = document.querySelector('.loader-counter');
     if (!loader) return;
+
+    let progress = 0;
+    const duration = 1800; // Match CSS animation duration
+    const startTime = Date.now();
+
+    function updateCounter() {
+        const elapsed = Date.now() - startTime;
+        progress = Math.min(Math.floor((elapsed / duration) * 100), 100);
+        
+        if (counter) {
+            counter.textContent = progress + '%';
+        }
+
+        if (progress < 100) {
+            requestAnimationFrame(updateCounter);
+        }
+    }
+
+    // Start counter animation
+    setTimeout(updateCounter, 300); // Match animation delay
 
     // Wait for everything to load
     window.addEventListener('load', () => {
         setTimeout(() => {
-            loader.classList.add('hidden');
-            document.body.classList.add('loaded');
+            if (counter) counter.textContent = '100%';
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                document.body.classList.add('loaded');
+            }, 200);
         }, 2000);
     });
 
     // Fallback
     setTimeout(() => {
+        if (counter) counter.textContent = '100%';
         loader.classList.add('hidden');
         document.body.classList.add('loaded');
     }, 3500);

@@ -108,6 +108,7 @@ $location = $settings['contact_location'] ?? '';
         <span>L</span><span>o</span><span>a</span><span>d</span><span>i</span><span>n</span><span>g</span>
       </div>
       <div class="loader-line"></div>
+      <div class="loader-counter">0%</div>
     </div>
   </div>
 
