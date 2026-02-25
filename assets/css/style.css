@@ -2219,20 +2219,20 @@ section {
     .project-modal {
         padding: 1rem;
     }
-    
+
     .project-modal-content {
         max-height: 85vh;
         border-radius: 12px;
     }
-    
+
     .project-modal-image {
         aspect-ratio: 4 / 3;
     }
-    
+
     .project-modal-body {
         padding: 1.5rem;
     }
-    
+
     .project-modal-links a {
         flex: 1;
         justify-content: center;

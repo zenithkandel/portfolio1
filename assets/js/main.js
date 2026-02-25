@@ -24,13 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // Split text animation - reveal characters one by one
 function initSplitText() {
     const elements = document.querySelectorAll('.hero-title .word');
-    
+
     elements.forEach(el => {
         const text = el.textContent;
         el.innerHTML = '';
         el.style.transform = 'none';
         el.style.animation = 'none';
-        
+
         [...text].forEach((char, i) => {
             const span = document.createElement('span');
             span.className = 'char';
@@ -44,24 +44,24 @@ function initSplitText() {
 // Magnetic buttons - subtle pull effect on hover
 function initMagneticButtons() {
     if (window.matchMedia('(pointer: coarse)').matches) return;
-    
+
     const buttons = document.querySelectorAll('.btn, .nav-icon, .theme-toggle');
     const strength = 0.3;
-    
+
     buttons.forEach(btn => {
         btn.addEventListener('mousemove', (e) => {
             const rect = btn.getBoundingClientRect();
             const x = e.clientX - rect.left - rect.width / 2;
             const y = e.clientY - rect.top - rect.height / 2;
-            
+
             btn.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
         });
-        
+
         btn.addEventListener('mouseleave', () => {
             btn.style.transform = 'translate(0, 0)';
             btn.style.transition = 'transform 0.3s var(--ease)';
         });
-        
+
         btn.addEventListener('mouseenter', () => {
             btn.style.transition = 'none';
         });
@@ -77,7 +77,7 @@ function initSmoothScroll() {
             if (target) {
                 const offset = 80;
                 const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
-                
+
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
@@ -90,26 +90,26 @@ function initSmoothScroll() {
 // Touch effects for mobile
 function initTouchEffects() {
     if (!window.matchMedia('(pointer: coarse)').matches) return;
-    
+
     // Add active states for touch feedback
     const touchElements = document.querySelectorAll('.btn, .project-item, .skill-tag, a');
-    
+
     touchElements.forEach(el => {
         el.addEventListener('touchstart', () => {
             el.style.opacity = '0.7';
             el.style.transform = 'scale(0.98)';
         }, { passive: true });
-        
+
         el.addEventListener('touchend', () => {
             el.style.opacity = '';
             el.style.transform = '';
         }, { passive: true });
     });
-    
+
     // Gyroscope-based parallax for hero on mobile (subtle)
     if (window.DeviceOrientationEvent) {
         let ticking = false;
-        
+
         window.addEventListener('deviceorientation', (e) => {
             if (!ticking) {
                 requestAnimationFrame(() => {
@@ -117,7 +117,7 @@ function initTouchEffects() {
                     if (hero && e.gamma !== null && e.beta !== null) {
                         const x = Math.max(-15, Math.min(15, e.gamma)) / 15;
                         const y = Math.max(-15, Math.min(15, e.beta - 45)) / 15;
-                        
+
                         hero.style.setProperty('--tilt-x', `${x * 2}px`);
                         hero.style.setProperty('--tilt-y', `${y * 2}px`);
                     }
@@ -133,68 +133,68 @@ function initTouchEffects() {
 function initParallax() {
     const container = document.querySelector('.parallax-container');
     if (!container) return;
-    
+
     const layers = container.querySelectorAll('.parallax-layer');
     if (layers.length === 0) return;
-    
+
     // Check for reduced motion preference
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    
+
     let mouseX = 0;
     let mouseY = 0;
     let currentX = 0;
     let currentY = 0;
     let scrollY = 0;
     let rafId = null;
-    
+
     // Smoothing factor (lower = smoother but slower)
     const smoothing = 0.08;
-    
+
     // Track mouse position
     document.addEventListener('mousemove', (e) => {
         // Normalize coordinates to -1 to 1
         mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
         mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
     });
-    
+
     // Track scroll position
     window.addEventListener('scroll', () => {
         scrollY = window.scrollY;
     }, { passive: true });
-    
+
     // Animation loop with smooth interpolation
     function animate() {
         // Smooth interpolation
         currentX += (mouseX - currentX) * smoothing;
         currentY += (mouseY - currentY) * smoothing;
-        
+
         layers.forEach(layer => {
             const depth = parseFloat(layer.dataset.depth) || 0.1;
-            
+
             // Calculate movement based on depth
             const moveX = currentX * depth * 60;
             const moveY = currentY * depth * 40;
-            
+
             // Add subtle scroll-based vertical shift
             const scrollOffset = scrollY * depth * 0.3;
-            
+
             // Apply transform with slight rotation for depth feel
             const rotateX = currentY * depth * 2;
             const rotateY = currentX * depth * -2;
-            
+
             layer.style.transform = `
                 translate3d(${moveX}px, ${moveY - scrollOffset}px, 0)
                 rotateX(${rotateX}deg)
                 rotateY(${rotateY}deg)
             `;
         });
-        
+
         rafId = requestAnimationFrame(animate);
     }
-    
+
     // Start animation
     animate();
-    
+
     // Pause animation when page is not visible
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
@@ -311,7 +311,7 @@ function initLoader() {
     function updateCounter() {
         const elapsed = Date.now() - startTime;
         progress = Math.min(Math.floor((elapsed / duration) * 100), 100);
-        
+
         if (counter) {
             counter.textContent = progress + '%';
         }
@@ -574,7 +574,7 @@ function initProjectModal() {
         // Populate modal content
         modalTitle.textContent = title;
         modalDescription.textContent = description || 'No description available.';
-        
+
         if (image) {
             modalImage.src = image;
             modalImage.alt = title;
@@ -617,7 +617,7 @@ function initProjectModal() {
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-        
+
         // Focus close button for accessibility
         setTimeout(() => closeBtn?.focus(), 100);
     }
@@ -640,7 +640,7 @@ function initProjectModal() {
     // Close modal handlers
     closeBtn?.addEventListener('click', closeModal);
     overlay?.addEventListener('click', closeModal);
-    
+
     // Close on escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('active')) {
