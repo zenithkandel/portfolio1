@@ -60,6 +60,7 @@ html {
     font-size: 16px;
     scroll-behavior: smooth;
     overflow-x: hidden;
+    width: 100%;
 }
 
 body {
@@ -69,6 +70,8 @@ body {
     line-height: 1.5;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    width: 100%;
+    position: relative;
 }
 
 /* === SUBTLE TEXTURE OVERLAY === */
@@ -510,14 +513,14 @@ img {
         display: none;
     }
 
-    /* Mobile ambient background */
+    /* Mobile ambient background - contained within viewport */
     .hero::before {
         content: '';
         position: absolute;
         top: 10%;
-        right: -30%;
-        width: 80%;
-        height: 60%;
+        right: 0;
+        width: 60%;
+        height: 50%;
         background: radial-gradient(ellipse, var(--glow) 0%, transparent 70%);
         opacity: 0.5;
         animation: ambientFloat 15s ease-in-out infinite;
@@ -529,9 +532,9 @@ img {
         content: '';
         position: absolute;
         bottom: 20%;
-        left: -20%;
-        width: 60%;
-        height: 50%;
+        left: 0;
+        width: 50%;
+        height: 40%;
         background: radial-gradient(ellipse, var(--glow) 0%, transparent 70%);
         opacity: 0.3;
         animation: ambientFloat 20s ease-in-out infinite reverse;
@@ -1365,11 +1368,13 @@ section {
     html {
         font-size: 16px;
         -webkit-tap-highlight-color: transparent;
+        overflow-x: clip;
     }
 
     body {
         padding-top: env(safe-area-inset-top);
         padding-bottom: env(safe-area-inset-bottom);
+        overflow-x: clip;
     }
 
     /* Header - Clean & Minimal */
