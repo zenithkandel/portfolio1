@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMagneticButtons();
     initSmoothScroll();
     initTouchEffects();
+    initProjectModal();
 });
 
 // Split text animation - reveal characters one by one
@@ -543,6 +544,107 @@ function initContactForm() {
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Send Message';
+        }
+    });
+}
+
+// Project modal - show project details on click
+function initProjectModal() {
+    const modal = document.getElementById('projectModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalTags = document.getElementById('modalTags');
+    const modalLinks = document.getElementById('modalLinks');
+    const closeBtn = modal?.querySelector('.project-modal-close');
+    const overlay = modal?.querySelector('.project-modal-overlay');
+    const projectItems = document.querySelectorAll('.project-item');
+
+    if (!modal || !projectItems.length) return;
+
+    function openModal(project) {
+        const title = project.dataset.title || '';
+        const description = project.dataset.description || '';
+        const image = project.dataset.image || '';
+        const tag1 = project.dataset.tag1 || '';
+        const tag2 = project.dataset.tag2 || '';
+        const github = project.dataset.github || '';
+        const live = project.dataset.live || '';
+
+        // Populate modal content
+        modalTitle.textContent = title;
+        modalDescription.textContent = description || 'No description available.';
+        
+        if (image) {
+            modalImage.src = image;
+            modalImage.alt = title;
+        } else {
+            modalImage.src = `https://via.placeholder.com/900x500/141414/333?text=${encodeURIComponent(title)}`;
+            modalImage.alt = '';
+        }
+
+        // Tags
+        modalTags.innerHTML = '';
+        if (tag1) {
+            const tagSpan = document.createElement('span');
+            tagSpan.textContent = tag1;
+            modalTags.appendChild(tagSpan);
+        }
+        if (tag2) {
+            const tagSpan = document.createElement('span');
+            tagSpan.textContent = tag2;
+            modalTags.appendChild(tagSpan);
+        }
+
+        // Links
+        modalLinks.innerHTML = '';
+        if (github) {
+            const link = document.createElement('a');
+            link.href = github;
+            link.target = '_blank';
+            link.innerHTML = '<i class="fab fa-github"></i> View Code';
+            modalLinks.appendChild(link);
+        }
+        if (live) {
+            const link = document.createElement('a');
+            link.href = live;
+            link.target = '_blank';
+            link.innerHTML = '<i class="fas fa-external-link-alt"></i> Live Demo';
+            modalLinks.appendChild(link);
+        }
+
+        // Show modal
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        
+        // Focus close button for accessibility
+        setTimeout(() => closeBtn?.focus(), 100);
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    // Click handlers for project items
+    projectItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            // Don't open modal if clicking on existing link buttons
+            if (e.target.closest('.project-cta')) return;
+            openModal(item);
+        });
+    });
+
+    // Close modal handlers
+    closeBtn?.addEventListener('click', closeModal);
+    overlay?.addEventListener('click', closeModal);
+    
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
         }
     });
 }

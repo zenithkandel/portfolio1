@@ -147,17 +147,20 @@ $location = $settings['contact_location'] ?? '';
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </div>
-    
+
     <div class="mobile-nav-footer">
       <div class="mobile-nav-social">
         <?php if (!empty($settings['github_url'])): ?>
-          <a href="<?= e($settings['github_url']) ?>" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="<?= e($settings['github_url']) ?>" target="_blank" aria-label="GitHub"><i
+              class="fab fa-github"></i></a>
         <?php endif; ?>
         <?php if (!empty($settings['linkedin_url'])): ?>
-          <a href="<?= e($settings['linkedin_url']) ?>" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="<?= e($settings['linkedin_url']) ?>" target="_blank" aria-label="LinkedIn"><i
+              class="fab fa-linkedin"></i></a>
         <?php endif; ?>
         <?php if (!empty($settings['instagram_url'])): ?>
-          <a href="<?= e($settings['instagram_url']) ?>" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="<?= e($settings['instagram_url']) ?>" target="_blank" aria-label="Instagram"><i
+              class="fab fa-instagram"></i></a>
         <?php endif; ?>
       </div>
       <span><?= e($location ?? 'Available Worldwide') ?></span>
@@ -187,7 +190,7 @@ $location = $settings['contact_location'] ?? '';
           <div class="geo geo-plus"></div>
         </div>
       </div>
-      
+
       <div class="hero-content">
         <p class="hero-intro"><?= e($role) ?></p>
 
@@ -237,14 +240,10 @@ $location = $settings['contact_location'] ?? '';
             $publicUrl = $project['public_url'] ?? '';
             $hasLinks = !empty($githubUrl) || !empty($publicUrl);
             ?>
-            <article class="project-item" data-project-id="<?= $project['id'] ?>" 
-              data-title="<?= e($project['title']) ?>"
-              data-description="<?= e($project['description'] ?? '') ?>"
-              data-image="<?= e($project['image'] ?? '') ?>"
-              data-tag1="<?= e($project['tag1'] ?? '') ?>"
-              data-tag2="<?= e($project['tag2'] ?? '') ?>"
-              data-github="<?= e($githubUrl) ?>"
-              data-live="<?= e($publicUrl) ?>">
+            <article class="project-item" data-project-id="<?= $project['id'] ?>" data-title="<?= e($project['title']) ?>"
+              data-description="<?= e($project['description'] ?? '') ?>" data-image="<?= e($project['image'] ?? '') ?>"
+              data-tag1="<?= e($project['tag1'] ?? '') ?>" data-tag2="<?= e($project['tag2'] ?? '') ?>"
+              data-github="<?= e($githubUrl) ?>" data-live="<?= e($publicUrl) ?>">
               <div class="project-image">
                 <?php if (!empty($project['image'])): ?>
                   <img src="<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>">
@@ -442,16 +441,16 @@ $location = $settings['contact_location'] ?? '';
         <span></span>
         <span></span>
       </button>
-      
+
       <div class="project-modal-image">
         <img src="" alt="" id="modalImage">
       </div>
-      
+
       <div class="project-modal-body">
         <div class="project-modal-tags" id="modalTags"></div>
         <h2 class="project-modal-title" id="modalTitle"></h2>
         <p class="project-modal-description" id="modalDescription"></p>
-        
+
         <div class="project-modal-links" id="modalLinks"></div>
       </div>
     </div>
