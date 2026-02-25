@@ -1379,10 +1379,16 @@ section {
     .logo {
         font-size: 1.125rem;
         font-weight: 600;
+        flex: 1;
     }
 
     .nav-menu {
         display: none;
+    }
+
+    .header-actions {
+        gap: 0.5rem;
+        order: 2;
     }
 
     .menu-toggle {
@@ -1393,10 +1399,7 @@ section {
         border: 1px solid var(--border);
         border-radius: 8px;
         color: var(--text);
-    }
-
-    .header-actions {
-        gap: 0.5rem;
+        order: 3;
     }
 
     .header-time {
