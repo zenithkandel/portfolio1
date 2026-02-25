@@ -896,12 +896,25 @@ section {
     color: var(--text-dim);
     transition: all 0.3s var(--ease);
     cursor: default;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.skill-tag i {
+    font-size: 1rem;
+    opacity: 0.7;
+    transition: opacity 0.3s var(--ease);
 }
 
 .skill-tag:hover {
     background: var(--text);
     color: var(--bg);
     border-color: var(--text);
+}
+
+.skill-tag:hover i {
+    opacity: 1;
 }
 
 /* === PROJECTS === */
@@ -913,6 +926,10 @@ section {
 #work .section-label {
     padding: 0 2rem;
     margin-bottom: 3rem;
+}
+
+.project-item {
+    cursor: pointer;
 }
 
 .projects-wrapper {

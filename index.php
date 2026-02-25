@@ -237,7 +237,14 @@ $location = $settings['contact_location'] ?? '';
             $publicUrl = $project['public_url'] ?? '';
             $hasLinks = !empty($githubUrl) || !empty($publicUrl);
             ?>
-            <article class="project-item">
+            <article class="project-item" data-project-id="<?= $project['id'] ?>" 
+              data-title="<?= e($project['title']) ?>"
+              data-description="<?= e($project['description'] ?? '') ?>"
+              data-image="<?= e($project['image'] ?? '') ?>"
+              data-tag1="<?= e($project['tag1'] ?? '') ?>"
+              data-tag2="<?= e($project['tag2'] ?? '') ?>"
+              data-github="<?= e($githubUrl) ?>"
+              data-live="<?= e($publicUrl) ?>">
               <div class="project-image">
                 <?php if (!empty($project['image'])): ?>
                   <img src="<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>">
@@ -326,7 +333,12 @@ $location = $settings['contact_location'] ?? '';
 
         <div class="skills-grid">
           <?php foreach ($skills as $skill): ?>
-            <span class="skill-tag"><?= e($skill['name']) ?></span>
+            <span class="skill-tag">
+              <?php if (!empty($skill['icon'])): ?>
+                <i class="<?= e($skill['icon']) ?>"></i>
+              <?php endif; ?>
+              <?= e($skill['name']) ?>
+            </span>
           <?php endforeach; ?>
         </div>
       </div>
@@ -421,6 +433,29 @@ $location = $settings['contact_location'] ?? '';
       <a href="#contact">Contact</a>
     </div>
   </footer>
+
+  <!-- Project Modal -->
+  <div class="project-modal" id="projectModal" aria-hidden="true">
+    <div class="project-modal-overlay"></div>
+    <div class="project-modal-content" role="dialog" aria-labelledby="modalTitle">
+      <button class="project-modal-close" aria-label="Close modal">
+        <span></span>
+        <span></span>
+      </button>
+      
+      <div class="project-modal-image">
+        <img src="" alt="" id="modalImage">
+      </div>
+      
+      <div class="project-modal-body">
+        <div class="project-modal-tags" id="modalTags"></div>
+        <h2 class="project-modal-title" id="modalTitle"></h2>
+        <p class="project-modal-description" id="modalDescription"></p>
+        
+        <div class="project-modal-links" id="modalLinks"></div>
+      </div>
+    </div>
+  </div>
 
   <script src="assets/js/main.js"></script>
 </body>
