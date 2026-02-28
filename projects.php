@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/config.php';
 
+
 $settings = getSettings($pdo);
 $projects = getProjects($pdo);
 
