@@ -1,0 +1,20 @@
+# Robots.txt for zenithkandel.com.np
+# Portfolio Website
+
+User-agent: *
+Allow: /
+
+# Disallow admin and system files
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /setup.php
+Disallow: /handle_message.php
+Disallow: /schema.sql
+Disallow: /index_backup.php
+Disallow: /index_old.php
+
+# Disallow uploads directory listing (but allow individual files)
+Disallow: /uploads/*.php
+
+# Sitemap location
+Sitemap: https://zenithkandel.com.np/sitemap.xml
