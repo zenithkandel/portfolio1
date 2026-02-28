@@ -226,7 +226,12 @@ $location = $settings['contact_location'] ?? '';
 
     <!-- Work -->
     <section id="work" aria-labelledby="work-heading">
-      <h2 id="work-heading" class="section-label">Selected Work</h2>
+      <div class="section-header">
+        <h2 id="work-heading" class="section-label">Selected Work</h2>
+        <a href="projects.php" class="view-all-btn">
+          View All <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
 
       <div class="projects-wrapper">
         <button class="projects-nav projects-nav-prev" aria-label="Previous">
