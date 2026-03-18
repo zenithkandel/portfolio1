@@ -1,6 +1,6 @@
 /* ================================================
-   NODE NAVIGATOR - Constellation Explorer Game
-   Gamified portfolio navigation
+   NODE NAVIGATOR - Space Explorer Adventure
+   A narrative journey through the portfolio
    ================================================ */
 
 /* === OVERLAY CONTAINER === */
@@ -8,16 +8,129 @@
     position: fixed;
     inset: 0;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.98);
+    background: linear-gradient(135deg, #0a0a12 0%, #12121f 50%, #0d0d18 100%);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.5s var(--ease), visibility 0.5s;
+    transition: opacity 0.6s var(--ease), visibility 0.6s;
     overflow: hidden;
+    font-family: var(--font-sans);
 }
 
 .node-navigator.active {
     opacity: 1;
     visibility: visible;
+}
+
+/* Animated star field background */
+.node-navigator::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(1px 1px at 160px 120px, rgba(255, 255, 255, 0.7), transparent);
+    background-size: 200px 200px;
+    animation: nn-stars 100s linear infinite;
+    opacity: 0.6;
+}
+
+.node-navigator::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(10, 10, 18, 0.8) 100%);
+    pointer-events: none;
+}
+
+@keyframes nn-stars {
+    from { transform: translateY(0); }
+    to { transform: translateY(-200px); }
+}
+
+/* === INTRO SEQUENCE === */
+.nn-intro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    background: rgba(10, 10, 18, 0.98);
+    transition: opacity 0.8s var(--ease), visibility 0.8s;
+}
+
+.nn-intro.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.nn-intro-content {
+    max-width: 600px;
+    text-align: center;
+    padding: 2rem;
+}
+
+.nn-intro-title {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-style: italic;
+    color: #fff;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: nn-fade-in 1s ease forwards 0.5s;
+}
+
+.nn-intro-subtitle {
+    font-size: 0.85rem;
+    color: #6ee7b7;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: nn-fade-in 1s ease forwards 0.8s;
+}
+
+.nn-intro-text {
+    font-size: 1rem;
+    color: #a5b4c4;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: nn-fade-in 1s ease forwards 1.1s;
+}
+
+.nn-intro-text strong {
+    color: #fff;
+}
+
+.nn-intro-start {
+    padding: 1rem 2.5rem;
+    background: transparent;
+    border: 2px solid #6ee7b7;
+    color: #6ee7b7;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+    opacity: 0;
+    animation: nn-fade-in 1s ease forwards 1.4s;
+}
+
+.nn-intro-start:hover {
+    background: #6ee7b7;
+    color: #0a0a12;
+    box-shadow: 0 0 30px rgba(110, 231, 183, 0.4);
+}
+
+@keyframes nn-fade-in {
+    to { opacity: 1; }
 }
 
 /* === CANVAS CONTAINER === */
@@ -29,6 +142,7 @@
     justify-content: center;
     cursor: grab;
     touch-action: none;
+    z-index: 10;
 }
 
 .nn-canvas:active {
@@ -56,32 +170,27 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    border: 1px dashed var(--border);
+    border: 1px solid rgba(110, 231, 183, 0.15);
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0.5;
 }
 
 .nn-orbit-1 {
-    width: 300px;
-    height: 300px;
-    animation: nn-orbit-rotate 60s linear infinite;
+    width: 320px;
+    height: 320px;
+    animation: nn-orbit-rotate 80s linear infinite;
 }
 
 .nn-orbit-2 {
-    width: 480px;
-    height: 480px;
-    animation: nn-orbit-rotate 90s linear infinite reverse;
+    width: 520px;
+    height: 520px;
+    animation: nn-orbit-rotate 120s linear infinite reverse;
+    border-style: dashed;
 }
 
 @keyframes nn-orbit-rotate {
-    from {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 /* === NODES CONTAINER === */
@@ -94,11 +203,11 @@
     height: 0;
 }
 
-/* === CORE NODE === */
+/* === CORE NODE (The Explorer) === */
 .nn-node-core {
     position: absolute;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     transform: translate(-50%, -50%);
     cursor: pointer;
     z-index: 10;
@@ -108,64 +217,76 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, var(--text), var(--text-dim));
+    background: linear-gradient(135deg, #6ee7b7 0%, #3b82f6 50%, #8b5cf6 100%);
     box-shadow:
-        0 0 40px rgba(255, 255, 255, 0.15),
-        0 0 80px rgba(255, 255, 255, 0.08);
-    animation: nn-core-pulse 3s ease-in-out infinite;
+        0 0 60px rgba(110, 231, 183, 0.4),
+        0 0 120px rgba(59, 130, 246, 0.2),
+        inset 0 0 30px rgba(255, 255, 255, 0.2);
+    animation: nn-core-pulse 4s ease-in-out infinite;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: transform 0.3s var(--ease);
+    position: relative;
+    overflow: hidden;
+}
+
+.nn-node-core-inner::before {
+    content: '🚀';
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
 .nn-node-core:hover .nn-node-core-inner {
-    transform: scale(1.08);
+    transform: scale(1.1);
 }
 
 .nn-node-core-label {
     position: absolute;
-    top: calc(100% + 16px);
+    top: calc(100% + 20px);
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-serif);
     font-style: italic;
-    font-size: 1rem;
-    color: var(--text);
+    font-size: 1.25rem;
+    color: #fff;
     white-space: nowrap;
-    letter-spacing: 0.15em;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 .nn-node-core-sublabel {
     position: absolute;
-    top: calc(100% + 40px);
+    top: calc(100% + 48px);
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-sans);
     font-size: 0.7rem;
-    color: var(--text-muted);
+    color: #6ee7b7;
     white-space: nowrap;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.2em;
 }
 
 @keyframes nn-core-pulse {
-
-    0%,
-    100% {
-        box-shadow: 0 0 40px rgba(255, 255, 255, 0.15), 0 0 80px rgba(255, 255, 255, 0.08);
+    0%, 100% {
+        box-shadow:
+            0 0 60px rgba(110, 231, 183, 0.4),
+            0 0 120px rgba(59, 130, 246, 0.2),
+            inset 0 0 30px rgba(255, 255, 255, 0.2);
     }
-
     50% {
-        box-shadow: 0 0 60px rgba(255, 255, 255, 0.25), 0 0 100px rgba(255, 255, 255, 0.12);
+        box-shadow:
+            0 0 80px rgba(110, 231, 183, 0.6),
+            0 0 160px rgba(59, 130, 246, 0.3),
+            inset 0 0 40px rgba(255, 255, 255, 0.3);
     }
 }
 
-/* === SECTION NODES === */
+/* === SECTION NODES (Planets/Stations) === */
 .nn-node-section {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     transform: translate(-50%, -50%);
     cursor: pointer;
     z-index: 5;
@@ -180,91 +301,79 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 2px solid var(--border-strong);
-    background: var(--bg);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s var(--ease);
     position: relative;
+    font-size: 1.8rem;
+}
+
+/* Planet themes */
+.nn-node-section[data-section-id="work"] .nn-node-section-inner {
+    background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+}
+
+.nn-node-section[data-section-id="skills"] .nn-node-section-inner {
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+}
+
+.nn-node-section[data-section-id="about"] .nn-node-section-inner {
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+}
+
+.nn-node-section[data-section-id="contact"] .nn-node-section-inner {
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+}
+
+.nn-node-section[data-section-id="social"] .nn-node-section-inner {
+    background: linear-gradient(135deg, #f43f5e 0%, #d946ef 100%);
+    box-shadow: 0 0 30px rgba(244, 63, 94, 0.4);
 }
 
 .nn-node-section:hover .nn-node-section-inner {
-    border-color: var(--text);
-    background: var(--bg-elevated);
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-}
-
-.nn-node-section-inner::before {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--text-dim);
-    transition: background 0.3s var(--ease);
-}
-
-.nn-node-section:hover .nn-node-section-inner::before {
-    background: var(--text);
+    transform: rotate(10deg);
 }
 
 .nn-node-section-icon {
-    font-size: 1rem;
-    color: var(--text-dim);
-    transition: color 0.3s var(--ease);
-    opacity: 0;
+    display: none;
 }
 
-.nn-node-section:hover .nn-node-section-icon {
-    color: var(--text);
-    opacity: 1;
-}
-
-.nn-node-section:hover .nn-node-section-inner::before {
-    opacity: 0;
+.nn-node-section-emoji {
+    font-size: 2rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
 .nn-node-section-label {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 12px);
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-sans);
-    font-size: 0.65rem;
-    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #fff;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.1em;
     white-space: nowrap;
-    opacity: 0;
+    opacity: 0.7;
     transition: opacity 0.3s var(--ease);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
 }
 
 .nn-node-section:hover .nn-node-section-label {
     opacity: 1;
-    color: var(--text);
 }
 
 .nn-node-section.expanded .nn-node-section-inner {
-    border-color: var(--text);
-    background: var(--text);
+    transform: scale(1.2);
 }
 
-.nn-node-section.expanded .nn-node-section-inner::before {
-    background: var(--bg);
-}
-
-.nn-node-section.expanded .nn-node-section-icon {
-    color: var(--bg);
-    opacity: 1;
-}
-
-.nn-node-section.expanded .nn-node-section-label {
-    opacity: 1;
-    color: var(--text);
-}
-
-/* === SUB NODES === */
+/* === SUB NODES (Moons/Satellites) === */
 .nn-subnodes {
     position: absolute;
     top: 0;
@@ -281,8 +390,8 @@
 
 .nn-node-sub {
     position: absolute;
-    width: 36px;
-    height: 36px;
+    width: 50px;
+    height: 50px;
     transform: translate(-50%, -50%) scale(0);
     cursor: pointer;
     transition: transform 0.4s var(--ease);
@@ -296,98 +405,67 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 2px solid var(--border);
-    background: var(--bg);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s var(--ease);
+    font-size: 1.2rem;
 }
 
 .nn-node-sub:hover .nn-node-sub-inner {
-    border-color: var(--text);
-    transform: scale(1.2);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    border-color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.2);
+    transform: scale(1.15);
+    box-shadow: 0 0 25px rgba(110, 231, 183, 0.3);
 }
 
 .nn-node-sub.discovered .nn-node-sub-inner {
-    background: var(--text);
-    border-color: var(--text);
+    background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+    border-color: transparent;
 }
 
-.nn-node-sub-inner::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--text-dim);
-    transition: background 0.3s var(--ease);
-}
-
-.nn-node-sub.discovered .nn-node-sub-inner::before {
-    background: var(--bg);
-}
-
-.nn-node-sub:hover .nn-node-sub-inner::before {
-    background: var(--text);
-}
-
-.nn-node-sub.discovered:hover .nn-node-sub-inner::before {
-    background: var(--bg);
+.nn-node-sub.discovered .nn-node-sub-inner::after {
+    content: '✓';
+    position: absolute;
+    font-size: 1rem;
+    color: #fff;
 }
 
 .nn-node-sub-label {
     position: absolute;
-    top: calc(100% + 6px);
+    top: calc(100% + 8px);
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-sans);
     font-size: 0.6rem;
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.7);
     white-space: nowrap;
-    max-width: 80px;
+    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     opacity: 0;
     transition: opacity 0.3s var(--ease);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8);
 }
 
 .nn-node-sub:hover .nn-node-sub-label {
     opacity: 1;
-    color: var(--text);
+    color: #fff;
 }
 
-/* === CONNECTION LINES === */
-.nn-connections {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.nn-connection {
-    stroke: var(--border);
-    stroke-width: 1;
-    fill: none;
-    opacity: 0;
-    transition: opacity 0.4s var(--ease);
-}
-
-.nn-connection.visible {
-    opacity: 0.5;
-}
-
-/* === INFO PANEL === */
+/* === INFO PANEL (Transmission Log) === */
 .nn-info {
     position: fixed;
     right: 0;
     top: 0;
     bottom: 0;
-    width: 400px;
+    width: 450px;
     max-width: 90vw;
-    background: var(--bg-light);
-    border-left: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(10, 15, 30, 0.98) 100%);
+    border-left: 1px solid rgba(110, 231, 183, 0.2);
     transform: translateX(100%);
     transition: transform 0.5s var(--ease);
     z-index: 1001;
@@ -402,11 +480,34 @@
 
 .nn-info-header {
     padding: 2rem;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--bg-light);
-    z-index: 1;
+    border-bottom: 1px solid rgba(110, 231, 183, 0.1);
+    position: relative;
+    background: rgba(110, 231, 183, 0.03);
+}
+
+.nn-info-transmission {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    color: #6ee7b7;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+}
+
+.nn-info-transmission::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #6ee7b7;
+    border-radius: 50%;
+    animation: nn-blink 1s ease-in-out infinite;
+}
+
+@keyframes nn-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
 }
 
 .nn-info-close {
@@ -415,43 +516,47 @@
     right: 1.5rem;
     width: 40px;
     height: 40px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     background: transparent;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-dim);
+    color: rgba(255, 255, 255, 0.5);
     transition: all 0.3s var(--ease);
 }
 
 .nn-info-close:hover {
-    border-color: var(--text);
-    color: var(--text);
+    border-color: #f43f5e;
+    color: #f43f5e;
 }
 
 .nn-info-tags {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 
 .nn-info-tag {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--text-muted);
-    padding: 0.25rem 0.75rem;
-    border: 1px solid var(--border);
+    color: #6ee7b7;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid rgba(110, 231, 183, 0.3);
     border-radius: 100px;
+    background: rgba(110, 231, 183, 0.1);
 }
 
 .nn-info-title {
     font-family: var(--font-serif);
     font-size: 1.75rem;
     font-weight: 400;
-    line-height: 1.2;
+    font-style: italic;
+    line-height: 1.3;
+    color: #fff;
     margin: 0;
 }
 
@@ -466,12 +571,22 @@
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 1.5rem;
-    background: var(--bg-elevated);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nn-info-story {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    padding-left: 1rem;
+    border-left: 2px solid rgba(110, 231, 183, 0.3);
 }
 
 .nn-info-description {
     font-size: 0.95rem;
-    color: var(--text-dim);
+    color: #cbd5e1;
     line-height: 1.7;
     margin-bottom: 1.5rem;
 }
@@ -486,53 +601,49 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border: 1px solid var(--border);
+    padding: 0.85rem 1.5rem;
+    border: 1px solid rgba(110, 231, 183, 0.3);
     border-radius: 4px;
     font-size: 0.8rem;
-    color: var(--text-dim);
+    color: #6ee7b7;
     transition: all 0.3s var(--ease);
+    text-decoration: none;
 }
 
 .nn-info-link:hover {
-    border-color: var(--text);
-    color: var(--text);
-    background: var(--bg-elevated);
+    background: rgba(110, 231, 183, 0.15);
+    border-color: #6ee7b7;
+    box-shadow: 0 0 20px rgba(110, 231, 183, 0.2);
 }
 
-/* Skill info specific */
+/* Skill info */
 .nn-info-skill-icon {
-    font-size: 3rem;
-    color: var(--text);
-    margin-bottom: 1rem;
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    display: block;
 }
 
-/* Story info specific */
-.nn-info-story {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: var(--text);
-    font-style: italic;
-}
-
-/* Social link specific */
+/* Social link */
 .nn-info-social-link {
     display: flex;
     align-items: center;
     gap: 1rem;
     padding: 1.5rem;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(110, 231, 183, 0.2);
     border-radius: 8px;
     transition: all 0.3s var(--ease);
+    text-decoration: none;
+    color: #fff;
 }
 
 .nn-info-social-link:hover {
-    border-color: var(--text);
-    background: var(--bg-elevated);
+    border-color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.1);
 }
 
 .nn-info-social-link i {
-    font-size: 1.5rem;
+    font-size: 2rem;
+    color: #6ee7b7;
 }
 
 /* === PROGRESS BAR === */
@@ -545,15 +656,16 @@
     align-items: center;
     gap: 1rem;
     z-index: 1002;
-    background: var(--bg-elevated);
-    padding: 0.75rem 1.25rem;
+    background: rgba(15, 23, 42, 0.9);
+    padding: 0.75rem 1.5rem;
     border-radius: 100px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(110, 231, 183, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 .nn-progress-text {
     font-size: 0.7rem;
-    color: var(--text-muted);
+    color: #6ee7b7;
     text-transform: uppercase;
     letter-spacing: 0.1em;
 }
@@ -561,17 +673,18 @@
 .nn-progress-bar {
     width: 120px;
     height: 4px;
-    background: var(--border);
+    background: rgba(110, 231, 183, 0.2);
     border-radius: 2px;
     overflow: hidden;
 }
 
 .nn-progress-fill {
     height: 100%;
-    background: var(--text);
+    background: linear-gradient(90deg, #6ee7b7, #3b82f6);
     border-radius: 2px;
     transition: width 0.5s var(--ease);
     width: 0%;
+    box-shadow: 0 0 10px rgba(110, 231, 183, 0.5);
 }
 
 /* === EXIT BUTTON === */
@@ -583,10 +696,10 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.25rem;
-    background: transparent;
-    border: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(244, 63, 94, 0.3);
     border-radius: 4px;
-    color: var(--text-dim);
+    color: #f43f5e;
     font-family: var(--font-sans);
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -594,15 +707,15 @@
     cursor: pointer;
     z-index: 1002;
     transition: all 0.3s var(--ease);
+    backdrop-filter: blur(10px);
 }
 
 .nn-exit:hover {
-    border-color: var(--text);
-    color: var(--text);
-    background: var(--bg-elevated);
+    background: rgba(244, 63, 94, 0.15);
+    border-color: #f43f5e;
 }
 
-/* === BACK BUTTON (when zoomed) === */
+/* === BACK BUTTON === */
 .nn-back {
     position: fixed;
     top: 1.5rem;
@@ -611,10 +724,10 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.25rem;
-    background: transparent;
-    border: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(110, 231, 183, 0.3);
     border-radius: 4px;
-    color: var(--text-dim);
+    color: #6ee7b7;
     font-family: var(--font-sans);
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -624,6 +737,7 @@
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s var(--ease);
+    backdrop-filter: blur(10px);
 }
 
 .nn-back.visible {
@@ -632,9 +746,8 @@
 }
 
 .nn-back:hover {
-    border-color: var(--text);
-    color: var(--text);
-    background: var(--bg-elevated);
+    background: rgba(110, 231, 183, 0.15);
+    border-color: #6ee7b7;
 }
 
 /* === HINT TEXT === */
@@ -643,29 +756,39 @@
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.7rem;
-    color: var(--text-muted);
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
     z-index: 1002;
-    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     transition: opacity 0.3s var(--ease);
+}
+
+.nn-hint::before,
+.nn-hint::after {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .nn-hint.hidden {
     opacity: 0;
 }
 
-/* === GAME TOGGLE BUTTON (in header) === */
+/* === GAME TOGGLE BUTTON === */
 .game-toggle {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text-dim);
+    background: linear-gradient(135deg, rgba(110, 231, 183, 0.1), rgba(59, 130, 246, 0.1));
+    border: 1px solid rgba(110, 231, 183, 0.3);
+    border-radius: 100px;
+    color: #6ee7b7;
     font-family: var(--font-sans);
     font-size: 0.7rem;
     text-transform: uppercase;
@@ -675,22 +798,34 @@
 }
 
 .game-toggle:hover {
-    color: var(--text);
-    border-color: var(--border-strong);
-    background: var(--bg-light);
+    background: linear-gradient(135deg, rgba(110, 231, 183, 0.2), rgba(59, 130, 246, 0.2));
+    border-color: #6ee7b7;
+    box-shadow: 0 0 20px rgba(110, 231, 183, 0.2);
 }
 
 .game-toggle.active {
-    background: var(--text);
-    color: var(--bg);
-    border-color: var(--text);
+    background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+    color: #0a0a12;
+    border-color: transparent;
+}
+
+/* Light theme adjustments */
+[data-theme="light"] .game-toggle {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #059669;
+}
+
+[data-theme="light"] .game-toggle:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+    border-color: #059669;
 }
 
 /* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
-
     .nn-orbit-1,
-    .nn-orbit-2 {
+    .nn-orbit-2,
+    .node-navigator::before {
         animation: none;
     }
 
@@ -698,42 +833,47 @@
         animation: none;
     }
 
-    .nn-canvas-inner,
-    .nn-node-section,
-    .nn-node-sub,
-    .nn-info {
-        transition-duration: 0.1s;
+    .nn-info-transmission::before {
+        animation: none;
     }
 }
 
 /* === MOBILE RESPONSIVE === */
 @media (max-width: 768px) {
     .nn-node-core {
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
+    }
+
+    .nn-node-core-inner::before {
+        font-size: 2rem;
     }
 
     .nn-node-section {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
+    }
+
+    .nn-node-section-emoji {
+        font-size: 1.5rem;
     }
 
     .nn-node-sub {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
     }
 
     .nn-orbit-1 {
-        width: 200px;
-        height: 200px;
+        width: 220px;
+        height: 220px;
     }
 
     .nn-orbit-2 {
-        width: 340px;
-        height: 340px;
+        width: 380px;
+        height: 380px;
     }
 
-    /* Bottom sheet info panel on mobile */
+    /* Bottom sheet info panel */
     .nn-info {
         top: auto;
         bottom: 0;
@@ -741,19 +881,15 @@
         right: 0;
         width: 100%;
         max-width: none;
-        max-height: 70vh;
+        max-height: 75vh;
         border-left: none;
-        border-top: 1px solid var(--border);
-        border-radius: 16px 16px 0 0;
+        border-top: 1px solid rgba(110, 231, 183, 0.2);
+        border-radius: 20px 20px 0 0;
         transform: translateY(100%);
     }
 
     .nn-info.active {
         transform: translateY(0);
-    }
-
-    .nn-info-header {
-        padding: 1.5rem;
     }
 
     .nn-info-header::before {
@@ -764,12 +900,8 @@
         transform: translateX(-50%);
         width: 40px;
         height: 4px;
-        background: var(--border);
+        background: rgba(255, 255, 255, 0.3);
         border-radius: 2px;
-    }
-
-    .nn-info-body {
-        padding: 1.5rem;
     }
 
     .nn-progress {
@@ -782,18 +914,10 @@
         width: 80px;
     }
 
-    .nn-exit {
-        top: auto;
-        bottom: 1.5rem;
-        right: 1.5rem;
-        padding: 0.5rem 1rem;
-    }
-
+    .nn-exit,
     .nn-back {
         top: auto;
-        bottom: 1.5rem;
-        left: 1.5rem;
-        padding: 0.5rem 1rem;
+        bottom: 4.5rem;
     }
 
     .nn-hint {
@@ -805,29 +929,37 @@
     }
 
     .game-toggle {
-        padding: 0.5rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .nn-intro-title {
+        font-size: 1.75rem;
+    }
+
+    .nn-intro-text {
+        font-size: 0.9rem;
     }
 }
 
 /* === SMALL MOBILE === */
 @media (max-width: 380px) {
     .nn-orbit-1 {
-        width: 160px;
-        height: 160px;
+        width: 180px;
+        height: 180px;
     }
 
     .nn-orbit-2 {
-        width: 280px;
-        height: 280px;
+        width: 300px;
+        height: 300px;
     }
 
     .nn-node-core {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
     }
 
     .nn-node-section {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
     }
 }

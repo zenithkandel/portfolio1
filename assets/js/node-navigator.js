@@ -1,6 +1,6 @@
 /**
- * Node Navigator - Constellation Explorer
- * Gamified portfolio navigation system
+ * Node Navigator - Space Explorer Adventure
+ * A narrative journey through the portfolio
  */
 
 class NodeNavigator {
@@ -8,8 +8,43 @@ class NodeNavigator {
         this.container = container;
         this.data = data;
 
+        // Planet emojis and stories for each section
+        this.sectionMeta = {
+            work: {
+                emoji: '🪐',
+                name: 'Project Nebula',
+                story: 'Incoming transmission from Project Nebula... This cosmic archive contains evidence of remarkable creations. Each satellite holds a different artifact.',
+                subEmoji: '🛸'
+            },
+            skills: {
+                emoji: '⚡',
+                name: 'Tech Station',
+                story: 'You\'ve docked at Tech Station - a hub of knowledge and tools. The station\'s database reveals the technologies mastered by the explorer.',
+                subEmoji: '💫'
+            },
+            about: {
+                emoji: '🌍',
+                name: 'Origin World',
+                story: 'Welcome to the Origin World. Here lie the chronicles of the explorer\'s journey - their story, dreams, and philosophy.',
+                subEmoji: '📜'
+            },
+            contact: {
+                emoji: '📡',
+                name: 'Comm Relay',
+                story: 'The Communication Relay is active. Ready to establish a direct link with the explorer...',
+                subEmoji: '💬'
+            },
+            social: {
+                emoji: '🌐',
+                name: 'Network Hub',
+                story: 'You\'ve discovered the Network Hub - portals to other dimensions where the explorer leaves their mark.',
+                subEmoji: '🔗'
+            }
+        };
+
         this.state = {
             active: false,
+            introComplete: false,
             zoom: 1,
             panX: 0,
             panY: 0,
@@ -24,20 +59,9 @@ class NodeNavigator {
         this.lastTime = 0;
         this.orbitAngles = {};
 
-        // Touch state
-        this.touch = {
-            dragging: false,
-            lastX: 0,
-            lastY: 0,
-            lastDistance: 0
-        };
-
-        // Mouse drag state
-        this.mouse = {
-            dragging: false,
-            lastX: 0,
-            lastY: 0
-        };
+        // Touch/mouse state
+        this.touch = { dragging: false, lastX: 0, lastY: 0, lastDistance: 0 };
+        this.mouse = { dragging: false, lastX: 0, lastY: 0 };
     }
 
     init() {
@@ -50,6 +74,9 @@ class NodeNavigator {
 
     buildDOM() {
         const canvas = this.container.querySelector('.nn-canvas');
+
+        // Create intro screen
+        this.createIntro();
 
         // Create inner container for transforms
         const inner = document.createElement('div');
@@ -90,14 +117,14 @@ class NodeNavigator {
         // Create back button
         const backBtn = document.createElement('button');
         backBtn.className = 'nn-back';
-        backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back';
+        backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Return';
         this.container.appendChild(backBtn);
         this.elements.backBtn = backBtn;
 
         // Create hint
         const hint = document.createElement('div');
         hint.className = 'nn-hint';
-        hint.textContent = 'Click nodes to explore';
+        hint.textContent = 'Click planets to explore';
         this.container.appendChild(hint);
         this.elements.hint = hint;
 
@@ -105,13 +132,33 @@ class NodeNavigator {
         this.updateProgressDisplay();
     }
 
+    createIntro() {
+        const intro = document.createElement('div');
+        intro.className = 'nn-intro';
+        intro.innerHTML = `
+            <div class="nn-intro-content">
+                <h2 class="nn-intro-title">The Journey Begins</h2>
+                <p class="nn-intro-subtitle">Incoming Transmission</p>
+                <p class="nn-intro-text">
+                    You are <strong>Explorer-1</strong>, drifting through the digital cosmos.
+                    Your sensors have detected an uncharted system orbiting a mysterious entity known as <strong>"${this.data.core.name}"</strong>.
+                    <br><br>
+                    Your mission: Discover the secrets of this system. Visit each planet, decode the transmissions, and piece together the story of this enigmatic developer.
+                </p>
+                <button class="nn-intro-start">Begin Exploration</button>
+            </div>
+        `;
+        this.container.appendChild(intro);
+        this.elements.intro = intro;
+    }
+
     createCoreNode() {
         const core = document.createElement('div');
         core.className = 'nn-node-core';
         core.innerHTML = `
             <div class="nn-node-core-inner"></div>
-            <span class="nn-node-core-label">${this.data.core.label}</span>
-            <span class="nn-node-core-sublabel">${this.data.core.role}</span>
+            <span class="nn-node-core-label">${this.data.core.name}</span>
+            <span class="nn-node-core-sublabel">// ${this.data.core.role}</span>
         `;
 
         this.elements.nodes.appendChild(core);
@@ -125,14 +172,16 @@ class NodeNavigator {
     }
 
     createSectionNode(section) {
+        const meta = this.sectionMeta[section.id] || { emoji: '🌑', name: section.label };
+
         const node = document.createElement('div');
         node.className = 'nn-node-section';
         node.dataset.sectionId = section.id;
         node.innerHTML = `
             <div class="nn-node-section-inner">
-                <i class="${section.icon} nn-node-section-icon"></i>
+                <span class="nn-node-section-emoji">${meta.emoji}</span>
             </div>
-            <span class="nn-node-section-label">${section.label}</span>
+            <span class="nn-node-section-label">${meta.name}</span>
         `;
 
         // Initialize orbit angle
@@ -159,10 +208,13 @@ class NodeNavigator {
         // Click handler
         node.addEventListener('click', () => {
             if (section.action === 'scrollTo') {
-                this.deactivate();
+                this.showNotification('📡 Opening communication channel...');
                 setTimeout(() => {
-                    document.querySelector(section.target)?.scrollIntoView({ behavior: 'smooth' });
-                }, 300);
+                    this.deactivate();
+                    setTimeout(() => {
+                        document.querySelector(section.target)?.scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+                }, 800);
             } else {
                 this.expandSection(section.id);
             }
@@ -170,6 +222,8 @@ class NodeNavigator {
     }
 
     createSubNode(container, childData, section, index) {
+        const meta = this.sectionMeta[section.id] || { subEmoji: '⭐' };
+
         const node = document.createElement('div');
         node.className = 'nn-node-sub';
         node.dataset.nodeId = childData.id;
@@ -193,23 +247,22 @@ class NodeNavigator {
         }
 
         node.innerHTML = `
-            <div class="nn-node-sub-inner"></div>
+            <div class="nn-node-sub-inner">${meta.subEmoji}</div>
             <span class="nn-node-sub-label">${label}</span>
         `;
 
         // Position in circle around parent
         const total = section.children.length;
         const angleOffset = 360 / total;
-        const angle = index * angleOffset - 90; // Start from top
-        const radius = 100;
+        const angle = index * angleOffset - 90;
+        const radius = 120;
         const rad = angle * (Math.PI / 180);
         const x = Math.cos(rad) * radius;
         const y = Math.sin(rad) * radius;
 
-        // Store position for later animation
         node.dataset.x = x;
         node.dataset.y = y;
-        node.style.transitionDelay = `${index * 0.05}s`;
+        node.style.transitionDelay = `${index * 0.08}s`;
 
         container.appendChild(node);
 
@@ -221,7 +274,7 @@ class NodeNavigator {
     }
 
     positionOnOrbit(node, orbitNum, angle) {
-        const radius = orbitNum === 1 ? 150 : 240;
+        const radius = orbitNum === 1 ? 160 : 260;
         const rad = angle * (Math.PI / 180);
         const x = Math.cos(rad) * radius;
         const y = Math.sin(rad) * radius;
@@ -230,8 +283,53 @@ class NodeNavigator {
         node.style.top = `${y}px`;
     }
 
+    showNotification(message) {
+        // Create a brief notification
+        const notif = document.createElement('div');
+        notif.style.cssText = `
+            position: fixed;
+            bottom: 6rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(110, 231, 183, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 100px;
+            color: #6ee7b7;
+            font-size: 0.8rem;
+            z-index: 2000;
+            animation: nn-notif 2s ease forwards;
+        `;
+        notif.textContent = message;
+        this.container.appendChild(notif);
+
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes nn-notif {
+                0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+                15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        setTimeout(() => {
+            notif.remove();
+            style.remove();
+        }, 2000);
+    }
+
     bindEvents() {
         const canvas = this.container.querySelector('.nn-canvas');
+
+        // Intro start button
+        this.elements.intro.querySelector('.nn-intro-start').addEventListener('click', () => {
+            this.state.introComplete = true;
+            this.elements.intro.classList.add('hidden');
+            this.showNotification('🚀 Systems online. Exploration mode activated.');
+        });
 
         // Exit button
         const exitBtn = this.container.querySelector('.nn-exit');
@@ -330,13 +428,12 @@ class NodeNavigator {
             if (!this.state.active) return;
 
             if (e.key === 'Escape') {
-                if (this.state.currentSection) {
+                if (document.getElementById('nnInfo')?.classList.contains('active')) {
+                    this.hideInfo();
+                } else if (this.state.currentSection) {
                     this.collapseToCenter();
                 } else {
-                    this.hideInfo();
-                    if (!document.getElementById('nnInfo')?.classList.contains('active')) {
-                        this.deactivate();
-                    }
+                    this.deactivate();
                 }
             }
         });
@@ -362,13 +459,18 @@ class NodeNavigator {
         this.state.zoom = 1;
         this.applyTransform();
 
+        // Show intro if first time
+        if (!this.state.introComplete) {
+            this.elements.intro.classList.remove('hidden');
+        }
+
         // Start animation loop
         this.startLoop();
 
         // Hide hint after delay
         setTimeout(() => {
             this.elements.hint?.classList.add('hidden');
-        }, 4000);
+        }, 5000);
     }
 
     deactivate() {
@@ -377,22 +479,18 @@ class NodeNavigator {
         this.container.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
 
-        // Collapse if expanded
         if (this.state.currentSection) {
             this.collapseToCenter();
         }
 
-        // Hide info panel
         this.hideInfo();
-
-        // Stop animation loop
         this.stopLoop();
 
-        // Update toggle button
         const toggleBtn = document.getElementById('gameToggle');
         if (toggleBtn) {
             toggleBtn.classList.remove('active');
-            toggleBtn.querySelector('span').textContent = 'Explore';
+            const span = toggleBtn.querySelector('span');
+            if (span) span.textContent = 'Explore';
         }
     }
 
@@ -403,8 +501,7 @@ class NodeNavigator {
             const delta = timestamp - this.lastTime;
             this.lastTime = timestamp;
 
-            // Update orbit positions (slow rotation)
-            if (!this.state.currentSection) {
+            if (!this.state.currentSection && this.state.introComplete) {
                 this.updateOrbits(delta);
             }
 
@@ -423,11 +520,10 @@ class NodeNavigator {
     }
 
     updateOrbits(delta) {
-        // Rotate section nodes slowly
-        const speed = 0.005; // degrees per ms
+        const speed = 0.003;
 
         this.data.sections.forEach(section => {
-            this.orbitAngles[section.id] += speed * delta * (section.orbit === 1 ? 1 : -0.7);
+            this.orbitAngles[section.id] += speed * delta * (section.orbit === 1 ? 1 : -0.6);
 
             const node = this.nodes.get(section.id);
             if (node) {
@@ -440,21 +536,17 @@ class NodeNavigator {
         const section = this.data.sections.find(s => s.id === sectionId);
         if (!section || !section.children || section.children.length === 0) return;
 
-        this.state.currentSection = sectionId;
+        const meta = this.sectionMeta[sectionId];
+        this.showNotification(`🔭 Scanning ${meta.name}...`);
 
-        // Show back button
+        this.state.currentSection = sectionId;
         this.elements.backBtn.classList.add('visible');
 
-        // Mark section as expanded
         const sectionNode = this.nodes.get(sectionId);
         sectionNode?.classList.add('expanded');
 
-        // Show sub-nodes
         const subnodes = this.container.querySelector(`.nn-subnodes[data-section-id="${sectionId}"]`);
         if (subnodes) {
-            // Position sub-nodes relative to section node
-            const sectionRect = sectionNode.getBoundingClientRect();
-            const containerRect = this.elements.nodes.getBoundingClientRect();
             const offsetX = parseFloat(sectionNode.style.left) || 0;
             const offsetY = parseFloat(sectionNode.style.top) || 0;
 
@@ -463,7 +555,6 @@ class NodeNavigator {
 
             subnodes.classList.add('visible');
 
-            // Position each sub-node
             const children = subnodes.querySelectorAll('.nn-node-sub');
             children.forEach(child => {
                 const x = parseFloat(child.dataset.x) || 0;
@@ -472,10 +563,6 @@ class NodeNavigator {
                 child.style.top = `${y}px`;
             });
         }
-
-        // Zoom toward section (optional)
-        // this.state.zoom = 1.3;
-        // this.applyTransform();
     }
 
     collapseToCenter() {
@@ -483,21 +570,16 @@ class NodeNavigator {
 
         const sectionId = this.state.currentSection;
 
-        // Hide back button
         this.elements.backBtn.classList.remove('visible');
 
-        // Remove expanded state
         const sectionNode = this.nodes.get(sectionId);
         sectionNode?.classList.remove('expanded');
 
-        // Hide sub-nodes
         const subnodes = this.container.querySelector(`.nn-subnodes[data-section-id="${sectionId}"]`);
         subnodes?.classList.remove('visible');
 
-        // Hide info panel
         this.hideInfo();
 
-        // Reset zoom
         this.state.zoom = 1;
         this.applyTransform();
 
@@ -505,14 +587,11 @@ class NodeNavigator {
     }
 
     selectSubNode(nodeData, section) {
-        // Mark as discovered
         this.markDiscovered(nodeData.id);
 
-        // Update node visual
         const node = this.container.querySelector(`.nn-node-sub[data-node-id="${nodeData.id}"]`);
         node?.classList.add('discovered');
 
-        // Show info panel
         this.showInfo(nodeData, section);
     }
 
@@ -520,33 +599,35 @@ class NodeNavigator {
         const panel = document.getElementById('nnInfo');
         if (!panel) return;
 
+        const meta = this.sectionMeta[section.id];
         let content = '';
 
         if (section.id === 'work') {
-            // Project info
             const tags = nodeData.tags || [];
             content = `
                 <div class="nn-info-header">
                     <button class="nn-info-close"><i class="fas fa-times"></i></button>
+                    <div class="nn-info-transmission">Signal Decoded</div>
                     <div class="nn-info-tags">
                         ${tags.map(t => `<span class="nn-info-tag">${t}</span>`).join('')}
                     </div>
                     <h3 class="nn-info-title">${nodeData.title}</h3>
                 </div>
                 <div class="nn-info-body">
+                    <p class="nn-info-story">"This artifact was discovered in the ${meta.name} archives. It appears to be a significant creation..."</p>
                     ${nodeData.image ? `<img src="${nodeData.image}" alt="${nodeData.title}" class="nn-info-image" onerror="this.style.display='none'">` : ''}
-                    <p class="nn-info-description">${nodeData.description || 'No description available.'}</p>
+                    <p class="nn-info-description">${nodeData.description || 'Data logs corrupted. No additional information available.'}</p>
                     <div class="nn-info-links">
-                        ${nodeData.github ? `<a href="${nodeData.github}" target="_blank" class="nn-info-link"><i class="fab fa-github"></i> View Code</a>` : ''}
-                        ${nodeData.live ? `<a href="${nodeData.live}" target="_blank" class="nn-info-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>` : ''}
+                        ${nodeData.github ? `<a href="${nodeData.github}" target="_blank" class="nn-info-link"><i class="fab fa-github"></i> Source Code</a>` : ''}
+                        ${nodeData.live ? `<a href="${nodeData.live}" target="_blank" class="nn-info-link"><i class="fas fa-external-link-alt"></i> Visit Site</a>` : ''}
                     </div>
                 </div>
             `;
         } else if (section.id === 'skills') {
-            // Skill info
             content = `
                 <div class="nn-info-header">
                     <button class="nn-info-close"><i class="fas fa-times"></i></button>
+                    <div class="nn-info-transmission">Tech Database Access</div>
                     <div class="nn-info-tags">
                         <span class="nn-info-tag">Technology</span>
                     </div>
@@ -554,37 +635,45 @@ class NodeNavigator {
                 </div>
                 <div class="nn-info-body">
                     ${nodeData.icon ? `<i class="${nodeData.icon} nn-info-skill-icon"></i>` : ''}
-                    <p class="nn-info-description">Part of my technology stack. I use ${nodeData.name} in various projects.</p>
+                    <p class="nn-info-story">"Tech Station records indicate this technology has been mastered by the explorer."</p>
+                    <p class="nn-info-description">
+                        <strong>${nodeData.name}</strong> is part of the explorer's arsenal.
+                        It has been deployed across multiple missions and proven invaluable in the creation of digital artifacts.
+                    </p>
                 </div>
             `;
         } else if (section.id === 'about') {
-            // Story fragment
             content = `
                 <div class="nn-info-header">
                     <button class="nn-info-close"><i class="fas fa-times"></i></button>
+                    <div class="nn-info-transmission">Personal Log Entry</div>
                     <div class="nn-info-tags">
-                        <span class="nn-info-tag">Story</span>
+                        <span class="nn-info-tag">${nodeData.title}</span>
                     </div>
-                    <h3 class="nn-info-title">${nodeData.title}</h3>
+                    <h3 class="nn-info-title">Explorer's Chronicle</h3>
                 </div>
                 <div class="nn-info-body">
                     <p class="nn-info-story">"${nodeData.fragment}"</p>
+                    <p class="nn-info-description" style="margin-top: 1.5rem; font-size: 0.85rem; opacity: 0.7;">
+                        — Excerpt from the personal logs of ${this.data.core.name}
+                    </p>
                 </div>
             `;
         } else if (section.id === 'social') {
-            // Social link
             content = `
                 <div class="nn-info-header">
                     <button class="nn-info-close"><i class="fas fa-times"></i></button>
+                    <div class="nn-info-transmission">Portal Located</div>
                     <div class="nn-info-tags">
-                        <span class="nn-info-tag">Social</span>
+                        <span class="nn-info-tag">Dimension Gate</span>
                     </div>
-                    <h3 class="nn-info-title">${nodeData.name}</h3>
+                    <h3 class="nn-info-title">${nodeData.name} Portal</h3>
                 </div>
                 <div class="nn-info-body">
+                    <p class="nn-info-story">"A stable wormhole to the ${nodeData.name} dimension has been detected. The explorer maintains an active presence there."</p>
                     <a href="${nodeData.url}" target="_blank" class="nn-info-social-link">
                         <i class="${nodeData.icon}"></i>
-                        <span>Visit ${nodeData.name}</span>
+                        <span>Enter ${nodeData.name} Dimension</span>
                     </a>
                 </div>
             `;
@@ -605,6 +694,21 @@ class NodeNavigator {
         this.state.discovered.add(nodeId);
         this.saveProgress();
         this.updateProgressDisplay();
+
+        // Check for milestones
+        const count = this.state.discovered.size;
+        const total = this.state.totalNodes;
+        const percent = Math.round((count / total) * 100);
+
+        if (percent === 100) {
+            setTimeout(() => {
+                this.showNotification('🎉 Mission Complete! All secrets discovered!');
+            }, 500);
+        } else if (count === 1) {
+            this.showNotification('✨ First discovery logged!');
+        } else if (percent === 50) {
+            this.showNotification('🌟 Halfway there! Keep exploring!');
+        }
     }
 
     loadProgress() {
@@ -613,6 +717,7 @@ class NodeNavigator {
             if (saved) {
                 const data = JSON.parse(saved);
                 this.state.discovered = new Set(data.discovered || []);
+                this.state.introComplete = data.introComplete || false;
             }
         } catch (e) {
             console.warn('Failed to load progress:', e);
@@ -623,6 +728,7 @@ class NodeNavigator {
         try {
             const data = {
                 discovered: Array.from(this.state.discovered),
+                introComplete: this.state.introComplete,
                 lastUpdated: Date.now()
             };
             localStorage.setItem('nodeNavigator_progress', JSON.stringify(data));
@@ -649,7 +755,6 @@ class NodeNavigator {
     }
 
     render() {
-        // Initial render - apply discovered states
         this.state.discovered.forEach(nodeId => {
             const node = this.container.querySelector(`.nn-node-sub[data-node-id="${nodeId}"]`);
             node?.classList.add('discovered');
@@ -675,12 +780,13 @@ function initNodeNavigator() {
         } else {
             game.activate();
             toggleBtn.classList.add('active');
-            toggleBtn.querySelector('span').textContent = 'Playing';
+            const span = toggleBtn.querySelector('span');
+            if (span) span.textContent = 'Playing';
         }
     });
 }
 
-// Auto-initialize if DOM is ready
+// Auto-initialize
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initNodeNavigator);
 } else {
