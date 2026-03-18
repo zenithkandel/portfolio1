@@ -9,7 +9,7 @@ $aboutParagraphs = array_filter(array_map('trim', explode("\n", $about)));
 $storyFragments = array_slice($aboutParagraphs, 0, 3);
 
 // Build projects array for game
-$gameProjects = array_map(function($p) {
+$gameProjects = array_map(function ($p) {
     return [
         'id' => 'proj-' . $p['id'],
         'title' => $p['title'],
@@ -22,7 +22,7 @@ $gameProjects = array_map(function($p) {
 }, $projects);
 
 // Build skills array for game
-$gameSkills = array_map(function($s) {
+$gameSkills = array_map(function ($s) {
     return [
         'id' => 'skill-' . $s['id'],
         'name' => $s['name'],
@@ -110,5 +110,5 @@ $gameData = [
 ];
 ?>
 <script>
-window.GAME_DATA = <?= json_encode($gameData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?>;
+    window.GAME_DATA = <?= json_encode($gameData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?>;
 </script>

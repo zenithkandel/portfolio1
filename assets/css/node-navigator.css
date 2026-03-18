@@ -75,8 +75,13 @@
 }
 
 @keyframes nn-orbit-rotate {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
 /* === NODES CONTAINER === */
@@ -145,8 +150,15 @@
 }
 
 @keyframes nn-core-pulse {
-    0%, 100% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.15), 0 0 80px rgba(255, 255, 255, 0.08); }
-    50% { box-shadow: 0 0 60px rgba(255, 255, 255, 0.25), 0 0 100px rgba(255, 255, 255, 0.12); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.15), 0 0 80px rgba(255, 255, 255, 0.08);
+    }
+
+    50% {
+        box-shadow: 0 0 60px rgba(255, 255, 255, 0.25), 0 0 100px rgba(255, 255, 255, 0.12);
+    }
 }
 
 /* === SECTION NODES === */
@@ -676,6 +688,7 @@
 
 /* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
+
     .nn-orbit-1,
     .nn-orbit-2 {
         animation: none;
