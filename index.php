@@ -97,6 +97,7 @@ $location = $settings['contact_location'] ?? '';
   <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.2.0/css/duotone.css">
   <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.2.0/css/thin.css">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/node-navigator.css">
 </head>
 
 <body>
@@ -125,6 +126,10 @@ $location = $settings['contact_location'] ?? '';
     </nav>
 
     <div class="header-actions">
+      <button class="game-toggle" id="gameToggle" aria-label="Enter explore mode">
+        <i class="fas fa-rocket"></i>
+        <span>Explore</span>
+      </button>
       <button class="theme-toggle" aria-label="Toggle theme">
         <i class="fas fa-sun"></i>
         <i class="fas fa-moon"></i>
@@ -461,7 +466,22 @@ $location = $settings['contact_location'] ?? '';
     </div>
   </div>
 
+  <!-- Node Navigator Game -->
+  <div id="nodeNavigator" class="node-navigator" aria-hidden="true">
+    <div class="nn-canvas"></div>
+    <div class="nn-info" id="nnInfo"></div>
+    <div class="nn-progress">
+      <span class="nn-progress-text">0/0 discovered</span>
+      <div class="nn-progress-bar">
+        <div class="nn-progress-fill"></div>
+      </div>
+    </div>
+    <button class="nn-exit"><i class="fas fa-times"></i> Exit</button>
+  </div>
+
+  <?php include 'includes/game-data.php'; ?>
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/node-navigator.js"></script>
 </body>
 
 </html>
