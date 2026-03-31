@@ -220,7 +220,7 @@ const depth = parseFloat(shape.dataset.depth) || 0.5;
 Fonts are loaded via Google Fonts in `style.css`:
 
 ```css
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300..700&display=swap"); 
 ```
 
 ### Social Links
